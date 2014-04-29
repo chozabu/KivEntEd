@@ -103,7 +103,7 @@ class TestGame(Widget):
           print "menu?"
           return
         #print super(TestGame, self).on_touch_move(touch)
-        pos = (touch.x, touch.y)
+        pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         if (self.maintools.currentTool == "circle"):
           self.create_asteroid(pos)
           print "There are: %i Asteroids" % len(self.asteroids)
@@ -115,8 +115,8 @@ class TestGame(Widget):
           for aid in self.asteroids:
             asteroid = self.gameworld.entities[aid]
             apos = asteroid.position
-            dvecx = (touch.x-apos.x)*asteroid.physics.body.mass*0.1
-            dvecy = (touch.y-apos.y)*asteroid.physics.body.mass*0.1
+            dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
+            dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
             asteroid.physics.body.apply_impulse((dvecx,dvecy))
     def on_touch_down(self, touch):
         print self.maintools.currentTool
@@ -124,18 +124,17 @@ class TestGame(Widget):
           super(TestGame, self).on_touch_down(touch)
           print "menu?"
           return
-        pos = (touch.x, touch.y)
+        pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         if (self.maintools.currentTool == "circle"):
           self.create_asteroid(pos)
         if (self.maintools.currentTool == "box"):
           self.create_box(pos)
+    def getWorldPosFromTouch(self,touch):
+    
+        viewport = self.gameworld.systems['gameview']
+        return (touch.x- viewport.camera_pos[0],touch.y- viewport.camera_pos[1])
     def update(self, dt):
         self.gameworld.update(dt)
-        systems = self.gameworld.systems
-        print systems
-        viewport = systems['gameview']
-        print dir(viewport)
-        print viewport.camera_pos
 
     def setup_states(self):
         self.gameworld.add_state(state_name='main', 
