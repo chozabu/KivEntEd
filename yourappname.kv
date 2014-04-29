@@ -1,4 +1,15 @@
 #:kivy 1.8.0
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition 
+#:set COLOR_HIGHLIGHT (0.788235294, 0.643137255, 1)
+#:set COLOR_BACKGROUND (0.349019608, 0.082352941, 0.658823529)
+#:set COLOR_BACKGROUND_A50 (0.349019608, 0.082352941, 0.658823529, .5)
+#:set COLOR_BORDER (0.643137255, 0.160784314, 1)
+#:set COLOR_BORDER_A50 (0.643137255, 0.160784314, 1, .5)
+#:set COLOR_BORDER_A75 (0.643137255, 0.160784314, 1, .75)
+#:set COLOR_HIGHLIGHT_A50 (0.788235294, 0.643137255, 1, .5)
+#:set COLOR_HIGHLIGHT_A100 (0.788235294, 0.643137255, 1, 1.0)
+#:set COLOR_BACKGROUND_A100 (0.349019608, 0.082352941, 0.658823529, 1.0)
+#:set COLOR_BORDER_A100 (0.643137255, 0.160784314, 1, 1.0)
 
 TestGame:
 
@@ -30,13 +41,13 @@ TestGame:
             system_id: 'renderer'
             shader_source: 'assets/glsl/positionshader.glsl'
             atlas_dir: 'assets/'
-            atlas: 'background_objects'
+            atlas: 'myatlas'
         DynamicRenderer:
             gameworld: gameworld
             system_id: 'physics_renderer'
             shader_source: 'assets/glsl/positionrotateshader.glsl'
             atlas_dir: 'assets/'
-            atlas: 'background_objects'
+            atlas: 'myatlas'
             physics_system: 'physics'
         CymunkPhysics:
             gameworld: root.gameworld
@@ -52,7 +63,53 @@ TestGame:
     MainScreen:
         id: main_screen
 
+<MainTools@BoxLayout>
+    orientation: 'vertical'
+    size_hint: (min(.25, 300./root.size[0]), 1)
+    pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+    padding: 4
+    height: root.height
+    Button:
+        id: camButton
+        text: 'Camera'
+        on_press: root.camPressed(self)
+    Button:
+        id: circleButton
+        text: 'Circles'
+        on_press: root.circlePressed(self)
+    Button:
+        id: boxButton
+        text: 'Boxes'
+        on_press: root.boxPressed(self)
+    Button:
+        id: timeButton
+        text: 'pause/play'
+        on_press: root.playPressed(self)
+    Button:
+        id: saveButton
+        text: 'Save'
+        on_press: root.savePressed(self)
+    Button:
+        id: dragButton
+        text: 'Drag'
+        on_press: root.dragPressed(self)
+    Button:
+        id: linesButton
+        text: 'Draw Lines'
+        on_press: root.drawPressed(self)
+    Button:
+        id: deleteButton
+        text: 'Delete'
+        on_press: root.delPressed(self)
+        
+<PlainButton@Button>:
+    
+                
 <MainScreen@GameScreen>:
     name: 'main'
     FloatLayout:
+        size: root.size
+        pos: root.pos
+        MainTools:
+            id: mainTools
 

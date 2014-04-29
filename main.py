@@ -6,12 +6,16 @@ import kivent
 from random import randint
 from math import radians
 
+import ui_elements
+
 
 class TestGame(Widget):
     def __init__(self, **kwargs):
         super(TestGame, self).__init__(**kwargs)
         Clock.schedule_once(self.init_game)
         self.asteroids = []
+        self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
+        self.maintools.setTool("circle")
 
     def init_game(self, dt):
         self.setup_map()
@@ -26,25 +30,25 @@ class TestGame(Widget):
             pos = (randint(0, size[0]), randint(0, size[1]))
             self.create_asteroid(pos)
 
-    def create_asteroid(self, pos):
+    def create_asteroid(self, pos, radius=20, mass=10, friction=1.0, elasticity=.5):
         x_vel = randint(-100, 100)
         y_vel = randint(-100, 100)
         angle = radians(randint(-360, 360))
         angular_velocity = radians(randint(-150, -150))
-        shape_dict = {'inner_radius': 0, 'outer_radius': 32, 
-            'mass': 50, 'offset': (0, 0)}
-        col_shape = {'shape_type': 'circle', 'elasticity': .5, 
-            'collision_type': 1, 'shape_info': shape_dict, 'friction': 1.0}
+        shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
+            'mass': mass, 'offset': (0, 0)}
+        col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
+            'collision_type': 1, 'shape_info': shape_dict, 'friction': friction}
         col_shapes = [col_shape]
         physics_component = {'main_shape': 'circle', 
             'velocity': (x_vel, y_vel), 
             'position': pos, 'angle': angle, 
             'angular_velocity': angular_velocity, 
-            'vel_limit': 1250, 
+            'vel_limit': 1024, 
             'ang_vel_limit': radians(200), 
-            'mass': 10, 'col_shapes': col_shapes}
+            'mass': mass, 'col_shapes': col_shapes}
         create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': 'asteroid1', 'size': (64 , 64)}, 
+            'physics_renderer': {'texture': 'circle', 'size': (radius*2 , radius*2)}, 
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
@@ -57,18 +61,31 @@ class TestGame(Widget):
         gameworld.currentmap = gameworld.systems['map']
 
     def on_touch_move(self, touch):
+        if touch.x < min(self.width*.25, 300):
+          print "menu?"
+          return
+        #print super(TestGame, self).on_touch_move(touch)
         pos = (touch.x, touch.y)
-        self.create_asteroid(pos)
-        for aid in self.asteroids:
-          asteroid = self.gameworld.entities[aid]
-          apos = asteroid.position
-          dvecx = (touch.x-apos.x)*asteroid.physics.body.mass*0.1
-          dvecy = (touch.y-apos.y)*asteroid.physics.body.mass*0.1
-          asteroid.physics.body.apply_impulse((dvecx,dvecy))
-        print "There are: %i Asteroids" % len(self.asteroids)
+        if (self.maintools.currentTool == "circle"):
+          self.create_asteroid(pos)
+          print "There are: %i Asteroids" % len(self.asteroids)
+        
+        if (self.maintools.currentTool == "vortex"):
+          for aid in self.asteroids:
+            asteroid = self.gameworld.entities[aid]
+            apos = asteroid.position
+            dvecx = (touch.x-apos.x)*asteroid.physics.body.mass*0.1
+            dvecy = (touch.y-apos.y)*asteroid.physics.body.mass*0.1
+            asteroid.physics.body.apply_impulse((dvecx,dvecy))
     def on_touch_down(self, touch):
+        print self.maintools.currentTool
+        if touch.x < min(self.width*.25, 300):
+          super(TestGame, self).on_touch_down(touch)
+          print "menu?"
+          return
         pos = (touch.x, touch.y)
-        self.create_asteroid(pos)
+        if (self.maintools.currentTool == "circle"):
+          self.create_asteroid(pos)
     def update(self, dt):
         self.gameworld.update(dt)
 
