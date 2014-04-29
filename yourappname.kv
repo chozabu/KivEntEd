@@ -83,6 +83,14 @@ TestGame:
         text: 'Boxes'
         on_press: root.boxPressed(self)
     Button:
+        id: deleteButton
+        text: 'Delete'
+        on_press: root.delPressed(self)
+    Button:
+        id: staticButton
+        text: 'Dynamic'
+        on_press: root.staticPressed(self)
+    Button:
         id: timeButton
         text: 'pause/play'
         on_press: root.playPressed(self)
@@ -98,10 +106,6 @@ TestGame:
         id: linesButton
         text: 'Draw Lines'
         on_press: root.drawPressed(self)
-    Button:
-        id: deleteButton
-        text: 'Delete'
-        on_press: root.delPressed(self)
         
 <PlainButton@Button>:
     

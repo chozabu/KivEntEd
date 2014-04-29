@@ -105,7 +105,9 @@ class TestGame(Widget):
         #print super(TestGame, self).on_touch_move(touch)
         pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         if (self.maintools.currentTool == "circle"):
-          self.create_asteroid(pos)
+          self.create_asteroid(pos, mass=3)
+        if (self.maintools.currentTool == "box"):
+          self.create_box(pos, mass=0)
           print "There are: %i Asteroids" % len(self.asteroids)
         
         if (self.maintools.currentTool == "camera"):
@@ -114,10 +116,11 @@ class TestGame(Widget):
         if (self.maintools.currentTool == "vortex"):
           for aid in self.asteroids:
             asteroid = self.gameworld.entities[aid]
-            apos = asteroid.position
-            dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
-            dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
-            asteroid.physics.body.apply_impulse((dvecx,dvecy))
+            if asteroid.physics.body.is_static == 0:
+              apos = asteroid.position
+              dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
+              dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
+              asteroid.physics.body.apply_impulse((dvecx,dvecy))
     def on_touch_down(self, touch):
         print self.maintools.currentTool
         if touch.x < min(self.width*.25, 300):
