@@ -105,9 +105,11 @@ class TestGame(Widget):
         #print super(TestGame, self).on_touch_move(touch)
         pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         if (self.maintools.currentTool == "circle"):
-          self.create_asteroid(pos, mass=3)
+          mass = 0 if self.maintools.staticOn else 3
+          self.create_asteroid(pos, mass=mass)
         if (self.maintools.currentTool == "box"):
-          self.create_box(pos, mass=0)
+          mass = 0 if self.maintools.staticOn else 3
+          self.create_box(pos, mass=mass)
           print "There are: %i Asteroids" % len(self.asteroids)
         
         if (self.maintools.currentTool == "camera"):
@@ -128,10 +130,13 @@ class TestGame(Widget):
           print "menu?"
           return
         pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
+        print self.maintools.staticOn
         if (self.maintools.currentTool == "circle"):
-          self.create_asteroid(pos)
+          mass = 0 if self.maintools.staticOn else 3
+          self.create_asteroid(pos, mass=mass)
         if (self.maintools.currentTool == "box"):
-          self.create_box(pos)
+          mass = 0 if self.maintools.staticOn else 3
+          self.create_box(pos, mass=mass)
     def getWorldPosFromTouch(self,touch):
     
         viewport = self.gameworld.systems['gameview']
