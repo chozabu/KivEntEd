@@ -27,10 +27,11 @@ TestGame:
         GameView:
             system_id: 'gameview'
             focus_entity: False
-            updateable: False
+            updateable: True
             gameworld: gameworld
             pos: root.pos
-            do_scroll: False
+            do_scroll: True
+            do_scroll_lock: False
             size: root.size
         GameMap:
             system_id: 'map'

@@ -5,6 +5,7 @@ from kivy.core.window import Window
 import kivent
 from random import randint
 from math import radians
+from kivy.graphics import *
 
 import ui_elements
 
@@ -55,6 +56,43 @@ class TestGame(Widget):
         asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
         self.asteroids.append(asteroidID)
         return asteroidID
+      
+    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5):
+        x_vel = randint(-100, 100)
+        y_vel = randint(-100, 100)
+        angle = radians(randint(-360, 360))
+        angular_velocity = radians(randint(-150, -150))
+        
+        '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
+            (height, width), (height, 0.0)],
+            'offset': (height/2., -width/2.)}
+        acol_shape_dict = {'shape_type': 'box', 'elasticity': .5, 
+            'collision_type': 2, 'shape_info': box_dict, 'friction': 1.0}
+        '''
+        box_dict = {
+            'width': width, 
+            'height': height,
+            'mass': mass}
+        #shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
+        #    'mass': mass, 'offset': (0, 0)}
+        col_shape = {'shape_type': 'box', 'elasticity': elasticity, 
+            'collision_type': 1, 'shape_info': box_dict, 'friction': friction}
+        col_shapes = [col_shape]
+        physics_component = {'main_shape': 'box', 
+            'velocity': (x_vel, y_vel), 
+            'position': pos, 'angle': angle, 
+            'angular_velocity': angular_velocity, 
+            'vel_limit': 1024, 
+            'ang_vel_limit': radians(200), 
+            'mass': mass, 'col_shapes': col_shapes}
+        create_component_dict = {'physics': physics_component, 
+            'physics_renderer': {'texture': 'square', 'size': (width , height)}, 
+            'position': pos, 'rotate': 0}
+        component_order = ['position', 'rotate', 
+            'physics', 'physics_renderer']
+        asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
+        self.asteroids.append(asteroidID)
+        return asteroidID
 
     def setup_map(self):
         gameworld = self.gameworld
@@ -70,6 +108,9 @@ class TestGame(Widget):
           self.create_asteroid(pos)
           print "There are: %i Asteroids" % len(self.asteroids)
         
+        if (self.maintools.currentTool == "camera"):
+          super(TestGame, self).on_touch_move(touch)
+          
         if (self.maintools.currentTool == "vortex"):
           for aid in self.asteroids:
             asteroid = self.gameworld.entities[aid]
@@ -86,8 +127,15 @@ class TestGame(Widget):
         pos = (touch.x, touch.y)
         if (self.maintools.currentTool == "circle"):
           self.create_asteroid(pos)
+        if (self.maintools.currentTool == "box"):
+          self.create_box(pos)
     def update(self, dt):
         self.gameworld.update(dt)
+        systems = self.gameworld.systems
+        print systems
+        viewport = systems['gameview']
+        print dir(viewport)
+        print viewport.camera_pos
 
     def setup_states(self):
         self.gameworld.add_state(state_name='main', 
