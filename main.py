@@ -115,6 +115,7 @@ class TestGame(Widget):
           return
         pos = self.getWorldPosFromTouch(touch)
         self.touches[touch.id]['newpos'] = pos
+        self.touches[touch.id]['ownbody'].position = pos
         #print super(TestGame, self).on_touch_move(touch)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
@@ -130,6 +131,10 @@ class TestGame(Widget):
     def on_touch_up(self, touch):
         pos = self.getWorldPosFromTouch(touch)
         ctouch = self.touches[touch.id]
+        
+        space =self.gameworld.systems['physics'].space
+        if 'mousejoint' in ctouch:
+          space.remove(ctouch['mousejoint'])
         
         if ctouch['onmenu']:return
         if self.maintools.currentTool == "circle" and ctouch["active"]:
@@ -152,14 +157,28 @@ class TestGame(Widget):
         self.touches[touch.id] = {"active":False , "newpos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
         pos = self.getWorldPosFromTouch(touch)
-        self.touches[touch.id] = {"active":True , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False}
-        print self.maintools.currentTool
+        position = cy.Vec2d(pos[0], pos[1])
+        space =self.gameworld.systems['physics'].space
+        shape = space.point_query_first(position)
+        #self.selectedShape = shape
+        print "touched shape:", shape
+        self.touches[touch.id] = {"active":False , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
         if touch.x < min(self.width*.25, 300):
           self.touches[touch.id]["onmenu"] = True
           super(TestGame, self).on_touch_down(touch)
           print "menu?"
           return
-        print self.maintools.staticOn
+        print self.maintools.currentTool
+        self.touches[touch.id] = {"active":True , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
+        
+        
+        if shape and not shape.body.is_static and self.maintools.currentTool == 'drag':
+          ctouch=self.touches[touch.id]
+          body = ctouch['ownbody']
+          body.position = pos
+          ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
+          space.add(ctouch['mousejoint'])
+        
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_asteroid(pos, mass=mass)
