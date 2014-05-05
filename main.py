@@ -21,6 +21,8 @@ class TestGame(Widget):
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
         self.maintools.setTool("circle")
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
     def init_game(self, dt):
         self.setup_map()
@@ -34,6 +36,29 @@ class TestGame(Widget):
         for x in range(50):
             pos = (randint(0, size[0]), randint(0, size[1]))
             self.create_asteroid(pos)
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        space =self.gameworld.systems['physics'].space
+        '''if keycode[1] == 'w':
+            self.player1.center_y += 10
+        elif keycode[1] == 's':
+            self.player1.center_y -= 10
+        elif keycode[1] == 'up':
+            self.player2.center_y += 10
+        el'''
+        if keycode[1] == 'up':
+            space.gravity = space.gravity.x,space.gravity.y+10
+        if keycode[1] == 'down':
+            space.gravity = space.gravity.x,space.gravity.y-10
+        if keycode[1] == 'left':
+            space.gravity = space.gravity.x-10 ,space.gravity.y
+        if keycode[1] == 'right':
+            space.gravity = space.gravity.x+10 ,space.gravity.y
+            print space.gravity
+        return True
 
     def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = radians(randint(-360, 360))):
         x_vel = 0#randint(-100, 100)
@@ -113,9 +138,10 @@ class TestGame(Widget):
         if touch.x < min(self.width*.25, 300):
           print "menu?"
           return
+        ctouch = self.touches[touch.id]
         pos = self.getWorldPosFromTouch(touch)
-        self.touches[touch.id]['newpos'] = pos
-        self.touches[touch.id]['ownbody'].position = pos
+        ctouch['newpos'] = pos
+        ctouch['ownbody'].position = pos
         #print super(TestGame, self).on_touch_move(touch)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
@@ -128,18 +154,34 @@ class TestGame(Widget):
         if (self.maintools.currentTool == "camera"):
           super(TestGame, self).on_touch_move(touch)
           
+        
+          
     def on_touch_up(self, touch):
         pos = self.getWorldPosFromTouch(touch)
         ctouch = self.touches[touch.id]
+        spos = ctouch['pos']
         
         space =self.gameworld.systems['physics'].space
         if 'mousejoint' in ctouch:
           space.remove(ctouch['mousejoint'])
+          
         
         if ctouch['onmenu']:return
+        
+        if self.maintools.currentTool == "draw" and ctouch["active"]:
+          mass = 0 if self.maintools.staticOn else 3
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          angle = atan2(yd,xd)
+          dist= sqrt(xd**2+yd**2)
+          if dist<4:dist=8
+          print "angle = ",angle
+          self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
+      
         if self.maintools.currentTool == "circle" and ctouch["active"]:
           mass = 0 if self.maintools.staticOn else 3
-          spos = ctouch['pos']
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
@@ -171,7 +213,12 @@ class TestGame(Widget):
         print self.maintools.currentTool
         self.touches[touch.id]['active'] =  True
         
-        if (
+        #if self.maintools.currentTool == 'draw':
+        #  self.touches[touch.id].drawpoints={}
+          
+        if shape and self.maintools.currentTool == 'del':
+          space.remove(shape)
+          space.remove(shape.body)
         
         if shape and not shape.body.is_static and self.maintools.currentTool == 'drag':
           ctouch=self.touches[touch.id]
