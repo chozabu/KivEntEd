@@ -113,8 +113,9 @@ class TestGame(Widget):
         if touch.x < min(self.width*.25, 300):
           print "menu?"
           return
+        pos = self.getWorldPosFromTouch(touch)
+        self.touches[touch.id]['newpos'] = pos
         #print super(TestGame, self).on_touch_move(touch)
-        pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_asteroid(pos, mass=mass)
@@ -126,14 +127,6 @@ class TestGame(Widget):
         if (self.maintools.currentTool == "camera"):
           super(TestGame, self).on_touch_move(touch)
           
-        if (self.maintools.currentTool == "vortex"):
-          for aid in self.asteroids:
-            asteroid = self.gameworld.entities[aid]
-            if asteroid.physics.body.is_static == 0:
-              apos = asteroid.position
-              dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
-              dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
-              asteroid.physics.body.apply_impulse((dvecx,dvecy))
     def on_touch_up(self, touch):
         pos = self.getWorldPosFromTouch(touch)
         ctouch = self.touches[touch.id]
@@ -152,15 +145,14 @@ class TestGame(Widget):
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
           angle = atan2(yd,xd)
-          
           dist= sqrt(xd**2+yd**2)
           if dist<4:dist=8
           print "angle = ",angle
           self.create_box(spos, mass=mass, width=dist*2, height=dist*2, angle=angle)
-        self.touches[touch.id] = {"active":False , "pos":pos, "screenpos":(touch.x,touch.y)}
+        self.touches[touch.id] = {"active":False , "newpos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
         pos = self.getWorldPosFromTouch(touch)
-        self.touches[touch.id] = {"active":True , "pos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False}
+        self.touches[touch.id] = {"active":True , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False}
         print self.maintools.currentTool
         if touch.x < min(self.width*.25, 300):
           self.touches[touch.id]["onmenu"] = True
@@ -181,7 +173,20 @@ class TestGame(Widget):
     def update(self, dt):
       if not self.maintools.paused:
         self.gameworld.update(dt)
-
+        for t in self.touches:
+          ctouch = self.touches[t]
+          if ctouch['active']:
+            if ctouch['tool'] == 'vortex':
+              self.pull2point(ctouch['newpos'])
+    def pull2point(self, pos):
+      for aid in self.asteroids:
+        asteroid = self.gameworld.entities[aid]
+        if asteroid.physics.body.is_static == 0:
+          apos = asteroid.position
+          dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
+          dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
+          asteroid.physics.body.apply_impulse((dvecx,dvecy))
+          #asteroid.physics.body.apply_force((dvecx,dvecy))
     def setup_states(self):
         self.gameworld.add_state(state_name='main', 
             systems_added=['renderer', 'physics_renderer'],
