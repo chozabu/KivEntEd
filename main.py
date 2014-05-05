@@ -8,6 +8,7 @@ from math import radians
 from kivy.graphics import *
 
 import cymunk as cy
+from math import *
 
 import ui_elements
 
@@ -19,6 +20,7 @@ class TestGame(Widget):
         self.asteroids = []
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
         self.maintools.setTool("circle")
+        self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
 
     def init_game(self, dt):
         self.setup_map()
@@ -34,8 +36,8 @@ class TestGame(Widget):
             self.create_asteroid(pos)
 
     def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5):
-        x_vel = randint(-100, 100)
-        y_vel = randint(-100, 100)
+        x_vel = 0#randint(-100, 100)
+        y_vel = 0#randint(-100, 100)
         angle = radians(randint(-360, 360))
         angular_velocity = radians(randint(-150, -150))
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
@@ -60,8 +62,8 @@ class TestGame(Widget):
         return asteroidID
       
     def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5):
-        x_vel = randint(-100, 100)
-        y_vel = randint(-100, 100)
+        x_vel = 0#randint(-100, 100)
+        y_vel = 0#randint(-100, 100)
         angle = radians(randint(-360, 360))
         angular_velocity = radians(randint(-150, -150))
         
@@ -114,9 +116,9 @@ class TestGame(Widget):
           return
         #print super(TestGame, self).on_touch_move(touch)
         pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
-        if (self.maintools.currentTool == "circle"):
-          mass = 0 if self.maintools.staticOn else 3
-          self.create_asteroid(pos, mass=mass)
+        #if (self.maintools.currentTool == "circle"):
+        #  mass = 0 if self.maintools.staticOn else 3
+        #  self.create_asteroid(pos, mass=mass)
         if (self.maintools.currentTool == "box"):
           mass = 0 if self.maintools.staticOn else 3
           self.create_box(pos, mass=mass)
@@ -133,17 +135,30 @@ class TestGame(Widget):
               dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
               dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
               asteroid.physics.body.apply_impulse((dvecx,dvecy))
+    def on_touch_up(self, touch):
+        pos = self.getWorldPosFromTouch(touch)
+        ctouch = self.touches[touch.id]
+        
+        if self.maintools.currentTool == "circle" and ctouch["active"]:
+          mass = 0 if self.maintools.staticOn else 3
+          spos = ctouch['pos']
+          dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
+          if dist<4:dist=8
+          print dist
+          self.create_asteroid(spos, mass=mass, radius=dist)
+        self.touches[touch.id] = {"active":False , "pos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
+        pos = self.getWorldPosFromTouch(touch)
+        self.touches[touch.id] = {"active":True , "pos":pos, "screenpos":(touch.x,touch.y)}
         print self.maintools.currentTool
         if touch.x < min(self.width*.25, 300):
           super(TestGame, self).on_touch_down(touch)
           print "menu?"
           return
-        pos = self.getWorldPosFromTouch(touch)#.x, touch.y)
         print self.maintools.staticOn
-        if (self.maintools.currentTool == "circle"):
-          mass = 0 if self.maintools.staticOn else 3
-          self.create_asteroid(pos, mass=mass)
+        #if (self.maintools.currentTool == "circle"):
+        #  mass = 0 if self.maintools.staticOn else 3
+        #  self.create_asteroid(pos, mass=mass)
         if (self.maintools.currentTool == "box"):
           mass = 0 if self.maintools.staticOn else 3
           self.create_box(pos, mass=mass)
