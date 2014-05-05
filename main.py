@@ -135,7 +135,7 @@ class TestGame(Widget):
         gameworld.currentmap = gameworld.systems['map']
 
     def on_touch_move(self, touch):
-        if touch.x < min(self.width*.25, 300):
+        if touch.x < self.width*.1:
           print "menu?"
           return
         ctouch = self.touches[touch.id]
@@ -205,7 +205,7 @@ class TestGame(Widget):
         #self.selectedShape = shape
         print "touched shape:", shape
         self.touches[touch.id] = {"active":False , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
-        if touch.x < min(self.width*.25, 300):
+        if touch.x < self.width*.1:
           self.touches[touch.id]["onmenu"] = True
           super(TestGame, self).on_touch_down(touch)
           print "menu?"
