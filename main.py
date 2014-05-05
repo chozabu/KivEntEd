@@ -218,7 +218,8 @@ class TestGame(Widget):
           
         if shape and self.maintools.currentTool == 'del':
           space.remove(shape)
-          space.remove(shape.body)
+          if shape.body in space.bodies:
+            space.remove(shape.body)
         
         if shape and not shape.body.is_static and self.maintools.currentTool == 'drag':
           ctouch=self.touches[touch.id]
