@@ -169,8 +169,9 @@ class TestGame(Widget):
           print "menu?"
           return
         print self.maintools.currentTool
-        self.touches[touch.id] = {"active":True , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
+        self.touches[touch.id]['active'] =  True
         
+        if (
         
         if shape and not shape.body.is_static and self.maintools.currentTool == 'drag':
           ctouch=self.touches[touch.id]
