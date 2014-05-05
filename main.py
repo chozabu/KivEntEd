@@ -7,6 +7,8 @@ from random import randint
 from math import radians
 from kivy.graphics import *
 
+import cymunk as cy
+
 import ui_elements
 
 
@@ -31,7 +33,7 @@ class TestGame(Widget):
             pos = (randint(0, size[0]), randint(0, size[1]))
             self.create_asteroid(pos)
 
-    def create_asteroid(self, pos, radius=20, mass=10, friction=1.0, elasticity=.5):
+    def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5):
         x_vel = randint(-100, 100)
         y_vel = randint(-100, 100)
         angle = radians(randint(-360, 360))
@@ -91,6 +93,14 @@ class TestGame(Widget):
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
         asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
+        #b1 = self.gameworld.entities[asteroidID]
+        #b2 = self.gameworld.entities[self.asteroids[-1]]
+        #qj = cy.PivotJoint(b1.physics.body, b2.physics.body, b2.physics.body.position)
+        #print (b2.physics.shapes[0])
+        #b2.physics.shapes[0].group=1
+        #b1.physics.shapes[0].group=1
+        #self.gameworld.systems['physics'].space.add(qj)
+        #print (self.gameworld.systems['physics'].space)
         self.asteroids.append(asteroidID)
         return asteroidID
 
