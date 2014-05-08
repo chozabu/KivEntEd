@@ -251,8 +251,8 @@ class TestGame(Widget):
         asteroid = self.gameworld.entities[aid]
         if asteroid.physics.body.is_static == 0:
           apos = asteroid.position
-          dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.1
-          dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.1
+          dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.02
+          dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.02
           asteroid.physics.body.apply_impulse((dvecx,dvecy))
           #asteroid.physics.body.apply_force((dvecx,dvecy))
     def setup_states(self):
