@@ -36,7 +36,7 @@ class TestGame(Widget):
         size = Window.size
         for x in range(50):
             pos = (randint(size[0]/3, size[0]), randint(0, size[1]))
-            self.create_asteroid(pos,y_vel=random()*-20)
+            self.create_circle(pos,y_vel=random()*-20)
         self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -62,7 +62,7 @@ class TestGame(Widget):
             print space.gravity
         return True
 
-    def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = radians(randint(-360, 360)), x_vel=0,y_vel=0,angular_velocity=0):
+    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
         col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
@@ -84,12 +84,7 @@ class TestGame(Widget):
         self.asteroids.append(asteroidID)
         return asteroidID
       
-    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = radians(randint(-360, 360))):
-        x_vel = 0#randint(-100, 100)
-        y_vel = 0#randint(-100, 100)
-        
-        angular_velocity = 0#radians(randint(-150, -150))
-        
+    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0):
         '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
             (height, width), (height, 0.0)],
             'offset': (height/2., -width/2.)}
@@ -145,7 +140,7 @@ class TestGame(Widget):
         #print super(TestGame, self).on_touch_move(touch)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
-        #  self.create_asteroid(pos, mass=mass)
+        #  self.create_circle(pos, mass=mass)
         #if (self.maintools.currentTool == "box"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
@@ -198,7 +193,7 @@ class TestGame(Widget):
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
-          self.create_asteroid(spos, mass=mass, radius=dist)
+          self.create_circle(spos, mass=mass, radius=dist)
         if self.maintools.currentTool == "box" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
@@ -244,7 +239,7 @@ class TestGame(Widget):
         
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
-        #  self.create_asteroid(pos, mass=mass)
+        #  self.create_circle(pos, mass=mass)
         #if (self.maintools.currentTool == "box"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
