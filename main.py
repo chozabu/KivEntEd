@@ -129,9 +129,9 @@ class TestGame(Widget):
         gameworld.currentmap = gameworld.systems['map']
 
     def on_touch_move(self, touch):
-        if touch.x < self.width*.1:
-          #print "menu?"
-          return
+        #if touch.x < self.width*.1:
+        #  #print "menu?"
+        #  return
         ctouch = self.touches[touch.id]
         pos = self.getWorldPosFromTouch(touch)
         spos = ctouch['pos']
