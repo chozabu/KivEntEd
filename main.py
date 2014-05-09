@@ -170,11 +170,24 @@ class TestGame(Widget):
         spos = ctouch['pos']
         
         space =self.gameworld.systems['physics'].space
-        if 'mousejoint' in ctouch:
+        position = cy.Vec2d(pos[0], pos[1])
+        shape = space.point_query_first(position)
+        
+        if 'mousejoint' in ctouch and (ctouch['tool'] != "pin"):
           space.remove(ctouch['mousejoint'])
-          
+        
         
         if ctouch['onmenu']:return
+        
+        
+          
+        if ctouch['tool'] == 'c2c':
+          b1 = shape.body#self.gameworld.entities[asteroidID]
+          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+          qj = cy.PinJoint(b1, b2, (0,0), (0,0))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          #b2.physics.shapes[0].group=1
+          #b1.physics.shapes[0].group=1
+          space.add(qj)
         
         if (self.maintools.currentTool == "draw" or self.maintools.currentTool == "plank") and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
@@ -230,7 +243,7 @@ class TestGame(Widget):
           if shape.body in space.bodies:
             space.remove(shape.body)
         
-        if shape and not shape.body.is_static and self.maintools.currentTool == 'drag':
+        if shape and not shape.body.is_static and (self.maintools.currentTool == 'drag' or self.maintools.currentTool == 'pin'):
           ctouch=self.touches[touch.id]
           body = ctouch['ownbody']
           body.position = pos

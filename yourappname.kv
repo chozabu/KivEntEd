@@ -69,6 +69,7 @@ TestGame:
     size_hint: (.15, 1)
     createMenu: createMenu
     rootMenu: rootMenu
+    joinMenu: joinMenu
     massSlider: massSlider
     BoxLayout:
         id: rootMenu
@@ -84,6 +85,10 @@ TestGame:
             id: createButton
             text: 'Create'
             on_press: root.createPressed(self)
+        Button:
+            id: joinButton
+            text: 'Join'
+            on_press: root.joinPressed(self)
         Button:
             id: deleteButton
             text: 'Delete'
@@ -123,7 +128,6 @@ TestGame:
             text: 'Plank'
             on_press: root.plankPressed(self)
         BoxLayout:
-            id: createMenu
             orientation: 'horizontal'
             Button:
                 text: "Mass"
@@ -134,6 +138,25 @@ TestGame:
                 min:0
                 max:100
                 value:10
+    
+    BoxLayout:
+        id: joinMenu
+        orientation: 'vertical'
+        pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+        padding: 4
+        height: root.height
+        Button:
+            text: 'Pin to World'
+            on_press: root.joinPinPressed(self)
+        Button:
+            text: 'Point 2 Point'
+            on_press: root.joinP2PPressed(self)
+        Button:
+            text: 'Center 2 Point'
+            on_press: root.joinC2PPressed(self)
+        Button:
+            text: 'Center 2 Center'
+            on_press: root.joinC2CPressed(self)
         
 <PlainButton@Button>:
     
