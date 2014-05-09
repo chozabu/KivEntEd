@@ -136,7 +136,7 @@ class TestGame(Widget):
 
     def on_touch_move(self, touch):
         if touch.x < self.width*.1:
-          print "menu?"
+          #print "menu?"
           return
         ctouch = self.touches[touch.id]
         pos = self.getWorldPosFromTouch(touch)
@@ -198,6 +198,7 @@ class TestGame(Widget):
           self.create_box(spos, mass=mass, width=dist*2, height=dist*2, angle=angle)
         self.touches[touch.id] = {"active":False , "newpos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
+        print "TOUCHDOWN\n"
         pos = self.getWorldPosFromTouch(touch)
         position = cy.Vec2d(pos[0], pos[1])
         space =self.gameworld.systems['physics'].space
@@ -205,10 +206,10 @@ class TestGame(Widget):
         #self.selectedShape = shape
         print "touched shape:", shape
         self.touches[touch.id] = {"active":False , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
-        if touch.x < self.width*.1:
+        if self.maintools.on_touch_down(touch):#True:#touch.x < self.width*.1:
           self.touches[touch.id]["onmenu"] = True
-          super(TestGame, self).on_touch_down(touch)
-          print "menu?"
+          #sresult = super(TestGame, self).on_touch_down(touch)
+          print "clicked in menu"
           return
         print self.maintools.currentTool
         self.touches[touch.id]['active'] =  True
