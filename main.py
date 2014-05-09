@@ -146,10 +146,10 @@ class TestGame(Widget):
         #  self.create_box(pos, mass=mass)
         #  print "There are: %i Asteroids" % len(self.asteroids)
         
-        if (self.maintools.currentTool == "camera"):
+        if (ctouch['tool'] == "camera"):
           super(TestGame, self).on_touch_move(touch)
         
-        if self.maintools.currentTool == "draw" and ctouch["active"]:
+        if ctouch['tool'] == "draw" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
@@ -207,7 +207,7 @@ class TestGame(Widget):
           #b1.physics.shapes[0].group=1
           space.add(qj)
         
-        if (self.maintools.currentTool == "draw" or self.maintools.currentTool == "plank") and ctouch["active"]:
+        if (ctouch['tool'] == "draw" or ctouch['tool'] == "plank") and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
@@ -219,13 +219,13 @@ class TestGame(Widget):
           print "angle = ",angle
           self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
       
-        if self.maintools.currentTool == "circle" and ctouch["active"]:
+        if ctouch['tool'] == "circle" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
           self.create_circle(spos, mass=mass, radius=dist)
-        if self.maintools.currentTool == "box" and ctouch["active"]:
+        if ctouch['tool'] == "box" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
           xd = spos[0]-pos[0]
