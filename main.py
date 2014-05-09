@@ -181,8 +181,8 @@ class TestGame(Widget):
         
         
         if ctouch['tool'] == 'c2p':
-          b1 = shape.body#self.gameworld.entities[asteroidID]
-          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
           b2l = b2.world_to_local(position)
           print b2l
           #qj = cy.PivotJoint(b1, b2, pos)
