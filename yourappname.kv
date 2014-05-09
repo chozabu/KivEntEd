@@ -69,6 +69,7 @@ TestGame:
     size_hint: (.15, 1)
     createMenu: createMenu
     rootMenu: rootMenu
+    massSlider: massSlider
     BoxLayout:
         id: rootMenu
         orientation: 'vertical'
@@ -87,10 +88,6 @@ TestGame:
             id: deleteButton
             text: 'Delete'
             on_press: root.delPressed(self)
-        Button:
-            id: staticButton
-            text: 'Dynamic'
-            on_press: root.staticPressed(self)
         Button:
             id: playButton
             text: 'pause/play'
@@ -121,6 +118,18 @@ TestGame:
             id: linesButton
             text: 'Lines'
             on_press: root.drawPressed(self)
+        BoxLayout:
+            id: createMenu
+            orientation: 'horizontal'
+            Button:
+                text: "Mass"
+                on_press: root.massPressed(self)
+            Slider:
+                id: massSlider
+                orientation: "vertical"
+                min:0
+                max:100
+                value:10
         
 <PlainButton@Button>:
     

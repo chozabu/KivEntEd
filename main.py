@@ -140,6 +140,7 @@ class TestGame(Widget):
           return
         ctouch = self.touches[touch.id]
         pos = self.getWorldPosFromTouch(touch)
+        spos = ctouch['pos']
         ctouch['newpos'] = pos
         ctouch['ownbody'].position = pos
         #print super(TestGame, self).on_touch_move(touch)
@@ -153,6 +154,19 @@ class TestGame(Widget):
         
         if (self.maintools.currentTool == "camera"):
           super(TestGame, self).on_touch_move(touch)
+        
+        if self.maintools.currentTool == "draw" and ctouch["active"]:
+          mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          dist= sqrt(xd**2+yd**2)
+          if dist > 10:
+            midx = (spos[0]+pos[0])/2.0
+            midy = (spos[1]+pos[1])/2.0
+            angle = atan2(yd,xd)
+            print "angle = ",angle
+            self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
+            ctouch['pos'] = pos
           
         
           
@@ -169,7 +183,7 @@ class TestGame(Widget):
         if ctouch['onmenu']:return
         
         if self.maintools.currentTool == "draw" and ctouch["active"]:
-          mass = 0 if self.maintools.staticOn else 3
+          mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
           midx = (spos[0]+pos[0])/2.0
@@ -181,13 +195,13 @@ class TestGame(Widget):
           self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
       
         if self.maintools.currentTool == "circle" and ctouch["active"]:
-          mass = 0 if self.maintools.staticOn else 3
+          mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
           self.create_asteroid(spos, mass=mass, radius=dist)
         if self.maintools.currentTool == "box" and ctouch["active"]:
-          mass = 0 if self.maintools.staticOn else 3
+          mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
