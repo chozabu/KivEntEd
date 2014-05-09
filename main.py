@@ -4,6 +4,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 import kivent
 from random import randint
+from random import random
 from math import radians
 from kivy.graphics import *
 
@@ -34,8 +35,9 @@ class TestGame(Widget):
     def draw_some_stuff(self):
         size = Window.size
         for x in range(50):
-            pos = (randint(0, size[0]), randint(0, size[1]))
-            self.create_asteroid(pos)
+            pos = (randint(size[0]/3, size[0]), randint(0, size[1]))
+            self.create_asteroid(pos,y_vel=random()*-20)
+        self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
@@ -60,10 +62,7 @@ class TestGame(Widget):
             print space.gravity
         return True
 
-    def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = radians(randint(-360, 360))):
-        x_vel = 0#randint(-100, 100)
-        y_vel = 0#randint(-100, 100)
-        angular_velocity = 0#radians(randint(-150, -150))
+    def create_asteroid(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = radians(randint(-360, 360)), x_vel=0,y_vel=0,angular_velocity=0):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
         col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
