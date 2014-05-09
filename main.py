@@ -182,7 +182,7 @@ class TestGame(Widget):
         
         if ctouch['onmenu']:return
         
-        if self.maintools.currentTool == "draw" and ctouch["active"]:
+        if (self.maintools.currentTool == "draw" or self.maintools.currentTool == "plank") and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
