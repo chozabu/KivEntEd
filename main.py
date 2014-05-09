@@ -190,8 +190,8 @@ class TestGame(Widget):
           space.add(qj)
           
         if ctouch['tool'] == 'p2p':
-          b1 = shape.body#self.gameworld.entities[asteroidID]
-          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
           b2l = b2.world_to_local(position)
           b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
           print b2l
