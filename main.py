@@ -180,6 +180,24 @@ class TestGame(Widget):
         if ctouch['onmenu']:return
         
         
+        if ctouch['tool'] == 'c2p':
+          b1 = shape.body#self.gameworld.entities[asteroidID]
+          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+          b2l = b2.world_to_local(position)
+          print b2l
+          #qj = cy.PivotJoint(b1, b2, pos)
+          qj = cy.PinJoint(b1, b2, (0,0), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          space.add(qj)
+          
+        if ctouch['tool'] == 'p2p':
+          b1 = shape.body#self.gameworld.entities[asteroidID]
+          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+          b2l = b2.world_to_local(position)
+          b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
+          print b2l
+          #qj = cy.PivotJoint(b1, b2, pos)
+          qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          space.add(qj)
           
         if ctouch['tool'] == 'c2c':
           b1 = shape.body#self.gameworld.entities[asteroidID]
