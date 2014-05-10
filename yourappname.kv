@@ -116,8 +116,12 @@ TestGame:
             text: 'Circles'
             on_press: root.circlePressed(self)
         Button:
+            id: squareButton
+            text: 'Square'
+            on_press: root.squarePressed(self)
+        Button:
             id: boxButton
-            text: 'Boxes'
+            text: 'Box'
             on_press: root.boxPressed(self)
         Button:
             id: linesButton
@@ -151,6 +155,9 @@ TestGame:
         Button:
             text: 'Point 2 Point'
             on_press: root.joinP2PPressed(self)
+        Button:
+            text: 'P2P Spring'
+            on_press: root.joinP2PSPressed(self)
         Button:
             text: 'Center 2 Point'
             on_press: root.joinC2PPressed(self)

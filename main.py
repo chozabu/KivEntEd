@@ -199,6 +199,17 @@ class TestGame(Widget):
           qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
           space.add(qj)
           
+        if ctouch['tool'] == 'p2ps':
+          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+          sposition = cy.Vec2d(spos[0], spos[1])
+          b2l = b2.world_to_local(position)
+          b1l = b1.world_to_local(sposition)
+          dvec = cy.Vec2d(position.x-sposition.x,position.y-sposition.y)
+          dist= sqrt(dvec.x**2+dvec.y**2)
+          qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          space.add(qj)
+          
         if ctouch['tool'] == 'c2c':
           b1 = shape.body#self.gameworld.entities[asteroidID]
           b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
@@ -226,6 +237,18 @@ class TestGame(Widget):
           print dist
           self.create_circle(spos, mass=mass, radius=dist)
         if ctouch['tool'] == "box" and ctouch["active"]:
+          mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
+          spos = ctouch['pos']
+          xd = max(5, abs(spos[0]-pos[0]))
+          yd = max(5, abs(spos[1]-pos[1]))
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          #angle = atan2(yd,xd)
+          #dist= sqrt(xd**2+yd**2)
+          #if dist<4:dist=8
+          #print "angle = ",angle
+          self.create_box((midx,midy), mass=mass, width=xd, height=yd, angle=0)
+        if ctouch['tool'] == "square" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
           xd = spos[0]-pos[0]
