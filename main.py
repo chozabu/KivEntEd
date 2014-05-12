@@ -269,7 +269,11 @@ class TestGame(Widget):
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
-          self.create_circle(spos, mass=mass, radius=dist, texture=self.maintools.spriteSpinner.text)
+          spos = ctouch['pos']
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          angle = atan2(yd,xd)
+          self.create_circle(spos, mass=mass, radius=dist, texture=self.maintools.spriteSpinner.text, angle=angle)
         if ctouch['tool'] == "box" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']

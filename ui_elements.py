@@ -65,10 +65,10 @@ class MainTools(BoxLayout):
           self.size_hint_x=.2
     def circlePressed(self, instance):
         self.setTool("circle")
-        self.spriteSpinner.text="circle"
+        self.spriteSpinner.text="sheep"
     def squarePressed(self, instance):
         self.setTool("square")
-        self.spriteSpinner.text="square"
+        self.spriteSpinner.text="face_box"
     def boxPressed(self, instance):
         self.setTool("box")
         self.spriteSpinner.text="square"
@@ -84,9 +84,10 @@ class MainTools(BoxLayout):
         self.setTool("vortex")
     def drawPressed(self, instance):
         self.setTool("draw")
-        self.spriteSpinner.text="circle"
+        self.spriteSpinner.text="square"
     def plankPressed(self, instance):
         self.setTool("plank")
+        self.spriteSpinner.text="square"
     def joinPinPressed(self, instance):
         self.setTool("pin")
     def joinP2PPressed(self, instance):
