@@ -132,6 +132,7 @@ class TestGame(Widget):
         #if touch.x < self.width*.1:
         #  #print "menu?"
         #  return
+        space =self.gameworld.systems['physics'].space
         ctouch = self.touches[touch.id]
         pos = self.getWorldPosFromTouch(touch)
         spos = ctouch['pos']
@@ -145,7 +146,7 @@ class TestGame(Widget):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
         #  print "There are: %i Asteroids" % len(self.asteroids)
-        
+        #print dir(touch)
         if (ctouch['tool'] == "camera"):
           super(TestGame, self).on_touch_move(touch)
         
@@ -161,6 +162,11 @@ class TestGame(Widget):
             print "angle = ",angle
             self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
             ctouch['pos'] = pos
+            
+        shape = ctouch['touching']
+        if shape and shape.body.is_static and (self.maintools.currentTool == 'drag'):
+            shape.body.position=(shape.body.position.x+touch.dx,shape.body.position.y+touch.dy)
+            space.reindex_shape(shape)
           
         
           
