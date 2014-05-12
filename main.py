@@ -194,6 +194,10 @@ class TestGame(Widget):
         
           
     def on_touch_up(self, touch):
+        if touch.id not in self.touches:
+          print super(TestGame, self).on_touch_up(touch)
+          print "touchdown not found, mousewheel?"
+          return
         pos = self.getWorldPosFromTouch(touch)
         ctouch = self.touches[touch.id]
         spos = ctouch['pos']
