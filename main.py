@@ -173,7 +173,7 @@ class TestGame(Widget):
             ctouch['pos'] = pos
             
         shape = ctouch['touching']
-        if shape and shape.body.is_static and (self.maintools.currentTool == 'drag'):
+        if shape and shape.body.is_static and (ctouch['tool'] == 'drag'):
             shape.body.position=(shape.body.position.x+touch.dx,shape.body.position.y+touch.dy)
             space.reindex_shape(shape)
           
