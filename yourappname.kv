@@ -71,6 +71,7 @@ TestGame:
     rootMenu: rootMenu
     joinMenu: joinMenu
     massSlider: massSlider
+    spriteSpinner: spriteSpinner
     BoxLayout:
         id: rootMenu
         orientation: 'vertical'
@@ -111,6 +112,8 @@ TestGame:
         pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
         padding: 4
         height: root.height
+        Spinner:
+            id: spriteSpinner
         Button:
             id: circleButton
             text: 'Circles'

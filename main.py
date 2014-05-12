@@ -11,6 +11,8 @@ from kivy.graphics import *
 import cymunk as cy
 from math import *
 
+import os
+
 import ui_elements
 
 
@@ -31,21 +33,33 @@ class TestGame(Widget):
     def init_game(self, dt):
         try: 
             self._init_game(0)
-        except:
+        except e:
             print 'failed: rescheduling init'
             Clock.schedule_once(self.init_game)
     def _init_game(self, dt):
         self.setup_map()
         self.setup_states()
         self.set_state()
+        
+        
         self.draw_some_stuff()
         Clock.schedule_interval(self.update, 0)
+        Clock.schedule_once(self.init_sprites)
+    def init_sprites(self, dt):
+        usprites = self.gameworld.systems['renderer'].uv_dict.keys()
+        sprites = []
+        print usprites
+        for k in usprites:
+          print k
+          if k!='atlas_size' and k!='main_texture' :sprites.append(str(k))
+        self.maintools.spriteSpinner.values = sprites
+      
 
     def draw_some_stuff(self):
         size = Window.size
         for x in range(50):
             pos = (randint(size[0]/3, size[0]), randint(0, size[1]))
-            self.create_circle(pos,y_vel=random()*-20)
+            self.create_circle(pos,y_vel=random()*-20, texture="sheep")
         self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -71,7 +85,7 @@ class TestGame(Widget):
             print space.gravity
         return True
 
-    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0):
+    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
         col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
@@ -85,7 +99,7 @@ class TestGame(Widget):
             'ang_vel_limit': radians(200), 
             'mass': mass, 'col_shapes': col_shapes}
         create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': 'circle', 'size': (radius*2 , radius*2)}, 
+            'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)}, 
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
@@ -93,7 +107,7 @@ class TestGame(Widget):
         self.asteroids.append(asteroidID)
         return asteroidID
       
-    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0):
+    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box"):
         '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
             (height, width), (height, 0.0)],
             'offset': (height/2., -width/2.)}
@@ -117,7 +131,7 @@ class TestGame(Widget):
             'ang_vel_limit': radians(200), 
             'mass': mass, 'col_shapes': col_shapes}
         create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': 'square', 'size': (width , height)}, 
+            'physics_renderer': {'texture': texture, 'size': (width , height)}, 
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
@@ -169,7 +183,7 @@ class TestGame(Widget):
             midy = (spos[1]+pos[1])/2.0
             angle = atan2(yd,xd)
             print "angle = ",angle
-            self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
+            self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle,texture=self.maintools.spriteSpinner.text)
             ctouch['pos'] = pos
             
         shape = ctouch['touching']
@@ -244,14 +258,14 @@ class TestGame(Widget):
           dist= sqrt(xd**2+yd**2)
           if dist<4:dist=8
           print "angle = ",angle
-          self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle)
+          self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle, texture=self.maintools.spriteSpinner.text)
       
         if ctouch['tool'] == "circle" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
           if dist<4:dist=8
           print dist
-          self.create_circle(spos, mass=mass, radius=dist)
+          self.create_circle(spos, mass=mass, radius=dist, texture=self.maintools.spriteSpinner.text)
         if ctouch['tool'] == "box" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
@@ -263,7 +277,7 @@ class TestGame(Widget):
           #dist= sqrt(xd**2+yd**2)
           #if dist<4:dist=8
           #print "angle = ",angle
-          self.create_box((midx,midy), mass=mass, width=xd, height=yd, angle=0)
+          self.create_box((midx,midy), mass=mass, width=xd, height=yd, angle=0, texture=self.maintools.spriteSpinner.text)
         if ctouch['tool'] == "square" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
@@ -273,10 +287,11 @@ class TestGame(Widget):
           dist= sqrt(xd**2+yd**2)
           if dist<4:dist=8
           print "angle = ",angle
-          self.create_box(spos, mass=mass, width=dist*2, height=dist*2, angle=angle)
+          self.create_box(spos, mass=mass, width=dist*2, height=dist*2, angle=angle, texture=self.maintools.spriteSpinner.text)
         self.touches[touch.id] = {"active":False , "newpos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
         print "TOUCHDOWN\n"
+        #print os.listdir("./sprites")
         pos = self.getWorldPosFromTouch(touch)
         position = cy.Vec2d(pos[0], pos[1])
         space =self.gameworld.systems['physics'].space

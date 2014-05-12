@@ -3,6 +3,8 @@ from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 
+import os
+
 '''class YACSButtonCircle(ToggleButton):
     
     def on_touch_down(self, touch):
@@ -30,6 +32,8 @@ class MainTools(BoxLayout):
     def init_tools(self, dt):
         self.l2menus = [self.joinMenu, self.createMenu]
         self.remove_widget(self.joinMenu)
+        self.spriteSpinner.text="square"
+        #self.spriteSpinner.values = os.listdir("./sprites")
     def setTool(self, tool):
        self.currentTool = tool
        print "Tool is now: %s" % tool
@@ -61,10 +65,13 @@ class MainTools(BoxLayout):
           self.size_hint_x=.2
     def circlePressed(self, instance):
         self.setTool("circle")
+        self.spriteSpinner.text="circle"
     def squarePressed(self, instance):
         self.setTool("square")
+        self.spriteSpinner.text="square"
     def boxPressed(self, instance):
         self.setTool("box")
+        self.spriteSpinner.text="square"
     def massPressed(self, instance):
         self.massSlider.value = 0 if self.massSlider.value > 0 else 10
         
@@ -77,6 +84,7 @@ class MainTools(BoxLayout):
         self.setTool("vortex")
     def drawPressed(self, instance):
         self.setTool("draw")
+        self.spriteSpinner.text="circle"
     def plankPressed(self, instance):
         self.setTool("plank")
     def joinPinPressed(self, instance):
