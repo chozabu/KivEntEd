@@ -280,6 +280,9 @@ class TestGame(Widget):
         #  self.touches[touch.id].drawpoints={}
           
         if shape and self.maintools.currentTool == 'del':
+          #print dir(shape)
+          #print dir(shape.body)
+          #self.gameworld.remove_entity(howdoigetIDfromshape?)
           space.remove(shape)
           if shape.body in space.bodies:
             space.remove(shape.body)
