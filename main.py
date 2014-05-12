@@ -59,7 +59,7 @@ class TestGame(Widget):
         size = Window.size
         for x in range(50):
             pos = (randint(size[0]/3, size[0]), randint(0, size[1]))
-            self.create_circle(pos,y_vel=random()*-20, texture="sheep")
+            self.create_circle(pos,y_vel=random()*-20, texture="sheep", radius=15)
         self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
