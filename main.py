@@ -22,10 +22,19 @@ class TestGame(Widget):
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
         self.maintools.setTool("draw")
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
-        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        try: 
+            self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+            self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        except:
+            print 'Python python no keyboard'
 
     def init_game(self, dt):
+        try: 
+            self._init_game(0)
+        except:
+            print 'failed: rescheduling init'
+            Clock.schedule_once(self.init_game)
+    def _init_game(self, dt):
         self.setup_map()
         self.setup_states()
         self.set_state()
