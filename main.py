@@ -194,44 +194,45 @@ class TestGame(Widget):
         
         if ctouch['onmenu']:return
         
-        
-        if ctouch['tool'] == 'c2p':
-          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
-          b2l = b2.world_to_local(position)
-          print b2l
-          #qj = cy.PivotJoint(b1, b2, pos)
-          qj = cy.PinJoint(b1, b2, (0,0), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-          space.add(qj)
-          
-        if ctouch['tool'] == 'p2p':
-          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
-          b2l = b2.world_to_local(position)
-          b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
-          print b2l
-          #qj = cy.PivotJoint(b1, b2, pos)
-          qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-          space.add(qj)
-          
-        if ctouch['tool'] == 'p2ps':
-          b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-          b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
-          sposition = cy.Vec2d(spos[0], spos[1])
-          b2l = b2.world_to_local(position)
-          b1l = b1.world_to_local(sposition)
-          dvec = cy.Vec2d(position.x-sposition.x,position.y-sposition.y)
-          dist= sqrt(dvec.x**2+dvec.y**2)
-          qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-          space.add(qj)
-          
-        if ctouch['tool'] == 'c2c':
-          b1 = shape.body#self.gameworld.entities[asteroidID]
-          b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
-          qj = cy.PinJoint(b1, b2, (0,0), (0,0))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-          #b2.physics.shapes[0].group=1
-          #b1.physics.shapes[0].group=1
-          space.add(qj)
+        tshape = ctouch['touching']
+        if tshape and shape:
+          if ctouch['tool'] == 'c2p':
+            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            b2l = b2.world_to_local(position)
+            print b2l
+            #qj = cy.PivotJoint(b1, b2, pos)
+            qj = cy.PinJoint(b1, b2, (0,0), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
+            
+          if ctouch['tool'] == 'p2p':
+            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            b2l = b2.world_to_local(position)
+            b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
+            print b2l
+            #qj = cy.PivotJoint(b1, b2, pos)
+            qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
+            
+          if ctouch['tool'] == 'p2ps':
+            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
+            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            sposition = cy.Vec2d(spos[0], spos[1])
+            b2l = b2.world_to_local(position)
+            b1l = b1.world_to_local(sposition)
+            dvec = cy.Vec2d(position.x-sposition.x,position.y-sposition.y)
+            dist= sqrt(dvec.x**2+dvec.y**2)
+            qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
+            
+          if ctouch['tool'] == 'c2c':
+            b1 = shape.body#self.gameworld.entities[asteroidID]
+            b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+            qj = cy.PinJoint(b1, b2, (0,0), (0,0))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            #b2.physics.shapes[0].group=1
+            #b1.physics.shapes[0].group=1
+            space.add(qj)
         
         if (ctouch['tool'] == "draw" or ctouch['tool'] == "plank") and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
