@@ -323,10 +323,10 @@ class TestGame(Widget):
         if shape and self.maintools.currentTool == 'del':
           #print dir(shape)
           #print dir(shape.body)
-          #self.gameworld.remove_entity(howdoigetIDfromshape?)
-          space.remove(shape)
-          if shape.body in space.bodies:
-            space.remove(shape.body)
+          self.gameworld.remove_entity(shape.body.data)
+          #space.remove(shape)
+          #if shape.body in space.bodies:
+          #  space.remove(shape.body)
         
         if shape and not shape.body.is_static and (self.maintools.currentTool == 'drag' or self.maintools.currentTool == 'pin'):
           ctouch=self.touches[touch.id]
