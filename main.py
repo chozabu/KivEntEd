@@ -162,6 +162,12 @@ class TestGame(Widget):
         spos = ctouch['pos']
         ctouch['newpos'] = pos
         ctouch['ownbody'].position = pos
+        
+        
+        position = cy.Vec2d(pos[0], pos[1])
+        shape = space.point_query_first(position)
+        ctouch['touchingnow'] = shape
+        
         #print super(TestGame, self).on_touch_move(touch)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
@@ -206,6 +212,7 @@ class TestGame(Widget):
         space =self.gameworld.systems['physics'].space
         position = cy.Vec2d(pos[0], pos[1])
         shape = space.point_query_first(position)
+        ctouch['touchingnow'] = shape
         
         if 'mousejoint' in ctouch and (ctouch['tool'] != "pin"):
           space.remove(ctouch['mousejoint'])
@@ -307,31 +314,32 @@ class TestGame(Widget):
         shape = space.point_query_first(position)
         #self.selectedShape = shape
         print "touched shape:", shape
-        self.touches[touch.id] = {"active":False , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "ownbody":cy.Body()}
+        self.touches[touch.id] = {"active":False , "pos":pos,"newpos":pos, "screenpos":(touch.x,touch.y), "tool":self.maintools.currentTool, "onmenu":False, "touching":shape, "touchingnow":shape, "ownbody":cy.Body()}
+        ctouch = self.touches[touch.id]
         if self.maintools.on_touch_down(touch):#True:#touch.x < self.width*.1:
-          self.touches[touch.id]["onmenu"] = True
+          ctouch["onmenu"] = True
           #sresult = super(TestGame, self).on_touch_down(touch)
           print "clicked in menu"
           return
         print self.maintools.currentTool
-        self.touches[touch.id]['active'] =  True
+        ctouch['active'] =  True
         
         self.maintools.setShape(shape)
         
         #if self.maintools.currentTool == 'draw':
-        #  self.touches[touch.id].drawpoints={}
+        #  ctouch.drawpoints={}
           
         if shape and self.maintools.currentTool == 'del':
           #print dir(shape)
           #print dir(shape.body)
           self.delObj(shape.body.data)
+          ctouch['touchingnow'] = None
           #self.gameworld.remove_entity(shape.body.data)
           #space.remove(shape)
           #if shape.body in space.bodies:
           #  space.remove(shape.body)
         
         if shape and not shape.body.is_static and (self.maintools.currentTool == 'drag' or self.maintools.currentTool == 'pin'):
-          ctouch=self.touches[touch.id]
           body = ctouch['ownbody']
           body.position = pos
           ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
@@ -344,6 +352,7 @@ class TestGame(Widget):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
     def delObj(self, objid):
+          #todo check before removing these items
           self.gameworld.remove_entity(objid)
           self.asteroids.remove(objid)
     def getWorldPosFromTouch(self,touch):
@@ -356,9 +365,14 @@ class TestGame(Widget):
         self.gameworld.update(dt)
         for t in self.touches:
           ctouch = self.touches[t]
+          if 'touchingnow' in ctouch: print ctouch['touchingnow']
           if ctouch['active']:
             if ctouch['tool'] == 'vortex':
               self.pull2point(ctouch['newpos'])
+            elif ctouch['tool'] == 'del' and 'touchingnow' in ctouch:
+              if ctouch['touchingnow']:
+                self.delObj(ctouch['touchingnow'].body.data)
+                ctouch['touchingnow'] = None
     def pull2point(self, pos):
       for aid in self.asteroids:
         asteroid = self.gameworld.entities[aid]
