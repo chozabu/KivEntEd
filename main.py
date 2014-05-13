@@ -351,6 +351,7 @@ class TestGame(Widget):
         viewport = self.gameworld.systems['gameview']
         return (touch.x- viewport.camera_pos[0],touch.y- viewport.camera_pos[1])
     def update(self, dt):
+      self.maintools.update(dt)
       if not self.maintools.paused:
         self.gameworld.update(dt)
         for t in self.touches:

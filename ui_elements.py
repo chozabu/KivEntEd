@@ -38,6 +38,13 @@ class MainTools(FloatLayout):
         self.spriteSpinner.text="square"
         self.clearl2()
         #self.spriteSpinner.values = os.listdir("./sprites")
+    def update(self, dt):
+       shape = self.selectedItem
+       self.selectedMenu.selectedLabel.text = str(shape)
+       self.selectedMenu.posLabel.text = ""
+       if (shape):
+         tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
+         self.selectedMenu.posLabel.text = tv
     def setTool(self, tool):
        self.currentTool = tool
        print "Tool is now: %s" % tool
