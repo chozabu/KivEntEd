@@ -196,11 +196,15 @@ class TestGame(Widget):
             ctouch['pos'] = pos
             
         shape = ctouch['touching']
-        if shape and shape.body.is_static and (ctouch['tool'] == 'drag'):
+        if shape and (shape.body.is_static or self.maintools.paused) and (ctouch['tool'] == 'drag'):
             shape.body.position=(shape.body.position.x+touch.dx,shape.body.position.y+touch.dy)
             entity = self.gameworld.entities[shape.body.data]
             for s in entity.physics.shapes:
                   space.reindex_shape(s)
+            if self.maintools.paused:
+              (self.gameworld.systems['physics'].update(0.00000001))
+              (self.gameworld.systems['physics_renderer'].update(0.00000001))
+              (self.gameworld.systems['renderer'].update(0.00000001))
             #space.reindex_shape(shape)
           
         
