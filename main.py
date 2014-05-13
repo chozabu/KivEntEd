@@ -354,7 +354,7 @@ class TestGame(Widget):
     def delObj(self, objid):
           #todo check before removing these items
           self.gameworld.remove_entity(objid)
-          self.asteroids.remove(objid)
+          if objid in self.asteroids: self.asteroids.remove(objid)
     def getWorldPosFromTouch(self,touch):
     
         viewport = self.gameworld.systems['gameview']
@@ -365,7 +365,6 @@ class TestGame(Widget):
         self.gameworld.update(dt)
         for t in self.touches:
           ctouch = self.touches[t]
-          if 'touchingnow' in ctouch: print ctouch['touchingnow']
           if ctouch['active']:
             if ctouch['tool'] == 'vortex':
               self.pull2point(ctouch['newpos'])
