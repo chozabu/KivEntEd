@@ -106,6 +106,7 @@ class TestGame(Widget):
             'physics', 'physics_renderer']
         asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
         self.asteroids.append(asteroidID)
+        if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
         return asteroidID
       
     def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box"):
@@ -146,6 +147,7 @@ class TestGame(Widget):
         #self.gameworld.systems['physics'].space.add(qj)
         #print (self.gameworld.systems['physics'].space)
         self.asteroids.append(asteroidID)
+        if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
         return asteroidID
 
     def setup_map(self):
