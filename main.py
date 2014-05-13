@@ -23,6 +23,7 @@ class TestGame(Widget):
         self.asteroids = []
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
         self.maintools.setTool("draw")
+        self.maintools.setRef(self)
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
         try: 
             self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -323,7 +324,8 @@ class TestGame(Widget):
         if shape and self.maintools.currentTool == 'del':
           #print dir(shape)
           #print dir(shape.body)
-          self.gameworld.remove_entity(shape.body.data)
+          self.delObj(shape.body.data)
+          #self.gameworld.remove_entity(shape.body.data)
           #space.remove(shape)
           #if shape.body in space.bodies:
           #  space.remove(shape.body)
@@ -341,6 +343,9 @@ class TestGame(Widget):
         #if (self.maintools.currentTool == "box"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
+    def delObj(self, objid):
+          self.gameworld.remove_entity(objid)
+          self.asteroids.remove(objid)
     def getWorldPosFromTouch(self,touch):
     
         viewport = self.gameworld.systems['gameview']

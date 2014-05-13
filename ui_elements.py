@@ -30,15 +30,20 @@ class MainTools(FloatLayout):
         self.staticOn = False
         self.paused = False
         self.selectedItem = None
+        #self.gameref = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
         self.l2menus = [self.joinMenu, self.createMenu]
-        self.leftMenu.remove_widget(self.joinMenu)
+        #self.leftMenu.remove_widget(self.joinMenu)
         self.spriteSpinner.text="square"
+        self.clearl2()
         #self.spriteSpinner.values = os.listdir("./sprites")
     def setTool(self, tool):
        self.currentTool = tool
        print "Tool is now: %s" % tool
+    def setRef(self, ref):
+        self.gameref = ref
+        print ref
     def setShape(self, shape):
        self.selectedItem = shape
        self.selectedMenu.selectedLabel.text = str(shape)
@@ -46,6 +51,10 @@ class MainTools(FloatLayout):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
+    def delSelPressed(self, instance):
+       if (self.selectedItem) and self.gameref:
+        self.gameref.delObj(self.selectedItem.body.data)
+        self.setShape(None)
     def camPressed(self, instance):
         self.setTool("camera")
         #for i in range(10):
@@ -54,13 +63,16 @@ class MainTools(FloatLayout):
         self.setTool("drag")
     def clearl2(self):
         for i in self.l2menus:
-          self.leftMenu.remove_widget(i)
+          if i in self.leftMenu.children:
+            self.leftMenu.remove_widget(i)
     def joinPressed(self, instance):
         if self.joinMenu in self.leftMenu.children:
           self.clearl2()
           self.leftMenu.size_hint_x=.1
         else:
           self.clearl2()
+          print self.leftMenu
+          print self.joinMenu
           self.leftMenu.add_widget(self.joinMenu)
           self.leftMenu.size_hint_x=.2
           
@@ -70,6 +82,8 @@ class MainTools(FloatLayout):
           self.leftMenu.size_hint_x=.1
         else:
           self.clearl2()
+          print self.leftMenu
+          print self.createMenu
           self.leftMenu.add_widget(self.createMenu)
           self.leftMenu.size_hint_x=.2
     def circlePressed(self, instance):
