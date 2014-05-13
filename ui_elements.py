@@ -36,7 +36,7 @@ class MainTools(FloatLayout):
         self.l2menus = [self.joinMenu, self.createMenu]
         #self.leftMenu.remove_widget(self.joinMenu)
         self.spriteSpinner.text="square"
-        #self.clearl2()
+        self.clearl2()
         #self.spriteSpinner.values = os.listdir("./sprites")
     def update(self, dt):
        shape = self.selectedItem
