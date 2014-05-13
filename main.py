@@ -315,6 +315,8 @@ class TestGame(Widget):
         print self.maintools.currentTool
         self.touches[touch.id]['active'] =  True
         
+        self.maintools.setShape(shape)
+        
         #if self.maintools.currentTool == 'draw':
         #  self.touches[touch.id].drawpoints={}
           

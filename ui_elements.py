@@ -2,6 +2,7 @@ from kivent import (GameScreenManager, GameScreen)
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 
 import os
 
@@ -23,20 +24,28 @@ class PlainButton(Button):
       return sres
     
 
-class MainTools(BoxLayout):
+class MainTools(FloatLayout):
     def __init__(self, **kwargs):
         super(MainTools, self).__init__(**kwargs)
         self.staticOn = False
         self.paused = False
+        self.selectedItem = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
         self.l2menus = [self.joinMenu, self.createMenu]
-        self.remove_widget(self.joinMenu)
+        self.leftMenu.remove_widget(self.joinMenu)
         self.spriteSpinner.text="square"
         #self.spriteSpinner.values = os.listdir("./sprites")
     def setTool(self, tool):
        self.currentTool = tool
        print "Tool is now: %s" % tool
+    def setShape(self, shape):
+       self.selectedItem = shape
+       self.selectedMenu.selectedLabel.text = str(shape)
+       if (shape):
+         tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
+         print (shape.body.data)
+         self.selectedMenu.posLabel.text = tv
     def camPressed(self, instance):
         self.setTool("camera")
         #for i in range(10):
@@ -45,24 +54,24 @@ class MainTools(BoxLayout):
         self.setTool("drag")
     def clearl2(self):
         for i in self.l2menus:
-          self.remove_widget(i)
+          self.leftMenu.remove_widget(i)
     def joinPressed(self, instance):
-        if self.joinMenu in self.children:
+        if self.joinMenu in self.leftMenu.children:
           self.clearl2()
-          self.size_hint_x=.1
+          self.leftMenu.size_hint_x=.1
         else:
           self.clearl2()
-          self.add_widget(self.joinMenu)
-          self.size_hint_x=.2
+          self.leftMenu.add_widget(self.joinMenu)
+          self.leftMenu.size_hint_x=.2
           
     def createPressed(self, instance):
-        if self.createMenu in self.children:
+        if self.createMenu in self.leftMenu.children:
           self.clearl2()
-          self.size_hint_x=.1
+          self.leftMenu.size_hint_x=.1
         else:
           self.clearl2()
-          self.add_widget(self.createMenu)
-          self.size_hint_x=.2
+          self.leftMenu.add_widget(self.createMenu)
+          self.leftMenu.size_hint_x=.2
     def circlePressed(self, instance):
         self.setTool("circle")
         self.spriteSpinner.text="sheep"
