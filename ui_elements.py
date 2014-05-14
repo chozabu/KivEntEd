@@ -55,11 +55,10 @@ class MainTools(FloatLayout):
         print ref
     def setShape(self, shape):
        self.selectedItem = shape
-       self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
-       print dir(self.selectedEntity.physics_renderer)
-       print dir(self.selectedEntity.physics)
        self.selectedMenu.selectedLabel.text = str(shape)
+       self.selectedEntity = None
        if (shape):
+         self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
