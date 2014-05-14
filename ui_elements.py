@@ -30,6 +30,7 @@ class MainTools(FloatLayout):
         self.staticOn = False
         self.paused = False
         self.selectedItem = None
+        self.selectedEntity = None
         #self.gameref = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
@@ -45,6 +46,7 @@ class MainTools(FloatLayout):
        if (shape):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          self.selectedMenu.posLabel.text = tv
+         
     def setTool(self, tool):
        self.currentTool = tool
        print "Tool is now: %s" % tool
@@ -53,11 +55,18 @@ class MainTools(FloatLayout):
         print ref
     def setShape(self, shape):
        self.selectedItem = shape
+       self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
+       print dir(self.selectedEntity.physics_renderer)
+       print dir(self.selectedEntity.physics)
        self.selectedMenu.selectedLabel.text = str(shape)
        if (shape):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
+       ent = self.selectedEntity
+       print ent
+       if ent:
+         self.selectedMenu.texLabel.text = ent.physics_renderer.texture
     def delSelPressed(self, instance):
        if (self.selectedItem) and self.gameref:
         self.gameref.delObj(self.selectedItem.body.data)
