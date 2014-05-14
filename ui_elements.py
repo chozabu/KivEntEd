@@ -36,7 +36,7 @@ class MainTools(FloatLayout):
     def init_tools(self, dt):
         self.l2menus = [self.joinMenu, self.createMenu]
         #self.leftMenu.remove_widget(self.joinMenu)
-        self.spriteSpinner.text="square"
+        #self.spriteSpinner.text="square"
         self.clearl2()
         #self.spriteSpinner.values = os.listdir("./sprites")
     def update(self, dt):
@@ -106,10 +106,10 @@ class MainTools(FloatLayout):
         self.spriteSpinner.text="sheep"
     def squarePressed(self, instance):
         self.setTool("square")
-        self.spriteSpinner.text="face_box"
+        self.spriteSpinner.text="grassyrock"
     def boxPressed(self, instance):
         self.setTool("box")
-        self.spriteSpinner.text="square"
+        self.spriteSpinner.text="face_box"
     def massPressed(self, instance):
         self.massSlider.value = 0 if self.massSlider.value > 0 else 10
         
@@ -122,10 +122,10 @@ class MainTools(FloatLayout):
         self.setTool("vortex")
     def drawPressed(self, instance):
         self.setTool("draw")
-        self.spriteSpinner.text="square"
+        self.spriteSpinner.text="Grass2"
     def plankPressed(self, instance):
         self.setTool("plank")
-        self.spriteSpinner.text="square"
+        self.spriteSpinner.text="plank"
     def joinPinPressed(self, instance):
         self.setTool("pin")
     def joinP2PPressed(self, instance):

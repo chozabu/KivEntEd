@@ -22,7 +22,8 @@ class TestGame(Widget):
         Clock.schedule_once(self.init_game)
         self.asteroids = []
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
-        self.maintools.setTool("draw")
+        #self.maintools.setTool("draw")
+        self.maintools.drawPressed(None)
         self.maintools.setRef(self)
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
         try: 
