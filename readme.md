@@ -1,4 +1,4 @@
-KivEnt-GLPolyGen2d
+KivEntEd
 ==================
 
 A simple physics/level editor using Kivent
