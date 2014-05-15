@@ -24,7 +24,12 @@ class PlainButton(Button):
       return sres
     
 class CircleSettings(BoxLayout):
-  pass
+    def on_touch_down(self, touch):
+      super(CircleSettings, self).on_touch_down(touch)
+      if self.collide_point( *touch.pos ):
+          #touch.grab( self )
+          return True
+      return False
 class BoxSettings(BoxLayout):
   pass
 
@@ -59,6 +64,13 @@ class MainTools(FloatLayout):
     def setRef(self, ref):
         self.gameref = ref
         print ref
+    def on_rad_change(self, instance, value):
+      newrad = float(value)
+      print "rad change", newrad
+      if self.selectedItem and self.selectedEntity:
+        self.selectedItem.unsafe_set_radius(newrad)
+        self.selectedEntity.physics_renderer.width = newrad*2
+        self.selectedEntity.physics_renderer.height = newrad*2
     def setShape(self, shape):
        self.selectedItem = shape
        self.selectedMenu.selectedLabel.text = str(shape)
@@ -66,14 +78,12 @@ class MainTools(FloatLayout):
        if (shape):
          self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
-         print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
          self.selectedMenu.shapeInfo.clear_widgets()
-         #print (shape.__class__.__name__)#Circle #BoxShape
-         print dir(shape)
          if shape.__class__.__name__ == "Circle":
            cs = CircleSettings()
            cs.radiusLabel.text = str(shape.radius)
+           cs.radiusLabel.bind(text=self.on_rad_change)
            self.selectedMenu.shapeInfo.add_widget(cs)
          if shape.__class__.__name__ == "BoxShape":
            bs = BoxSettings()
@@ -82,7 +92,7 @@ class MainTools(FloatLayout):
            self.selectedMenu.shapeInfo.add_widget(bs)
          
        ent = self.selectedEntity
-       print ent
+       print "selected ent:", ent
        if ent:
          self.selectedMenu.texLabel.text = ent.physics_renderer.texture
     def delSelPressed(self, instance):
