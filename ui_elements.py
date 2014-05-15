@@ -41,11 +41,13 @@ class MainTools(FloatLayout):
         #self.spriteSpinner.values = os.listdir("./sprites")
     def update(self, dt):
        shape = self.selectedItem
-       self.selectedMenu.selectedLabel.text = str(shape)
+       #self.selectedMenu.selectedLabel.text = str(shape)
        self.selectedMenu.posLabel.text = ""
        if (shape):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          self.selectedMenu.posLabel.text = tv
+         tv = "angle=%f" % (shape.body.angle)
+         self.selectedMenu.angleLabel.text = tv
          
     def setTool(self, tool):
        self.currentTool = tool
@@ -62,6 +64,7 @@ class MainTools(FloatLayout):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
+         print (shape.__class__)
        ent = self.selectedEntity
        print ent
        if ent:

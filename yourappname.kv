@@ -64,6 +64,18 @@ TestGame:
     MainScreen:
         id: main_screen
 
+<CircleSettings@BoxLayout>
+    Label:
+        id: radiusLabel
+        text: "radius"
+<BoxSettings@BoxLayout>
+    Label:
+        id: widthLabel
+        text: "width"
+    Label:
+        id: heightLabel
+        text: "height"
+
 <MainTools@FloatLayout>
     leftMenu: leftMenu
     createMenu: createMenu.__self__
@@ -81,6 +93,8 @@ TestGame:
             id: selectedMenu
             selectedLabel: selectedLabel
             posLabel: posLabel
+            angleLabel: angleLabel
+            shapeInfo: shapeInfo
             texLabel: texLabel
             delButton: delButton
             orientation: 'vertical'
@@ -91,8 +105,14 @@ TestGame:
                 id: posLabel
                 text: "position"
             Label:
+                id: angleLabel
+                text: "angle"
+            Label:
                 id: texLabel
                 text: "texture"
+            BoxLayout:
+                id: shapeInfo
+                orientation: 'vertical'
             Button:
                 id: delButton
                 text: 'delete'
