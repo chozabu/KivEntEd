@@ -68,22 +68,34 @@ TestGame:
     multiline: False
 <CircleSettings@BoxLayout>
     radiusLabel:radiusLabel
-    TextInput:
-        id: radiusLabel
-        multiline: False
-        text: "radius"
+    BoxLayout:
+        Label:
+            size_hint: (.1,1)
+            text: "radius:"
+        TextInput:
+            id: radiusLabel
+            multiline: False
+            text: "radius"
 <BoxSettings@BoxLayout>
     orientation: 'vertical'
     widthLabel:widthLabel
     heightLabel:heightLabel
-    TextInput:
-        id: widthLabel
-        multiline: False
-        text: "width"
-    TextInput:
-        id: heightLabel
-        multiline: False
-        text: "height"
+    BoxLayout:
+        Label:
+            size_hint: (.1,1)
+            text: "width:"
+        TextInput:
+            id: widthLabel
+            multiline: False
+            text: "width"
+    BoxLayout:
+        Label:
+            size_hint: (.1,1)
+            text: "height:"
+        TextInput:
+            id: heightLabel
+            multiline: False
+            text: "height"
 
 <MainTools@FloatLayout>
     leftMenu: leftMenu
@@ -111,18 +123,30 @@ TestGame:
             Label:
                 id: selectedLabel
                 text: "selected item"
-            tbox:
-                id: xposLabel
-                text: "position"
-                on_text: root.xposChanged(self)
-            tbox:
-                id: yposLabel
-                text: "position"
-                on_text: root.yposChanged(self)
-            tbox:
-                id: angleLabel
-                text: "angle"
-                on_text: root.angleChanged(self)
+            BoxLayout:
+                Label:
+                    size_hint: (.1,1)
+                    text: "x:"
+                tbox:
+                    id: xposLabel
+                    text: "position"
+                    on_text: root.xposChanged(self)
+            BoxLayout:
+                Label:
+                    size_hint: (.1,1)
+                    text: "y:"
+                tbox:
+                    id: yposLabel
+                    text: "position"
+                    on_text: root.yposChanged(self)
+            BoxLayout:
+                Label:
+                    size_hint: (.2,1)
+                    text: "angle:"
+                tbox:
+                    id: angleLabel
+                    text: "angle"
+                    on_text: root.angleChanged(self)
             Label:
                 id: texLabel
                 text: "texture"
