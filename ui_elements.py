@@ -23,6 +23,10 @@ class PlainButton(Button):
       print "--"
       return sres
     
+class CircleSettings(BoxLayout):
+  pass
+class BoxSettings(BoxLayout):
+  pass
 
 class MainTools(FloatLayout):
     def __init__(self, **kwargs):
@@ -64,7 +68,19 @@ class MainTools(FloatLayout):
          tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          print (shape.body.data)
          self.selectedMenu.posLabel.text = tv
-         print (shape.__class__)
+         self.selectedMenu.shapeInfo.clear_widgets()
+         #print (shape.__class__.__name__)#Circle #BoxShape
+         print dir(shape)
+         if shape.__class__.__name__ == "Circle":
+           cs = CircleSettings()
+           cs.radiusLabel.text = str(shape.radius)
+           self.selectedMenu.shapeInfo.add_widget(cs)
+         if shape.__class__.__name__ == "BoxShape":
+           bs = BoxSettings()
+           bs.widthLabel.text = str(shape.width)
+           bs.heightLabel.text = str(shape.height)
+           self.selectedMenu.shapeInfo.add_widget(bs)
+         
        ent = self.selectedEntity
        print ent
        if ent:
