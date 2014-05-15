@@ -97,8 +97,8 @@ class TestGame(Widget):
             'velocity': (x_vel, y_vel), 
             'position': pos, 'angle': angle, 
             'angular_velocity': angular_velocity, 
-            'vel_limit': 1024, 
-            'ang_vel_limit': radians(200), 
+            'vel_limit': 2048, 
+            'ang_vel_limit': radians(2000), 
             'mass': mass, 'col_shapes': col_shapes}
         create_component_dict = {'physics': physics_component, 
             'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)}, 
@@ -130,8 +130,8 @@ class TestGame(Widget):
             'velocity': (x_vel, y_vel), 
             'position': pos, 'angle': angle, 
             'angular_velocity': angular_velocity, 
-            'vel_limit': 1024, 
-            'ang_vel_limit': radians(200), 
+            'vel_limit': 2048, 
+            'ang_vel_limit': radians(2000), 
             'mass': mass, 'col_shapes': col_shapes}
         create_component_dict = {'physics': physics_component, 
             'physics_renderer': {'texture': texture, 'size': (width , height)}, 
