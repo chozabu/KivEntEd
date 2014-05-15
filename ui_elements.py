@@ -59,7 +59,7 @@ class MainTools(FloatLayout):
         #self.gameref = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
-        self.l2menus = [self.joinMenu, self.createMenu]
+        self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu]
         #self.leftMenu.remove_widget(self.joinMenu)
         #self.spriteSpinner.text="square"
         self.clearl2()
@@ -129,17 +129,27 @@ class MainTools(FloatLayout):
         #print dir(self.selectedEntity)
         #print dir(self.selectedEntity.physics)
         #print self.selectedItem.cache_bb()
-      if self.selectedItem and self.selectedEntity:
-        newshape = cy.BoxShape(self.selectedItem.body, newrad, self.selectedItem.height)
+      shape = self.selectedItem
+      if shape and self.selectedEntity:
+        newshape = cy.BoxShape(shape.body, newrad, shape.height)
+        newshape.body.moment = cy.moment_for_box(newshape.body.mass, newrad, shape.height)
+        newshape.collision_type = shape.collision_type 
+        newshape.elasticity = shape.elasticity 
+        newshape.friction = shape.friction 
         space.add_shape(newshape)
-        space.remove(self.selectedItem)
+        space.remove(shape)
         self.selectedItem = newshape
         self.selectedEntity.physics_renderer.width = newrad
     def on_height_change(self, instance, value):
       space =self.gameref.gameworld.systems['physics'].space
       newrad = float(value)
-      if self.selectedItem and self.selectedEntity:
-        newshape = cy.BoxShape(self.selectedItem.body, self.selectedItem.width, newrad)
+      shape = self.selectedItem
+      if shape and self.selectedEntity:
+        newshape = cy.BoxShape(shape.body, shape.width, newrad)
+        newshape.body.moment = cy.moment_for_box(newshape.body.mass, newrad, shape.height)
+        newshape.collision_type = shape.collision_type 
+        newshape.elasticity = shape.elasticity 
+        newshape.friction = shape.friction 
         space.add_shape(newshape)
         space.remove(self.selectedItem)
         self.selectedItem = newshape
@@ -184,6 +194,20 @@ class MainTools(FloatLayout):
         for i in self.l2menus:
           if i in self.leftMenu.children:
             self.leftMenu.remove_widget(i)
+    def startPressed(self, instance):
+        self.setTool("start")
+    def endPressed(self, instance):
+        self.setTool("end")
+    def blankPressed(self, instance):
+        self.setTool("blank")
+    def entityPressed(self, instance):
+        if self.entityMenu in self.leftMenu.children:
+          self.clearl2()
+          self.leftMenu.size_hint_x=.1
+        else:
+          self.clearl2()
+          self.leftMenu.add_widget(self.entityMenu)
+          self.leftMenu.size_hint_x=.2
     def joinPressed(self, instance):
         if self.joinMenu in self.leftMenu.children:
           self.clearl2()

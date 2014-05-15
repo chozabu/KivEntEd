@@ -102,6 +102,7 @@ TestGame:
     createMenu: createMenu.__self__
     rootMenu: rootMenu
     joinMenu: joinMenu.__self__
+    entityMenu: entityMenu.__self__
     massSlider: massSlider
     spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu
@@ -177,6 +178,10 @@ TestGame:
                 text: 'Create'
                 on_press: root.createPressed(self)
             Button:
+                id: createButton
+                text: 'Entity'
+                on_press: root.entityPressed(self)
+            Button:
                 id: joinButton
                 text: 'Join'
                 on_press: root.joinPressed(self)
@@ -196,6 +201,24 @@ TestGame:
                 id: dragButton
                 text: 'Drag'
                 on_press: root.dragPressed(self)
+        BoxLayout:
+            id: entityMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+            Button:
+                id: startButton
+                text: 'Start'
+                on_press: root.startPressed(self)
+            Button:
+                id: endButton
+                text: 'End'
+                on_press: root.endPressed(self)
+            Button:
+                id: blankButton
+                text: 'Blank'
+                on_press: root.blankPressed(self)
         BoxLayout:
             id: createMenu
             orientation: 'vertical'
