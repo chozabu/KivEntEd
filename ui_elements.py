@@ -4,6 +4,8 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
+from kivy.uix.textinput import TextInput
+
 import cymunk as cy
 
 import os
@@ -25,6 +27,13 @@ class PlainButton(Button):
       print "--"
       return sres
     
+class tbox(TextInput):
+    def on_touch_down(self, touch):
+      super(tbox, self).on_touch_down(touch)
+      if self.collide_point( *touch.pos ):
+          #touch.grab( self )
+          return True
+      return False
 class CircleSettings(BoxLayout):
     def on_touch_down(self, touch):
       super(CircleSettings, self).on_touch_down(touch)
@@ -58,12 +67,17 @@ class MainTools(FloatLayout):
     def update(self, dt):
        shape = self.selectedItem
        #self.selectedMenu.selectedLabel.text = str(shape)
-       self.selectedMenu.posLabel.text = ""
+       #self.selectedMenu.xposLabel.text = ""
+       #self.selectedMenu.yposLabel.text = ""
        if (shape):
-         tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
-         self.selectedMenu.posLabel.text = tv
-         tv = "angle=%f" % (shape.body.angle)
-         self.selectedMenu.angleLabel.text = tv
+         if not self.selectedMenu.xposLabel.focus:
+          self.selectedMenu.xposLabel.text = str(shape.body.position.x)
+         if not self.selectedMenu.yposLabel.focus:
+          ypostr = "%f" % (shape.body.position.y)
+          self.selectedMenu.yposLabel.text = ypostr
+         if not self.selectedMenu.angleLabel.focus:
+          tv = "%f" % (shape.body.angle)
+          self.selectedMenu.angleLabel.text = tv
          
     def setTool(self, tool):
        self.currentTool = tool
@@ -71,6 +85,33 @@ class MainTools(FloatLayout):
     def setRef(self, ref):
         self.gameref = ref
         print ref
+    def xposChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.body.position=(fval,shape.body.position.y)
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
+    def yposChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.body.position=(shape.body.position.x,fval)
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
+    def angleChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.body.angle=fval
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
     def on_rad_change(self, instance, value):
       newrad = float(value)
       print "rad change", newrad
@@ -109,8 +150,8 @@ class MainTools(FloatLayout):
        self.selectedEntity = None
        if (shape):
          self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
-         tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
-         self.selectedMenu.posLabel.text = tv
+         #tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
+         #self.selectedMenu.posLabel.text = tv
          self.selectedMenu.shapeInfo.clear_widgets()
          if shape.__class__.__name__ == "Circle":
            cs = CircleSettings()

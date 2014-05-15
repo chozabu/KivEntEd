@@ -156,6 +156,7 @@ class TestGame(Widget):
         gameworld.currentmap = gameworld.systems['map']
 
     def on_touch_move(self, touch):
+        self.maintools.on_touch_move(touch)
         #if touch.x < self.width*.1:
         #  #print "menu?"
         #  return
@@ -211,6 +212,7 @@ class TestGame(Widget):
         
           
     def on_touch_up(self, touch):
+        self.maintools.on_touch_up(touch)
         if touch.id not in self.touches:
           print super(TestGame, self).on_touch_up(touch)
           print "touchdown not found, mousewheel?"
@@ -331,6 +333,7 @@ class TestGame(Widget):
           #sresult = super(TestGame, self).on_touch_down(touch)
           print "clicked in menu"
           return
+        print "not in menu"
         print self.maintools.currentTool
         ctouch['active'] =  True
         

@@ -64,6 +64,8 @@ TestGame:
     MainScreen:
         id: main_screen
 
+<tbox@TextInput>
+    multiline: False
 <CircleSettings@BoxLayout>
     radiusLabel:radiusLabel
     TextInput:
@@ -99,7 +101,8 @@ TestGame:
         BoxLayout:
             id: selectedMenu
             selectedLabel: selectedLabel
-            posLabel: posLabel
+            xposLabel: xposLabel
+            yposLabel: yposLabel
             angleLabel: angleLabel
             shapeInfo: shapeInfo
             texLabel: texLabel
@@ -108,12 +111,18 @@ TestGame:
             Label:
                 id: selectedLabel
                 text: "selected item"
-            Label:
-                id: posLabel
+            tbox:
+                id: xposLabel
                 text: "position"
-            Label:
+                on_text: root.xposChanged(self)
+            tbox:
+                id: yposLabel
+                text: "position"
+                on_text: root.yposChanged(self)
+            tbox:
                 id: angleLabel
                 text: "angle"
+                on_text: root.angleChanged(self)
             Label:
                 id: texLabel
                 text: "texture"
