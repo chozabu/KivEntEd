@@ -4,6 +4,8 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
+import cymunk as cy
+
 import os
 
 '''class YACSButtonCircle(ToggleButton):
@@ -31,7 +33,12 @@ class CircleSettings(BoxLayout):
           return True
       return False
 class BoxSettings(BoxLayout):
-  pass
+    def on_touch_down(self, touch):
+      super(BoxSettings, self).on_touch_down(touch)
+      if self.collide_point( *touch.pos ):
+          #touch.grab( self )
+          return True
+      return False
 
 class MainTools(FloatLayout):
     def __init__(self, **kwargs):
@@ -71,6 +78,31 @@ class MainTools(FloatLayout):
         self.selectedItem.unsafe_set_radius(newrad)
         self.selectedEntity.physics_renderer.width = newrad*2
         self.selectedEntity.physics_renderer.height = newrad*2
+    def on_width_change(self, instance, value):
+      space =self.gameref.gameworld.systems['physics'].space
+      newrad = float(value)
+      #if self.selectedItem and self.selectedEntity:
+        #self.selectedItem.width = (newrad)
+        #self.selectedEntity.physics_renderer.width = newrad
+        #space.reindex_shape(self.selectedItem)
+        #print dir(self.selectedEntity)
+        #print dir(self.selectedEntity.physics)
+        #print self.selectedItem.cache_bb()
+      if self.selectedItem and self.selectedEntity:
+        newshape = cy.BoxShape(self.selectedItem.body, newrad, self.selectedItem.height)
+        space.add_shape(newshape)
+        space.remove(self.selectedItem)
+        self.selectedItem = newshape
+        self.selectedEntity.physics_renderer.width = newrad
+    def on_height_change(self, instance, value):
+      space =self.gameref.gameworld.systems['physics'].space
+      newrad = float(value)
+      if self.selectedItem and self.selectedEntity:
+        newshape = cy.BoxShape(self.selectedItem.body, self.selectedItem.width, newrad)
+        space.add_shape(newshape)
+        space.remove(self.selectedItem)
+        self.selectedItem = newshape
+        self.selectedEntity.physics_renderer.height = newrad
     def setShape(self, shape):
        self.selectedItem = shape
        self.selectedMenu.selectedLabel.text = str(shape)
@@ -89,6 +121,8 @@ class MainTools(FloatLayout):
            bs = BoxSettings()
            bs.widthLabel.text = str(shape.width)
            bs.heightLabel.text = str(shape.height)
+           bs.widthLabel.bind(text=self.on_width_change)
+           bs.heightLabel.bind(text=self.on_height_change)
            self.selectedMenu.shapeInfo.add_widget(bs)
          
        ent = self.selectedEntity
