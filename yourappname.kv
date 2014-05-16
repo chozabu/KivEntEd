@@ -118,6 +118,9 @@ TestGame:
             yposLabel: yposLabel
             angleLabel: angleLabel
             shapeInfo: shapeInfo
+            frictionLabel: frictionLabel
+            massLabel: massLabel
+            elasLabel: elasLabel
             texLabel: texLabel
             delButton: delButton
             orientation: 'vertical'
@@ -151,6 +154,30 @@ TestGame:
             Label:
                 id: texLabel
                 text: "texture"
+            BoxLayout:
+                Label:
+                    size_hint: (.2,1)
+                    text: "Mass:"
+                tbox:
+                    id: massLabel
+                    text: "Mass"
+                    on_text: root.massChanged(self)
+            BoxLayout:
+                Label:
+                    size_hint: (.2,1)
+                    text: "Friction:"
+                tbox:
+                    id: frictionLabel
+                    text: "Friction"
+                    on_text: root.frictionChanged(self)
+            BoxLayout:
+                Label:
+                    size_hint: (.2,1)
+                    text: "Elasticity:"
+                tbox:
+                    id: elasLabel
+                    text: "Elasticity"
+                    on_text: root.elasChanged(self)
             BoxLayout:
                 id: shapeInfo
                 orientation: 'vertical'

@@ -114,6 +114,33 @@ class MainTools(FloatLayout):
         entity = self.selectedEntity
         for s in entity.physics.shapes:
               space.reindex_shape(s)
+    def frictionChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.friction=fval
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
+    def massChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.body.mass=fval
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
+    def elasChanged(self, instance):
+      fval = float(instance.text)
+      shape = self.selectedItem
+      space =self.gameref.gameworld.systems['physics'].space
+      if shape:
+        shape.elasticity=fval
+        entity = self.selectedEntity
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
     def on_rad_change(self, instance, value):
       newrad = float(value)
       print "rad change", newrad
@@ -164,6 +191,10 @@ class MainTools(FloatLayout):
          self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
          #tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          #self.selectedMenu.posLabel.text = tv
+         print shape.friction
+         self.selectedMenu.frictionLabel.text = str(shape.friction)
+         self.selectedMenu.massLabel.text = str(shape.body.mass)
+         self.selectedMenu.elasLabel.text = str(shape.elasticity)
          self.selectedMenu.shapeInfo.clear_widgets()
          if shape.__class__.__name__ == "Circle":
            cs = CircleSettings()
