@@ -92,7 +92,8 @@ class MainTools(FloatLayout):
       if shape:
         shape.body.position=(fval,shape.body.position.y)
         entity = self.selectedEntity
-        for s in entity.physics.shapes:
+        if entity.physics:
+          for s in entity.physics.shapes:
               space.reindex_shape(s)
     def yposChanged(self, instance):
       fval = float(instance.text)
@@ -101,7 +102,8 @@ class MainTools(FloatLayout):
       if shape:
         shape.body.position=(shape.body.position.x,fval)
         entity = self.selectedEntity
-        for s in entity.physics.shapes:
+        if entity.physics:
+          for s in entity.physics.shapes:
               space.reindex_shape(s)
     def angleChanged(self, instance):
       fval = float(instance.text)
