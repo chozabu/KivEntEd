@@ -88,62 +88,42 @@ class MainTools(FloatLayout):
     def xposChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.body.position=(fval,shape.body.position.y)
-        entity = self.selectedEntity
-        if entity.physics:
-          for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def yposChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.body.position=(shape.body.position.x,fval)
-        entity = self.selectedEntity
-        if entity.physics:
-          for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def angleChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.body.angle=fval
-        entity = self.selectedEntity
-        for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def frictionChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.friction=fval
-        entity = self.selectedEntity
-        for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def massChanged(self, instance):
       fval = float(instance.text)
       if fval <= 0:
         fval = 0.1
         instance.text = str(fval)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.body.mass=fval
-        entity = self.selectedEntity
-        for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def elasChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
-      space =self.gameref.gameworld.systems['physics'].space
       if shape:
         shape.elasticity=fval
-        entity = self.selectedEntity
-        for s in entity.physics.shapes:
-              space.reindex_shape(s)
+        self.gameref.reindexEnt(self.selectedEntity)
     def on_rad_change(self, instance, value):
       newrad = float(value)
       print "rad change", newrad

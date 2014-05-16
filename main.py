@@ -55,7 +55,9 @@ class TestGame(Widget):
           print k
           if k!='atlas_size' and k!='main_texture' :sprites.append(str(k))
         self.maintools.spriteSpinner.values = sprites
-    def reindexEnt(entity):
+    def reindexEntID(self, entityID):
+      reindexEnt(self.gameworld.entities[entityID])
+    def reindexEnt(self, entity):
       space =self.gameworld.systems['physics'].space
       if entity and entity.physics:
         for s in entity.physics.shapes:
@@ -207,9 +209,7 @@ class TestGame(Widget):
         shape = ctouch['touching']
         if shape and (shape.body.is_static or self.maintools.paused) and (ctouch['tool'] == 'drag'):
             shape.body.position=(shape.body.position.x+touch.dx,shape.body.position.y+touch.dy)
-            entity = self.gameworld.entities[shape.body.data]
-            for s in entity.physics.shapes:
-                  space.reindex_shape(s)
+            self.reindexEntID(shape.body.data)
             if self.maintools.paused:
               (self.gameworld.systems['physics'].update(0.00000001))
               (self.gameworld.systems['physics_renderer'].update(0.00000001))
