@@ -225,8 +225,6 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Spinner:
-                id: spriteSpinner
             Button:
                 id: circleButton
                 text: 'Circles'
@@ -247,6 +245,14 @@ TestGame:
                 id: plankButton
                 text: 'Plank'
                 on_press: root.plankPressed(self)
+            Label:
+                size_hint: (1,0.2)
+                text: "Settings"
+            Label:
+                size_hint: (1,0.2)
+                text: "  Image:"
+            Spinner:
+                id: spriteSpinner
             BoxLayout:
                 orientation: 'horizontal'
                 Button:
