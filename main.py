@@ -35,7 +35,7 @@ class TestGame(Widget):
     def init_game(self, dt):
         try: 
             self._init_game(0)
-        except e:
+        except:
             print 'failed: rescheduling init'
             Clock.schedule_once(self.init_game)
     def _init_game(self, dt):
@@ -64,8 +64,11 @@ class TestGame(Widget):
             self.create_circle(pos,y_vel=random()*-20, texture="sheep", radius=15)
         self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
-        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-        self._keyboard = None
+        try: 
+          self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+          self._keyboard = None
+        except:
+          print "still no keyboard!"
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
         space =self.gameworld.systems['physics'].space
