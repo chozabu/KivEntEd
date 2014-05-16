@@ -125,6 +125,9 @@ class MainTools(FloatLayout):
               space.reindex_shape(s)
     def massChanged(self, instance):
       fval = float(instance.text)
+      if fval <= 0:
+        fval = 0.1
+        instance.text = str(fval)
       shape = self.selectedItem
       space =self.gameref.gameworld.systems['physics'].space
       if shape:
