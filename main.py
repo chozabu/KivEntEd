@@ -59,7 +59,7 @@ class TestGame(Widget):
       reindexEnt(self.gameworld.entities[entityID])
     def reindexEnt(self, entity):
       space =self.gameworld.systems['physics'].space
-      if entity and entity.physics:
+      if entity and hasattr(entity, "physics"):
         for s in entity.physics.shapes:
               space.reindex_shape(s)
 
