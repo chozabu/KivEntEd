@@ -55,7 +55,11 @@ class TestGame(Widget):
           print k
           if k!='atlas_size' and k!='main_texture' :sprites.append(str(k))
         self.maintools.spriteSpinner.values = sprites
-      
+    def reindexEnt(entity):
+      space =self.gameworld.systems['physics'].space
+      if entity and entity.physics:
+        for s in entity.physics.shapes:
+              space.reindex_shape(s)
 
     def draw_some_stuff(self):
         size = Window.size
