@@ -56,6 +56,13 @@ class MainTools(FloatLayout):
         self.paused = False
         self.selectedItem = None
         self.selectedEntity = None
+        self.toolSettings = {"circle": {"texture":"sheep"},
+                             "square": {"texture":"grassyrock"},
+                             "box": {"texture":"face_box"},
+                             "draw": {"texture":"Grass2"},
+                             "plank": {"texture":"plank"},
+                             }
+        self.currentTool = ""
         #self.gameref = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
@@ -80,7 +87,18 @@ class MainTools(FloatLayout):
           self.selectedMenu.angleLabel.text = tv
          
     def setTool(self, tool):
+       if self.currentTool not in self.toolSettings:
+         self.toolSettings[self.currentTool] = {}
+       lts = self.toolSettings[self.currentTool]
+       lts["texture"] = self.spriteSpinner.text
+       lts["mass"] = self.massSlider.value
        self.currentTool = tool
+       if tool in self.toolSettings:
+          cts = self.toolSettings[tool]
+          if "texture" in cts:
+            self.spriteSpinner.text = cts["texture"]
+          if "mass" in cts:
+            self.massSlider.value = cts["mass"]
        print "Tool is now: %s" % tool
     def setRef(self, ref):
         self.gameref = ref
@@ -248,13 +266,13 @@ class MainTools(FloatLayout):
           self.leftMenu.size_hint_x=.2
     def circlePressed(self, instance):
         self.setTool("circle")
-        self.spriteSpinner.text="sheep"
+        #self.spriteSpinner.text="sheep"
     def squarePressed(self, instance):
         self.setTool("square")
-        self.spriteSpinner.text="grassyrock"
+        #self.spriteSpinner.text="grassyrock"
     def boxPressed(self, instance):
         self.setTool("box")
-        self.spriteSpinner.text="face_box"
+        #self.spriteSpinner.text="face_box"
     def massPressed(self, instance):
         self.massSlider.value = 0 if self.massSlider.value > 0 else 10
         
@@ -267,10 +285,10 @@ class MainTools(FloatLayout):
         self.setTool("vortex")
     def drawPressed(self, instance):
         self.setTool("draw")
-        self.spriteSpinner.text="Grass2"
+        #self.spriteSpinner.text="Grass2"
     def plankPressed(self, instance):
         self.setTool("plank")
-        self.spriteSpinner.text="plank"
+        #self.spriteSpinner.text="plank"
     def joinPinPressed(self, instance):
         self.setTool("pin")
     def joinP2PPressed(self, instance):
