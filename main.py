@@ -25,6 +25,8 @@ class TestGame(Widget):
         #self.maintools.setTool("draw")
         self.maintools.drawPressed(None)
         self.maintools.setRef(self)
+        self.startID = -1
+        self.finishID = -1
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
         try: 
             self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -56,7 +58,7 @@ class TestGame(Widget):
           if k!='atlas_size' and k!='main_texture' :sprites.append(str(k))
         self.maintools.spriteSpinner.values = sprites
     def reindexEntID(self, entityID):
-      reindexEnt(self.gameworld.entities[entityID])
+      self.reindexEnt(self.gameworld.entities[entityID])
     def reindexEnt(self, entity):
       space =self.gameworld.systems['physics'].space
       if entity and hasattr(entity, "physics"):
@@ -96,6 +98,29 @@ class TestGame(Widget):
             print space.gravity
         return True
 
+    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
+        shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
+            'mass': mass, 'offset': (0, 0)}
+        col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
+            'collision_type': 1, 'shape_info': shape_dict, 'friction': friction}
+        col_shapes = [col_shape]
+        physics_component = {'main_shape': 'circle', 
+            'velocity': (x_vel, y_vel), 
+            'position': pos, 'angle': angle, 
+            'angular_velocity': angular_velocity, 
+            'vel_limit': 2048, 
+            'ang_vel_limit': radians(2000), 
+            'mass': mass, 'col_shapes': col_shapes}
+        create_component_dict = {'physics': physics_component, 
+            'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)}, 
+            'position': pos, 'rotate': 0}
+        component_order = ['position', 'rotate', 
+            'physics', 'physics_renderer']
+        asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
+        self.asteroids.append(asteroidID)
+        if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
+        return asteroidID
+      
     def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
@@ -301,6 +326,20 @@ class TestGame(Widget):
           yd = spos[1]-pos[1]
           angle = atan2(yd,xd)
           self.create_circle(spos, mass=mass, radius=dist, texture=self.maintools.spriteSpinner.text, angle=angle)
+        if ctouch['tool'] == "start" and ctouch["active"]:
+          if self.startID < 0:
+            self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb")
+          else:
+            ent = self.gameworld.entities[self.startID]
+            ent.physics.body.position = pos
+            self.reindexEnt(ent)
+        if ctouch['tool'] == "end" and ctouch["active"]:
+          if self.finishID < 0:
+            self.finishID = self.create_circle(pos, mass=0, radius=30, texture="checksphere")
+          else:
+            ent = self.gameworld.entities[self.finishID]
+            ent.physics.body.position = pos
+            self.reindexEnt(ent)
         if ctouch['tool'] == "box" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           spos = ctouch['pos']
