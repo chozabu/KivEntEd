@@ -71,12 +71,12 @@ class MainTools(FloatLayout):
        #self.selectedMenu.yposLabel.text = ""
        if (shape):
          if not self.selectedMenu.xposLabel.focus:
-          self.selectedMenu.xposLabel.text = str(shape.body.position.x)
+          self.selectedMenu.xposLabel.text = "%0.2f" % (shape.body.position.x)
          if not self.selectedMenu.yposLabel.focus:
-          ypostr = "%f" % (shape.body.position.y)
+          ypostr = "%0.2f" % (shape.body.position.y)
           self.selectedMenu.yposLabel.text = ypostr
          if not self.selectedMenu.angleLabel.focus:
-          tv = "%f" % (shape.body.angle)
+          tv = "%0.2f" % (shape.body.angle)
           self.selectedMenu.angleLabel.text = tv
          
     def setTool(self, tool):
@@ -113,7 +113,7 @@ class MainTools(FloatLayout):
       fval = float(instance.text)
       if fval <= 0:
         fval = 0.1
-        instance.text = str(fval)
+        instance.text = "%0.2f" % (fval)
       shape = self.selectedItem
       if shape:
         shape.body.mass=fval
@@ -176,19 +176,19 @@ class MainTools(FloatLayout):
          #tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
          #self.selectedMenu.posLabel.text = tv
          print shape.friction
-         self.selectedMenu.frictionLabel.text = str(shape.friction)
-         self.selectedMenu.massLabel.text = str(shape.body.mass)
-         self.selectedMenu.elasLabel.text = str(shape.elasticity)
+         self.selectedMenu.frictionLabel.text = "%0.2f" % (shape.friction)
+         self.selectedMenu.massLabel.text = "%0.2f" % (shape.body.mass)
+         self.selectedMenu.elasLabel.text = "%0.2f" % (shape.elasticity)
          self.selectedMenu.shapeInfo.clear_widgets()
          if shape.__class__.__name__ == "Circle":
            cs = CircleSettings()
-           cs.radiusLabel.text = str(shape.radius)
+           cs.radiusLabel.text = "%0.2f" % (shape.radius)
            cs.radiusLabel.bind(text=self.on_rad_change)
            self.selectedMenu.shapeInfo.add_widget(cs)
          if shape.__class__.__name__ == "BoxShape":
            bs = BoxSettings()
-           bs.widthLabel.text = str(shape.width)
-           bs.heightLabel.text = str(shape.height)
+           bs.widthLabel.text = "%0.2f" % (shape.width)
+           bs.heightLabel.text = "%0.2f" % (shape.height)
            bs.widthLabel.bind(text=self.on_width_change)
            bs.heightLabel.bind(text=self.on_height_change)
            self.selectedMenu.shapeInfo.add_widget(bs)
