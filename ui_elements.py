@@ -131,6 +131,7 @@ class MainTools(FloatLayout):
         self.selectedItem.unsafe_set_radius(newrad)
         self.selectedEntity.physics_renderer.width = newrad*2
         self.selectedEntity.physics_renderer.height = newrad*2
+        self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass, newrad)#seems ineffective?
     def on_width_change(self, instance, value):
       space =self.gameref.gameworld.systems['physics'].space
       newrad = float(value)
