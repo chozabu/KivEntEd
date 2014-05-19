@@ -8,6 +8,8 @@ from random import random
 from math import radians
 from kivy.graphics import *
 
+import json
+
 import cymunk as cy
 from math import *
 
@@ -240,10 +242,63 @@ class TestGame(Widget):
               (self.gameworld.systems['physics_renderer'].update(0.00000001))
               (self.gameworld.systems['renderer'].update(0.00000001))
             #space.reindex_shape(shape)
-          
-        
+
+    def shapeJSON(self,shape):
+      sd = {'collision_type':shape.collision_type, 'elasticity':shape.collision_type, 'friction':shape.collision_type, 'group':shape.collision_type}
+      if hasattr(shape, "radius"):
+        sd['radius'] = shape.radius
+      else:
+        sd['width'] = shape.width
+        sd['height'] = shape.height
+      return sd
+    def exportJSON(self):
+      entsdict = []
+      for e in self.gameworld.entities:
+        print "\n"
+        ed = {}
+        #print dir(e)
+        #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
+        if hasattr(e, "load_order"):
+          #print e.load_order
+          ed["load_order"] = e.load_order
+        if hasattr(e, "physics"):
+          #print dir(e.physics)
+          b = (e.physics.body)
+          for item in dir(b):
+            print item, getattr(b, item)
+          bd = {'velocity': (b.velocity.x, b.velocity.y), 
+            'position': b.position,
+            'angle': b.angle, 
+            'angular_velocity': b.angular_velocity, 
+            'vel_limit': b.velocity_limit, 
+            'ang_vel_limit': b.angular_velocity_limit, 
+            'mass': b.mass
+            }
+          print (e.physics.shape_type)
+          shapes = []
+          for s in (e.physics.shapes):
+            #print s
+            #print dir(s)
+            shapes.append(self.shapeJSON(s))
+          pd = {"shapes": shapes, "shape_type":e.physics.shape_type ,"body":bd }
+          ed["physics"] = pd
+        if hasattr(e, "physics_renderer"):
+          #print dir(e.physics_renderer)
+          prd = {"width":e.physics_renderer.width,"height":e.physics_renderer.height, "texture":e.physics_renderer.texture}
+          ed["physics_renderer"] = prd
+        if hasattr(e, "position"):
+          #print dir(e.position)
+          pd = {"x":e.position.x,"y":e.position.y}
+          ed["position"] = pd
+        if hasattr(e, "rotate"):
+          rd = {"r":e.rotate.r}
+          ed["rotate"] = rd
+          #print dir(e.rotate.r)
+        entsdict.append(ed)
+      print entsdict
           
     def on_touch_up(self, touch):
+        self.exportJSON()
         self.maintools.on_touch_up(touch)
         if touch.id not in self.touches:
           print super(TestGame, self).on_touch_up(touch)
