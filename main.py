@@ -304,14 +304,14 @@ class TestGame(Widget):
     def exportJSON(self, fileName="defaultlevel.json"):
       global dataDir
       entsdict = self.exportToDict()
-      fo = open(dataDir+fileName, 'w')
-      json.dump(entsdict, fo)
+      with open(dataDir+fileName, 'w') as fo:
+        json.dump(entsdict, fo)
       print "dir=",dataDir
       print "done"
       return entsdict
     def loadJSON(self, fileName="defaultlevel.json"):
-      fo = open(dataDir+fileName, 'r')
-      entsdict = json.load(fo)
+      with open(dataDir+fileName, 'r') as fo:
+        entsdict = json.load(fo)
       print entsdict
       self.loadFromDict(entsdict)
     def loadFromDict(self, data):
