@@ -63,6 +63,7 @@ class MainTools(FloatLayout):
                              "plank": {"texture":"plank"},
                              }
         self.currentTool = ""
+        self.testsave = []
         #self.gameref = None
         Clock.schedule_once(self.init_tools)
     def init_tools(self, dt):
@@ -85,6 +86,10 @@ class MainTools(FloatLayout):
          if not self.selectedMenu.angleLabel.focus:
           tv = "%0.2f" % (shape.body.angle)
           self.selectedMenu.angleLabel.text = tv
+    def loadPressed(self,instance):
+        self.gameref.loadJSON(self.testsave)
+    def savePressed(self,instance):
+        self.testsave = self.gameref.exportJSON()
     def clearPressed(self,instance):
       #print dir(self.gameref.gameworld)#.clear_entities()
       #print self.gameref.entIDs

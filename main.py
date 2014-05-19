@@ -251,56 +251,76 @@ class TestGame(Widget):
         sd['width'] = shape.width
         sd['height'] = shape.height
       return sd
+    def entJSON(self, e):
+      ed = {}
+      print dir(e)
+      print (e.entity_id)
+      #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
+      if hasattr(e, "load_order"):
+        #print e.load_order
+        ed["load_order"] = e.load_order
+      if hasattr(e, "physics"):
+        #print dir(e.physics)
+        b = (e.physics.body)
+        #for item in dir(b):
+        #  print item, getattr(b, item)
+        bd = {'velocity': (b.velocity.x, b.velocity.y), 
+          'position': b.position,
+          'angle': b.angle, 
+          'angular_velocity': b.angular_velocity, 
+          'vel_limit': b.velocity_limit, 
+          'ang_vel_limit': b.angular_velocity_limit, 
+          'mass': b.mass
+          }
+        #print (e.physics.shape_type)
+        shapes = []
+        for s in (e.physics.shapes):
+          #print s
+          #print dir(s)
+          shapes.append(self.shapeJSON(s))
+        pd = {"shapes": shapes, "shape_type":e.physics.shape_type ,"body":bd }
+        ed["physics"] = pd
+      if hasattr(e, "physics_renderer"):
+        #print dir(e.physics_renderer)
+        prd = {"width":e.physics_renderer.width,"height":e.physics_renderer.height, "texture":e.physics_renderer.texture}
+        ed["physics_renderer"] = prd
+      if hasattr(e, "position"):
+        #print dir(e.position)
+        pd = {"x":e.position.x,"y":e.position.y}
+        ed["position"] = pd
+      if hasattr(e, "rotate"):
+        rd = {"r":e.rotate.r}
+        ed["rotate"] = rd
+        #print dir(e.rotate.r)
+      return ed
     def exportJSON(self):
       entsdict = []
       for eid in self.entIDs:
         e = self.gameworld.entities[eid]
         print "\n"
-        ed = {}
-        print dir(e)
-        print (e.entity_id)
-        #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
-        if hasattr(e, "load_order"):
-          #print e.load_order
-          ed["load_order"] = e.load_order
-        if hasattr(e, "physics"):
-          #print dir(e.physics)
-          b = (e.physics.body)
-          #for item in dir(b):
-          #  print item, getattr(b, item)
-          bd = {'velocity': (b.velocity.x, b.velocity.y), 
-            'position': b.position,
-            'angle': b.angle, 
-            'angular_velocity': b.angular_velocity, 
-            'vel_limit': b.velocity_limit, 
-            'ang_vel_limit': b.angular_velocity_limit, 
-            'mass': b.mass
-            }
-          #print (e.physics.shape_type)
-          shapes = []
-          for s in (e.physics.shapes):
-            #print s
-            #print dir(s)
-            shapes.append(self.shapeJSON(s))
-          pd = {"shapes": shapes, "shape_type":e.physics.shape_type ,"body":bd }
-          ed["physics"] = pd
-        if hasattr(e, "physics_renderer"):
-          #print dir(e.physics_renderer)
-          prd = {"width":e.physics_renderer.width,"height":e.physics_renderer.height, "texture":e.physics_renderer.texture}
-          ed["physics_renderer"] = prd
-        if hasattr(e, "position"):
-          #print dir(e.position)
-          pd = {"x":e.position.x,"y":e.position.y}
-          ed["position"] = pd
-        if hasattr(e, "rotate"):
-          rd = {"r":e.rotate.r}
-          ed["rotate"] = rd
-          #print dir(e.rotate.r)
+        ed = self.entJSON(e)
         entsdict.append(ed)
-      print entsdict
+      return entsdict
+    def loadJSON(self, data):
+      print "LOADING"
+      #print data
+      for e in data:
+        if "physics" in e:
+          stype = e['physics']['shape_type']
+          pr = e['physics_renderer']
+          p = e['physics']
+          body = p['body']
+          shape = p['shapes'][0]
+          bp = body['position']
+          bpos = (bp.x,bp.y)
+          mass = body['mass']
+          if str(mass) == 'inf': mass = 0
+          if stype == "circle":
+            self.create_circle(bpos, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=pr['texture'])
+          elif stype == "box":
+            self.create_box(bpos, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=pr['texture'])
           
     def on_touch_up(self, touch):
-        self.exportJSON()
         self.maintools.on_touch_up(touch)
         if touch.id not in self.touches:
           print super(TestGame, self).on_touch_up(touch)
