@@ -22,7 +22,7 @@ class TestGame(Widget):
     def __init__(self, **kwargs):
         super(TestGame, self).__init__(**kwargs)
         Clock.schedule_once(self.init_game)
-        self.asteroids = []
+        self.entIDs = []
         self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
         #self.maintools.setTool("draw")
         self.maintools.drawPressed(None)
@@ -118,10 +118,10 @@ class TestGame(Widget):
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
-        asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
-        self.asteroids.append(asteroidID)
+        entityID = self.gameworld.init_entity(create_component_dict, component_order)
+        self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        return asteroidID
+        return entityID
       
     def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
@@ -141,10 +141,10 @@ class TestGame(Widget):
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
-        asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
-        self.asteroids.append(asteroidID)
+        entityID = self.gameworld.init_entity(create_component_dict, component_order)
+        self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        return asteroidID
+        return entityID
       
     def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box"):
         '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
@@ -174,18 +174,18 @@ class TestGame(Widget):
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 
             'physics', 'physics_renderer']
-        asteroidID = self.gameworld.init_entity(create_component_dict, component_order)
-        #b1 = self.gameworld.entities[asteroidID]
-        #b2 = self.gameworld.entities[self.asteroids[-1]]
+        entityID = self.gameworld.init_entity(create_component_dict, component_order)
+        #b1 = self.gameworld.entities[entityID]
+        #b2 = self.gameworld.entities[self.entIDs[-1]]
         #qj = cy.PivotJoint(b1.physics.body, b2.physics.body, b2.physics.body.position)
         #print (b2.physics.shapes[0])
         #b2.physics.shapes[0].group=1
         #b1.physics.shapes[0].group=1
         #self.gameworld.systems['physics'].space.add(qj)
         #print (self.gameworld.systems['physics'].space)
-        self.asteroids.append(asteroidID)
+        self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        return asteroidID
+        return entityID
 
     def setup_map(self):
         gameworld = self.gameworld
@@ -215,7 +215,7 @@ class TestGame(Widget):
         #if (self.maintools.currentTool == "box"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_box(pos, mass=mass)
-        #  print "There are: %i Asteroids" % len(self.asteroids)
+        #  print "There are: %i Asteroids" % len(self.entIDs)
         #print dir(touch)
         if (ctouch['tool'] == "camera"):
           super(TestGame, self).on_touch_move(touch)
@@ -323,8 +323,8 @@ class TestGame(Widget):
         tshape = ctouch['touching']
         if tshape and shape:
           if ctouch['tool'] == 'c2p':
-            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            b1 = ctouch['touching'].body#self.gameworld.entities[entityID]
+            b2 = shape.body#self.gameworld.entities[self.entIDs[-1]]
             b2l = b2.world_to_local(position)
             print b2l
             #qj = cy.PivotJoint(b1, b2, pos)
@@ -332,8 +332,8 @@ class TestGame(Widget):
             space.add(qj)
             
           if ctouch['tool'] == 'p2p':
-            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            b1 = ctouch['touching'].body#self.gameworld.entities[entityID]
+            b2 = shape.body#self.gameworld.entities[self.entIDs[-1]]
             b2l = b2.world_to_local(position)
             b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
             print b2l
@@ -342,8 +342,8 @@ class TestGame(Widget):
             space.add(qj)
             
           if ctouch['tool'] == 'p2ps':
-            b1 = ctouch['touching'].body#self.gameworld.entities[asteroidID]
-            b2 = shape.body#self.gameworld.entities[self.asteroids[-1]]
+            b1 = ctouch['touching'].body#self.gameworld.entities[entityID]
+            b2 = shape.body#self.gameworld.entities[self.entIDs[-1]]
             sposition = cy.Vec2d(spos[0], spos[1])
             b2l = b2.world_to_local(position)
             b1l = b1.world_to_local(sposition)
@@ -353,8 +353,8 @@ class TestGame(Widget):
             space.add(qj)
             
           if ctouch['tool'] == 'c2c':
-            b1 = shape.body#self.gameworld.entities[asteroidID]
-            b2 = ctouch['touching'].body#self.gameworld.entities[self.asteroids[-1]]
+            b1 = shape.body#self.gameworld.entities[entityID]
+            b2 = ctouch['touching'].body#self.gameworld.entities[self.entIDs[-1]]
             qj = cy.PinJoint(b1, b2, (0,0), (0,0))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             #b2.physics.shapes[0].group=1
             #b1.physics.shapes[0].group=1
@@ -469,7 +469,7 @@ class TestGame(Widget):
     def delObj(self, objid):
           #todo check before removing these items
           self.gameworld.remove_entity(objid)
-          if objid in self.asteroids: self.asteroids.remove(objid)
+          if objid in self.entIDs: self.entIDs.remove(objid)
     def getWorldPosFromTouch(self,touch):
     
         viewport = self.gameworld.systems['gameview']
@@ -488,14 +488,14 @@ class TestGame(Widget):
                 self.delObj(ctouch['touchingnow'].body.data)
                 ctouch['touchingnow'] = None
     def pull2point(self, pos):
-      for aid in self.asteroids:
-        asteroid = self.gameworld.entities[aid]
-        if asteroid.physics.body.is_static == 0:
-          apos = asteroid.position
-          dvecx = (pos[0]-apos.x)*asteroid.physics.body.mass*0.02
-          dvecy = (pos[1]-apos.y)*asteroid.physics.body.mass*0.02
-          asteroid.physics.body.apply_impulse((dvecx,dvecy))
-          #asteroid.physics.body.apply_force((dvecx,dvecy))
+      for aid in self.entIDs:
+        entity = self.gameworld.entities[aid]
+        if entity.physics.body.is_static == 0:
+          apos = entity.position
+          dvecx = (pos[0]-apos.x)*entity.physics.body.mass*0.02
+          dvecy = (pos[1]-apos.y)*entity.physics.body.mass*0.02
+          entity.physics.body.apply_impulse((dvecx,dvecy))
+          #entity.physics.body.apply_force((dvecx,dvecy))
     def setup_states(self):
         self.gameworld.add_state(state_name='main', 
             systems_added=['renderer', 'physics_renderer'],
