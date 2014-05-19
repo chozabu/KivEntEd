@@ -293,7 +293,7 @@ class TestGame(Widget):
         ed["rotate"] = rd
         #print dir(e.rotate.r)
       return ed
-    def exportToDict(self):
+    def exportEntsToDicts(self):
       entsdict = []
       for eid in self.entIDs:
         e = self.gameworld.entities[eid]
@@ -303,12 +303,14 @@ class TestGame(Widget):
       return entsdict
     def exportJSON(self, fileName="defaultlevel.json"):
       global dataDir
-      entsdict = self.exportToDict()
+      entslist = self.exportEntsToDicts()
+      space =self.gameworld.systems['physics'].space
+      worlddict = {"ents":entslist,"settings":{"gravity":(space.gravity.x,space.gravity.y)}}
       with open(dataDir+fileName, 'w') as fo:
-        json.dump(entsdict, fo)
+        json.dump(worlddict, fo)
       print "dir=",dataDir
       print "done"
-      return entsdict
+      return worlddict
     def loadJSON(self, fileName="defaultlevel.json"):
       with open(dataDir+fileName, 'r') as fo:
         entsdict = json.load(fo)
@@ -317,7 +319,12 @@ class TestGame(Widget):
     def loadFromDict(self, data):
       print "LOADING"
       #print data
-      for e in data:
+      space =self.gameworld.systems['physics'].space
+      if "settings" in data:
+        g = data['settings']['gravity']
+        space.gravity = (g[0],g[1])
+      ents = data['ents']
+      for e in ents:
         if "physics" in e:
           stype = e['physics']['shape_type']
           pr = e['physics_renderer']
