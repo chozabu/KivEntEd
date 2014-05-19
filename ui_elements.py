@@ -87,7 +87,8 @@ class MainTools(FloatLayout):
           tv = "%0.2f" % (shape.body.angle)
           self.selectedMenu.angleLabel.text = tv
     def loadPressed(self,instance):
-        self.gameref.loadJSON(self.testsave)
+        self.gameref.loadJSON()
+        #self.gameref.loadFromDict(self.testsave)
     def savePressed(self,instance):
         self.testsave = self.gameref.exportJSON()
     def clearPressed(self,instance):

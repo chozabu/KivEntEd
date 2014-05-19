@@ -9,7 +9,7 @@ from math import radians
 from kivy.graphics import *
 
 import json
-
+import os
 import cymunk as cy
 from math import *
 
@@ -243,7 +243,7 @@ class TestGame(Widget):
               (self.gameworld.systems['renderer'].update(0.00000001))
             #space.reindex_shape(shape)
 
-    def shapeJSON(self,shape):
+    def shapeToDict(self,shape):
       sd = {'collision_type':shape.collision_type, 'elasticity':shape.collision_type, 'friction':shape.collision_type, 'group':shape.collision_type}
       if hasattr(shape, "radius"):
         sd['radius'] = shape.radius
@@ -251,7 +251,7 @@ class TestGame(Widget):
         sd['width'] = shape.width
         sd['height'] = shape.height
       return sd
-    def entJSON(self, e):
+    def entToDict(self, e):
       ed = {}
       print dir(e)
       print (e.entity_id)
@@ -265,7 +265,7 @@ class TestGame(Widget):
         #for item in dir(b):
         #  print item, getattr(b, item)
         bd = {'velocity': (b.velocity.x, b.velocity.y), 
-          'position': b.position,
+          'position': (b.position.x,b.position.y),
           'angle': b.angle, 
           'angular_velocity': b.angular_velocity, 
           'vel_limit': b.velocity_limit, 
@@ -277,7 +277,7 @@ class TestGame(Widget):
         for s in (e.physics.shapes):
           #print s
           #print dir(s)
-          shapes.append(self.shapeJSON(s))
+          shapes.append(self.shapeToDict(s))
         pd = {"shapes": shapes, "shape_type":e.physics.shape_type ,"body":bd }
         ed["physics"] = pd
       if hasattr(e, "physics_renderer"):
@@ -293,18 +293,28 @@ class TestGame(Widget):
         ed["rotate"] = rd
         #print dir(e.rotate.r)
       return ed
-    def exportJSON(self):
-      global dataDir
+    def exportToDict(self):
       entsdict = []
       for eid in self.entIDs:
         e = self.gameworld.entities[eid]
         print "\n"
-        ed = self.entJSON(e)
+        ed = self.entToDict(e)
         entsdict.append(ed)
+      return entsdict
+    def exportJSON(self, fileName="defaultlevel.json"):
+      global dataDir
+      entsdict = self.exportToDict()
+      fo = open(dataDir+fileName, 'w')
+      json.dump(entsdict, fo)
       print "dir=",dataDir
       print "done"
       return entsdict
-    def loadJSON(self, data):
+    def loadJSON(self, fileName="defaultlevel.json"):
+      fo = open(dataDir+fileName, 'r')
+      entsdict = json.load(fo)
+      print entsdict
+      self.loadFromDict(entsdict)
+    def loadFromDict(self, data):
       print "LOADING"
       #print data
       for e in data:
@@ -314,14 +324,14 @@ class TestGame(Widget):
           p = e['physics']
           body = p['body']
           shape = p['shapes'][0]
-          bp = body['position']
-          bpos = (bp.x,bp.y)
+          bp = (body['position'][0],body['position'][1])
           mass = body['mass']
+          texture = str(pr['texture'])
           if str(mass) == 'inf': mass = 0
           if stype == "circle":
-            self.create_circle(bpos, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=pr['texture'])
+            self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
           elif stype == "box":
-            self.create_box(bpos, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=pr['texture'])
+            self.create_box(bp, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
           
     def on_touch_up(self, touch):
         self.maintools.on_touch_up(touch)
@@ -536,6 +546,8 @@ class KivEntEd(App):
         global dataDir
         Window.clearcolor = (0, 0, 0, 1.)
         dataDir = self.get_application_config_dir()
+        if not os.path.exists(dataDir):
+          os.makedirs(dataDir)
         print self.get_application_config_dir()
         print self.get_application_config()
     def get_application_config_dir(self,extra=""):
