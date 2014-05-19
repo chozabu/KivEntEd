@@ -294,12 +294,15 @@ class TestGame(Widget):
         #print dir(e.rotate.r)
       return ed
     def exportJSON(self):
+      global dataDir
       entsdict = []
       for eid in self.entIDs:
         e = self.gameworld.entities[eid]
         print "\n"
         ed = self.entJSON(e)
         entsdict.append(ed)
+      print "dir=",dataDir
+      print "done"
       return entsdict
     def loadJSON(self, data):
       print "LOADING"
@@ -527,11 +530,20 @@ class TestGame(Widget):
     def set_state(self):
         self.gameworld.state = 'main'
 
-
-class YourAppNameApp(App):
+dataDir = ""
+class KivEntEd(App):
     def build(self):
+        global dataDir
         Window.clearcolor = (0, 0, 0, 1.)
+        dataDir = self.get_application_config_dir()
+        print self.get_application_config_dir()
+        print self.get_application_config()
+    def get_application_config_dir(self,extra=""):
+        return super(KivEntEd, self).get_application_config(
+            '~/.%(appname)s/'+extra)
+    def get_application_config(self):
+        return self.get_application_config_dir("%(appname)s.ini")
 
 
 if __name__ == '__main__':
-    YourAppNameApp().run()
+    KivEntEd().run()
