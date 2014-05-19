@@ -253,7 +253,8 @@ class TestGame(Widget):
       return sd
     def exportJSON(self):
       entsdict = []
-      for e in self.gameworld.entities:
+      for eid in self.entIDs:
+        e = self.gameworld.entities[eid]
         print "\n"
         ed = {}
         print dir(e)
