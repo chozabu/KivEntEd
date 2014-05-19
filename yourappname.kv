@@ -213,10 +213,6 @@ TestGame:
                 text: 'Join'
                 on_press: root.joinPressed(self)
             Button:
-                id: deleteButton
-                text: 'Delete'
-                on_press: root.delPressed(self)
-            Button:
                 id: playButton
                 text: 'pause/play'
                 on_press: root.playPressed(self)
@@ -228,6 +224,13 @@ TestGame:
                 id: dragButton
                 text: 'Drag'
                 on_press: root.dragPressed(self)
+            Button:
+                id: deleteButton
+                text: 'Delete'
+                on_press: root.delPressed(self)
+            Button:
+                text: 'Clear'
+                on_press: root.clearPressed(self)
         BoxLayout:
             id: entityMenu
             orientation: 'vertical'

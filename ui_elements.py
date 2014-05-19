@@ -85,7 +85,8 @@ class MainTools(FloatLayout):
          if not self.selectedMenu.angleLabel.focus:
           tv = "%0.2f" % (shape.body.angle)
           self.selectedMenu.angleLabel.text = tv
-         
+    def clearPressed(self,instance):
+      self.gameref.clear_entities()
     def setTool(self, tool):
        if self.currentTool not in self.toolSettings:
          self.toolSettings[self.currentTool] = {}
