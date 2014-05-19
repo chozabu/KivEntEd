@@ -253,8 +253,9 @@ class TestGame(Widget):
       return sd
     def entToDict(self, e):
       ed = {}
-      print dir(e)
-      print (e.entity_id)
+      #print dir(e)
+      #print (e.entity_id)
+      ed["orig_id"] = e.entity_id
       #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
       if hasattr(e, "load_order"):
         #print e.load_order
@@ -293,29 +294,49 @@ class TestGame(Widget):
         ed["rotate"] = rd
         #print dir(e.rotate.r)
       return ed
+    def exportJointsToDicts(self):
+      space =self.gameworld.systems['physics'].space
+      jds = []
+      for j in space.constraints:
+        jtype = j.__class__.__name__
+        print jtype
+        print dir(j)
+        print j.anchor1
+        jd = {"type":jtype,"a":j.a.data, "b":j.b.data,
+              "anchor1":j.anchor1,"anchor2":j.anchor2}
+        if jtype == "DampedSpring":
+          jd['rest_length'] = j.rest_length
+          jd['stiffness'] = j.stiffness
+        jds.append(jd)
+      return jds
     def exportEntsToDicts(self):
       entsdict = []
       for eid in self.entIDs:
         e = self.gameworld.entities[eid]
-        print "\n"
+        #print "\n"
         ed = self.entToDict(e)
         entsdict.append(ed)
       return entsdict
-    def exportJSON(self, fileName="defaultlevel.json"):
+    def exportJSON(self, fileName="adefaultlevel.json"):
       global dataDir
       entslist = self.exportEntsToDicts()
+      jointslist = self.exportJointsToDicts()
+      #print dir(space.constraints[0])
       space =self.gameworld.systems['physics'].space
-      worlddict = {"ents":entslist,"settings":{"gravity":(space.gravity.x,space.gravity.y)}}
+      worlddict = {"ents":entslist,"jointslist":jointslist,"settings":{"gravity":(space.gravity.x,space.gravity.y)}}
       with open(dataDir+fileName, 'w') as fo:
         json.dump(worlddict, fo)
       print "dir=",dataDir
       print "done"
       return worlddict
-    def loadJSON(self, fileName="defaultlevel.json"):
+    def loadJSON(self, fileName="adefaultlevel.json"):
+      space =self.gameworld.systems['physics'].space
       with open(dataDir+fileName, 'r') as fo:
         entsdict = json.load(fo)
       print entsdict
       self.loadFromDict(entsdict)
+      #print dir(space.constraints[0])
+      #print (space.constraints[0].a)
     def loadFromDict(self, data):
       print "LOADING"
       #print data
@@ -324,6 +345,7 @@ class TestGame(Widget):
         g = data['settings']['gravity']
         space.gravity = (g[0],g[1])
       ents = data['ents']
+      idConvDict = {}
       for e in ents:
         if "physics" in e:
           stype = e['physics']['shape_type']
@@ -336,9 +358,25 @@ class TestGame(Widget):
           texture = str(pr['texture'])
           if str(mass) == 'inf': mass = 0
           if stype == "circle":
-            self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
+            idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
           elif stype == "box":
-            self.create_box(bp, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
+            idConvDict[e['orig_id']] = self.create_box(bp, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
+      if "jointslist" in data:
+        jointslist = data['jointslist']
+        for j in jointslist:
+          #if str(j['type']) == PivotJoint:
+          if str(j['type']) == "PinJoint":
+            b1id = idConvDict[j['a']]
+            b1 = self.gameworld.entities[b1id].physics.body
+            b2id = idConvDict[j['b']]
+            b2 = self.gameworld.entities[b2id].physics.body
+            b1l = j['anchor1']
+            b2l = j['anchor2']
+            qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
+          #if str(j['type']) == DampedSpring:
+          #  qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          print j
           
     def on_touch_up(self, touch):
         self.maintools.on_touch_up(touch)
