@@ -256,7 +256,8 @@ class TestGame(Widget):
       for e in self.gameworld.entities:
         print "\n"
         ed = {}
-        #print dir(e)
+        print dir(e)
+        print (e.entity_id)
         #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
         if hasattr(e, "load_order"):
           #print e.load_order
@@ -264,8 +265,8 @@ class TestGame(Widget):
         if hasattr(e, "physics"):
           #print dir(e.physics)
           b = (e.physics.body)
-          for item in dir(b):
-            print item, getattr(b, item)
+          #for item in dir(b):
+          #  print item, getattr(b, item)
           bd = {'velocity': (b.velocity.x, b.velocity.y), 
             'position': b.position,
             'angle': b.angle, 
@@ -274,7 +275,7 @@ class TestGame(Widget):
             'ang_vel_limit': b.angular_velocity_limit, 
             'mass': b.mass
             }
-          print (e.physics.shape_type)
+          #print (e.physics.shape_type)
           shapes = []
           for s in (e.physics.shapes):
             #print s
