@@ -193,7 +193,8 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: camButton
                 text: 'Camera'
                 on_press: root.camPressed(self)
