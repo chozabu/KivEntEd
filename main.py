@@ -301,9 +301,15 @@ class TestGame(Widget):
         jtype = j.__class__.__name__
         print jtype
         print dir(j)
-        print j.anchor1
+        anchor1 = j.anchor1
+        #if None == j.a.data and j.a != space.static_body:
+        #  anchor1 = {'x':j.a.position.x, 'y':j.a.position.y}
+        
+        anchor2 = j.anchor2
+        if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data == None:
+          anchor2 = {'x':j.b.position.x, 'y':j.b.position.y}
         jd = {"type":jtype,"a":j.a.data, "b":j.b.data,
-              "anchor1":j.anchor1,"anchor2":j.anchor2}
+              "anchor1":anchor1,"anchor2":anchor2}
         if jtype == "DampedSpring":
           jd['rest_length'] = j.rest_length
           jd['stiffness'] = j.stiffness
@@ -364,17 +370,25 @@ class TestGame(Widget):
       if "jointslist" in data:
         jointslist = data['jointslist']
         for j in jointslist:
-          #if str(j['type']) == PivotJoint:
-          if str(j['type']) == "PinJoint":
+          b1 = None
+          b2 = None
+          if j['a'] in idConvDict:
             b1id = idConvDict[j['a']]
             b1 = self.gameworld.entities[b1id].physics.body
+          else: b1 = cy.Body()
+          if j['b'] in idConvDict:
             b2id = idConvDict[j['b']]
             b2 = self.gameworld.entities[b2id].physics.body
-            b1l = j['anchor1']
-            b2l = j['anchor2']
+          else: b2 = cy.Body()
+          b1l = j['anchor1']
+          b2l = j['anchor2']
+          if str(j['type']) == "PivotJoint":
+            qj = cy.PivotJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
+          if str(j['type']) == "PinJoint":
             qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
-          #if str(j['type']) == DampedSpring:
+          #if str(j['type']) == "DampedSpring":
           #  qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
           print j
           
