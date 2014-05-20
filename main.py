@@ -59,6 +59,7 @@ class TestGame(Widget):
           print k
           if k!='atlas_size' and k!='main_texture' :sprites.append(str(k))
         self.maintools.spriteSpinner.values = sprites
+        self.maintools.selectedMenu.texLabel.values = sprites
     def reindexEntID(self, entityID):
       self.reindexEnt(self.gameworld.entities[entityID])
     def reindexEnt(self, entity):

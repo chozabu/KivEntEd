@@ -151,9 +151,13 @@ TestGame:
                     id: angleLabel
                     text: "angle"
                     on_text: root.angleChanged(self)
-            Label:
+            #Label:
+            #    id: texLabel
+            #    text: "texture"
+            Spinner:
                 id: texLabel
                 text: "texture"
+                on_text: root.textureChanged(self)
             BoxLayout:
                 Label:
                     size_hint: (.2,1)

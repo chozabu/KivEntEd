@@ -140,6 +140,9 @@ class MainTools(FloatLayout):
       if shape:
         shape.body.angle=fval
         self.gameref.reindexEnt(self.selectedEntity)
+    def textureChanged(self, instance):
+      ent = self.selectedEntity
+      ent.physics_renderer.texture = instance.text
     def frictionChanged(self, instance):
       fval = float(instance.text)
       shape = self.selectedItem
