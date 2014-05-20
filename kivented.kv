@@ -70,7 +70,6 @@ TestGame:
     radiusLabel:radiusLabel
     BoxLayout:
         Label:
-            size_hint: (.1,1)
             text: "radius:"
         TextInput:
             id: radiusLabel
@@ -82,7 +81,6 @@ TestGame:
     heightLabel:heightLabel
     BoxLayout:
         Label:
-            size_hint: (.1,1)
             text: "width:"
         TextInput:
             id: widthLabel
@@ -90,7 +88,6 @@ TestGame:
             text: "width"
     BoxLayout:
         Label:
-            size_hint: (.1,1)
             text: "height:"
         TextInput:
             id: heightLabel
@@ -131,7 +128,6 @@ TestGame:
                 text: "selected item"
             BoxLayout:
                 Label:
-                    size_hint: (.1,1)
                     text: "x:"
                 tbox:
                     id: xposLabel
@@ -139,7 +135,6 @@ TestGame:
                     on_text: root.xposChanged(self)
             BoxLayout:
                 Label:
-                    size_hint: (.1,1)
                     text: "y:"
                 tbox:
                     id: yposLabel
@@ -147,7 +142,6 @@ TestGame:
                     on_text: root.yposChanged(self)
             BoxLayout:
                 Label:
-                    size_hint: (.2,1)
                     text: "angle:"
                 tbox:
                     id: angleLabel
@@ -162,7 +156,6 @@ TestGame:
                 on_text: root.textureChanged(self)
             BoxLayout:
                 Label:
-                    size_hint: (.2,1)
                     text: "Mass:"
                 tbox:
                     id: massLabel
@@ -170,7 +163,6 @@ TestGame:
                     on_text: root.massChanged(self)
             BoxLayout:
                 Label:
-                    size_hint: (.2,1)
                     text: "Friction:"
                 tbox:
                     id: frictionLabel
@@ -178,7 +170,6 @@ TestGame:
                     on_text: root.frictionChanged(self)
             BoxLayout:
                 Label:
-                    size_hint: (.2,1)
                     text: "Elasticity:"
                 tbox:
                     id: elasLabel

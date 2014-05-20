@@ -70,7 +70,7 @@ class TestGame(Widget):
 		self.reindexEnt(self.gameworld.entities[entityID])
 
 	def reindexEnt(self, entity):
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		if entity and hasattr(entity, "physics"):
 			for s in entity.physics.shapes:
 				space.reindex_shape(s)
@@ -90,7 +90,7 @@ class TestGame(Widget):
 			print "still no keyboard!"
 
 	def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		if keycode[1] == 'up':
 			space.gravity = space.gravity.x, space.gravity.y + 10
 		if keycode[1] == 'down':
@@ -166,12 +166,12 @@ class TestGame(Widget):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
 	def getShapeAt(self, x,y):
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		position = cy.Vec2d(x,y)
 		return space.point_query_first(position)
 	def on_touch_move(self, touch):
 		self.mainTools.on_touch_move(touch)
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		ctouch = self.touches[touch.id]
 		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
@@ -318,7 +318,7 @@ class TestGame(Widget):
 		return ed
 
 	def exportJointsToDicts(self):
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		jds = []
 		for j in space.constraints:
 			jtype = j.__class__.__name__
@@ -354,7 +354,7 @@ class TestGame(Widget):
 		entslist = self.exportEntsToDicts()
 		jointslist = self.exportJointsToDicts()
 		#print dir(space.constraints[0])
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y)}}
 		with open(dataDir + fileName, 'w') as fo:
@@ -373,8 +373,7 @@ class TestGame(Widget):
 
 	def loadFromDict(self, data):
 		print "LOADING"
-		#print data
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		if "settings" in data:
 			g = data['settings']['gravity']
 			space.gravity = (g[0], g[1])
@@ -445,7 +444,7 @@ class TestGame(Widget):
 			self.gameworld.remove_entity(ctouch['previewShape'])
 		#  self.canvas.before.remove(ctouch['previewShape'])
 
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		position = cy.Vec2d(pos[0], pos[1])
 		shape = space.point_query_first(position)
 		ctouch['touchingnow'] = shape
@@ -562,7 +561,7 @@ class TestGame(Widget):
 		print "TOUCHDOWN\n"
 		pos = self.getWorldPosFromTouch(touch)
 		position = cy.Vec2d(pos[0], pos[1])
-		space = self.gameworld.systems['physics'].space
+		space = self.space
 		shape = space.point_query_first(position)
 		#self.selectedShape = shape
 		print "touched shape:", shape

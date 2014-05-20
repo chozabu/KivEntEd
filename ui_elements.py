@@ -65,6 +65,7 @@ class MainTools(FloatLayout):
 		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
+		self.rightMenu.remove_widget(self.selectedMenu)
 		self.clearl2()
 		#self.spriteSpinner.values = os.listdir("./sprites")
 
@@ -91,7 +92,7 @@ class MainTools(FloatLayout):
 		self.testsave = self.gameref.exportJSON()
 
 	def clearPressed(self, instance):
-		space = self.gameref.gameworld.systems['physics'].space
+		space = self.gameref.space
 		#print dir(self.gameref.gameworld)#.clear_entities()
 		#print self.gameref.entIDs
 		for eid in self.gameref.entIDs[:]:
@@ -185,7 +186,7 @@ class MainTools(FloatLayout):
 																 newrad)  #seems ineffective?
 
 	def on_width_change(self, instance, value):
-		space = self.gameref.gameworld.systems['physics'].space
+		space = self.gameref.space
 		newrad = float(value)
 		#if self.selectedItem and self.selectedEntity:
 		#self.selectedItem.width = (newrad)
@@ -209,7 +210,7 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics_renderer.width = newrad
 
 	def on_height_change(self, instance, value):
-		space = self.gameref.gameworld.systems['physics'].space
+		space = self.gameref.space
 		newrad = float(value)
 		shape = self.selectedItem
 		if shape and self.selectedEntity:
