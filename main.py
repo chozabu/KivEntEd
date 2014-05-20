@@ -165,7 +165,10 @@ class TestGame(Widget):
 	def setup_map(self):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
-
+	def getShapeAt(self, x,y):
+		space = self.gameworld.systems['physics'].space
+		position = cy.Vec2d(x,y)
+		return space.point_query_first(position)
 	def on_touch_move(self, touch):
 		self.mainTools.on_touch_move(touch)
 		space = self.gameworld.systems['physics'].space
@@ -175,8 +178,7 @@ class TestGame(Widget):
 		ctouch['newpos'] = pos
 		ctouch['ownbody'].position = pos
 
-		position = cy.Vec2d(pos[0], pos[1])
-		shape = space.point_query_first(position)
+		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
 		if ctouch['tool'] == "camera":
@@ -623,11 +625,13 @@ class TestGame(Widget):
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:
+					pos = ctouch['newpos']
 					if ctouch['tool'] == 'vortex':
-						self.pull2point(ctouch['newpos'])
+						self.pull2point(pos)
 					elif ctouch['tool'] == 'del' and 'touchingnow' in ctouch:
-						if ctouch['touchingnow']:
-							self.delObj(ctouch['touchingnow'].body.data)
+						shape = self.getShapeAt(pos[0], pos[1])
+						if shape:
+							self.delObj(shape.body.data)
 							ctouch['touchingnow'] = None
 
 	def pull2point(self, pos):
