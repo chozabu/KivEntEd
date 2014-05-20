@@ -607,6 +607,13 @@ class TestGame(Widget):
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
 			space.add(ctouch['mousejoint'])
 
+	def clearAll(self):
+		self.startID = -1
+		self.finishID = -1
+		space = self.space
+		for eid in list(self.entIDs):
+			self.delObj(eid)
+		space.remove(list(space.constraints))
 	def delObj(self, objid):
 		#todo check before removing these items
 		self.gameworld.remove_entity(objid)
