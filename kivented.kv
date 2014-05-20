@@ -213,15 +213,18 @@ TestGame:
                 id: playButton
                 text: 'pause/play'
                 on_press: root.playPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: vortexButton
                 text: 'Vortex'
                 on_press: root.vortexPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: dragButton
                 text: 'Drag'
                 on_press: root.dragPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: deleteButton
                 text: 'Delete'
                 on_press: root.delPressed(self)
@@ -240,15 +243,18 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: startButton
                 text: 'Start'
                 on_press: root.startPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: endButton
                 text: 'End'
                 on_press: root.endPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: blankButton
                 text: 'Blank'
                 on_press: root.blankPressed(self)
@@ -258,23 +264,28 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: circleButton
                 text: 'Circles'
                 on_press: root.circlePressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: squareButton
                 text: 'Square'
                 on_press: root.squarePressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: boxButton
                 text: 'Box'
                 on_press: root.boxPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: linesButton
                 text: 'Lines'
                 on_press: root.drawPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 id: plankButton
                 text: 'Plank'
                 on_press: root.plankPressed(self)
@@ -304,19 +315,24 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 text: 'Pin to World'
                 on_press: root.joinPinPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 text: 'Point 2 Point'
                 on_press: root.joinP2PPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 text: 'P2P Spring'
                 on_press: root.joinP2PSPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 text: 'Center 2 Point'
                 on_press: root.joinC2PPressed(self)
-            Button:
+            ToggleButton:
+                group: 'ToolGroup'
                 text: 'Center 2 Center'
                 on_press: root.joinC2CPressed(self)
         
