@@ -221,7 +221,7 @@ class TestGame(Widget):
             #space.reindex_shape(shape)
 
     def shapeToDict(self,shape):
-      sd = {'collision_type':shape.collision_type, 'elasticity':shape.collision_type, 'friction':shape.collision_type, 'group':shape.collision_type}
+      sd = {'collision_type':shape.collision_type, 'elasticity':shape.elasticity, 'friction':shape.friction, 'group':shape.group}
       if hasattr(shape, "radius"):
         sd['radius'] = shape.radius
       else:
@@ -301,7 +301,7 @@ class TestGame(Widget):
         ed = self.entToDict(e)
         entsdict.append(ed)
       return entsdict
-    def exportJSON(self, fileName="adefaultlevel.json"):
+    def exportJSON(self, fileName="defaultlevel.json"):
       global dataDir
       entslist = self.exportEntsToDicts()
       jointslist = self.exportJointsToDicts()
@@ -313,7 +313,7 @@ class TestGame(Widget):
       print "dir=",dataDir
       print "done"
       return worlddict
-    def loadJSON(self, fileName="adefaultlevel.json"):
+    def loadJSON(self, fileName="defaultlevel.json"):
       space =self.gameworld.systems['physics'].space
       with open(dataDir+fileName, 'r') as fo:
         entsdict = json.load(fo)
