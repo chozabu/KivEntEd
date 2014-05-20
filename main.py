@@ -99,29 +99,6 @@ class TestGame(Widget):
             space.gravity = space.gravity.x+10 ,space.gravity.y
             print space.gravity
         return True
-
-    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
-        shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
-            'mass': mass, 'offset': (0, 0)}
-        col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
-            'collision_type': 1, 'shape_info': shape_dict, 'friction': friction}
-        col_shapes = [col_shape]
-        physics_component = {'main_shape': 'circle', 
-            'velocity': (x_vel, y_vel), 
-            'position': pos, 'angle': angle, 
-            'angular_velocity': angular_velocity, 
-            'vel_limit': 2048, 
-            'ang_vel_limit': radians(2000), 
-            'mass': mass, 'col_shapes': col_shapes}
-        create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)}, 
-            'position': pos, 'rotate': 0}
-        component_order = ['position', 'rotate', 
-            'physics', 'physics_renderer']
-        entityID = self.gameworld.init_entity(create_component_dict, component_order)
-        self.entIDs.append(entityID)
-        if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        return entityID
       
     def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
