@@ -1,15 +1,27 @@
+Games:
+-extreme tilt maze
+-MyWheelz
 
-level settings (gravity, notes)preview object creation
-create vortex/repeller
-create wrecker
-create grav/drag zone
+important:
+-level settings (gravity, notes)preview object creation
+-show joints
+-edit joints
 
-make simple wheelz, or tilt-maze game
-render joints
+Entitys:
+-create vortex/repeller
+-create wrecker?
+-create grav/drag zone
+custom entitys? online library? scripts?
 
-needmorekivent:
-add shapes to body
-change shape pos
+
+Kivent:
+-enable rotation
+-multi-quad renderer
+-texture importing and/or themes
+-polygons
+-poly-painting
+-destructable/deformable polys
+-segments
 
 
 
