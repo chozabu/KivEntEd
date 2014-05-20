@@ -233,9 +233,11 @@ class MainTools(FloatLayout):
            bs.heightLabel.bind(text=self.on_height_change)
            self.selectedMenu.shapeInfo.add_widget(bs)
          
+       self.rightMenu.remove_widget(self.selectedMenu)
        ent = self.selectedEntity
        print "selected ent:", ent
        if ent:
+         self.rightMenu.add_widget(self.selectedMenu)
          self.selectedMenu.texLabel.text = ent.physics_renderer.texture
     def delSelPressed(self, instance):
        if (self.selectedItem) and self.gameref:

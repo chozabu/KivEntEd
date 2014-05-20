@@ -99,15 +99,17 @@ TestGame:
 
 <MainTools@FloatLayout>
     leftMenu: leftMenu
+    rightMenu: rightMenu
     createMenu: createMenu.__self__
     rootMenu: rootMenu
     joinMenu: joinMenu.__self__
     entityMenu: entityMenu.__self__
     massSlider: massSlider
     spriteSpinner: spriteSpinner
-    selectedMenu: selectedMenu
+    selectedMenu: selectedMenu.__self__
     
     BoxLayout:
+        id: rightMenu
         size_hint: (.15, 1)
         orientation: 'horizontal'
         pos_hint: {'x':.85, 'y':0}
