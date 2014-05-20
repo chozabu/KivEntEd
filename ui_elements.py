@@ -168,6 +168,7 @@ class MainTools(FloatLayout):
       newrad = float(value)
       print "rad change", newrad
       if self.selectedItem and self.selectedEntity:
+        self.selectedItem.radius = newrad
         self.selectedItem.unsafe_set_radius(newrad)
         self.selectedEntity.physics_renderer.width = newrad*2
         self.selectedEntity.physics_renderer.height = newrad*2
@@ -191,6 +192,8 @@ class MainTools(FloatLayout):
         newshape.friction = shape.friction 
         space.add_shape(newshape)
         space.remove(shape)
+        #print shape.body._shapes
+        self.selectedEntity.physics.shapes = [newshape]
         self.selectedItem = newshape
         self.selectedEntity.physics_renderer.width = newrad
     def on_height_change(self, instance, value):
@@ -205,6 +208,7 @@ class MainTools(FloatLayout):
         newshape.friction = shape.friction 
         space.add_shape(newshape)
         space.remove(self.selectedItem)
+        self.selectedEntity.physics.shapes = [newshape]
         self.selectedItem = newshape
         self.selectedEntity.physics_renderer.height = newrad
     def setShape(self, shape):

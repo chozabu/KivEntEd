@@ -113,7 +113,7 @@ class TestGame(Widget):
         component_order = ['position', 'rotate', 'renderer']
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         return entityID
-    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
+    def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep",selectNow = True):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
         col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
@@ -134,10 +134,10 @@ class TestGame(Widget):
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+        if selectNow: self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
         return entityID
       
-    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box"):
+    def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box",selectNow = True):
         '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
             (height, width), (height, 0.0)],
             'offset': (height/2., -width/2.)}
@@ -176,7 +176,7 @@ class TestGame(Widget):
         #print (self.gameworld.systems['physics'].space)
         self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-        self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+        if selectNow: self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
         return entityID
 
     def setup_map(self):
@@ -416,9 +416,9 @@ class TestGame(Widget):
           if str(mass) == 'inf': mass = 0
           print e['orig_id']
           if stype == "circle":
-            idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
+            idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture, selectNow = False)
           elif stype == "box":
-            idConvDict[e['orig_id']] = self.create_box(bp, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
+            idConvDict[e['orig_id']] = self.create_box(bp, width=shape['width'], height=shape['height'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture, selectNow = False)
       if "jointslist" in data:
         jointslist = data['jointslist']
         for j in jointslist:
