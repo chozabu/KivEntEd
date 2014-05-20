@@ -232,6 +232,7 @@ class TestGame(Widget):
           prect = self.gameworld.entities[ctouch['previewShape']]
           prect.position.x = spos[0]#(midx,midy)
           prect.position.y = spos[1]#(midx,midy)
+          angle = atan2(yd,xd)
           prect.rotate.r = angle
           prect.renderer.width = dist*2
           prect.renderer.height = dist*2
@@ -244,6 +245,7 @@ class TestGame(Widget):
           prect = self.gameworld.entities[ctouch['previewShape']]
           prect.position.x = spos[0]#(midx,midy)
           prect.position.y = spos[1]#(midx,midy)
+          angle = atan2(yd,xd)
           prect.rotate.r = angle
           prect.renderer.width = dist*2
           prect.renderer.height = dist*2
