@@ -33,14 +33,14 @@ class TestGame(Widget):
         self.finishID = -1
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
         self.atlas = Atlas('assets/myatlas.atlas')
-        try: 
+        try:
             self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
             self._keyboard.bind(on_key_down=self._on_keyboard_down)
         except:
             print 'Python python no keyboard'
 
     def init_game(self, dt):
-        try: 
+        try:
             self._init_game(0)
         except:
             print 'failed: rescheduling init'
@@ -49,8 +49,8 @@ class TestGame(Widget):
         self.setup_map()
         self.setup_states()
         self.set_state()
-        
-        
+
+
         self.draw_some_stuff()
         Clock.schedule_interval(self.update, 0)
         Clock.schedule_once(self.init_sprites)
@@ -80,7 +80,7 @@ class TestGame(Widget):
             self.create_circle(pos,y_vel=random()*-20, texture="sheep", radius=15)
         self.create_box((size[0]/2.0,0), mass=0, width=size[0]*2, height=10, angle=0)
     def _keyboard_closed(self):
-        try: 
+        try:
           self._keyboard.unbind(on_key_down=self._on_keyboard_down)
           self._keyboard = None
         except:
@@ -88,13 +88,6 @@ class TestGame(Widget):
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
         space =self.gameworld.systems['physics'].space
-        '''if keycode[1] == 'w':
-            self.player1.center_y += 10
-        elif keycode[1] == 's':
-            self.player1.center_y -= 10
-        elif keycode[1] == 'up':
-            self.player2.center_y += 10
-        el'''
         if keycode[1] == 'up':
             space.gravity = space.gravity.x,space.gravity.y+10
         if keycode[1] == 'down':
@@ -105,65 +98,59 @@ class TestGame(Widget):
             space.gravity = space.gravity.x+10 ,space.gravity.y
             print space.gravity
         return True
-      
+
     def create_decoration(self, pos=(0,0), width=40, height=40, angle = 0, texture="sheep"):
         create_component_dict = {
-            'renderer': {'texture': texture, 'size': (width , height)}, 
+            'renderer': {'texture': texture, 'size': (width , height)},
             'position': pos, 'rotate': 0}
         component_order = ['position', 'rotate', 'renderer']
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         return entityID
     def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep",selectNow = True):
-        shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
+        shape_dict = {'inner_radius': 0, 'outer_radius': radius,
             'mass': mass, 'offset': (0, 0)}
-        col_shape = {'shape_type': 'circle', 'elasticity': elasticity, 
+        col_shape = {'shape_type': 'circle', 'elasticity': elasticity,
             'collision_type': 1, 'shape_info': shape_dict, 'friction': friction}
         col_shapes = [col_shape]
-        physics_component = {'main_shape': 'circle', 
-            'velocity': (x_vel, y_vel), 
-            'position': pos, 'angle': angle, 
-            'angular_velocity': angular_velocity, 
-            'vel_limit': 2048, 
-            'ang_vel_limit': radians(2000), 
+        physics_component = {'main_shape': 'circle',
+            'velocity': (x_vel, y_vel),
+            'position': pos, 'angle': angle,
+            'angular_velocity': angular_velocity,
+            'vel_limit': 2048,
+            'ang_vel_limit': radians(2000),
             'mass': mass, 'col_shapes': col_shapes}
-        create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)}, 
+        create_component_dict = {'physics': physics_component,
+            'physics_renderer': {'texture': texture, 'size': (radius*2 , radius*2)},
             'position': pos, 'rotate': 0}
-        component_order = ['position', 'rotate', 
+        component_order = ['position', 'rotate',
             'physics', 'physics_renderer']
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
         if selectNow: self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
         return entityID
-      
+
     def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box",selectNow = True):
-        '''aview_dict = {'vertices': [(0., 0.), (0.0, width), 
-            (height, width), (height, 0.0)],
-            'offset': (height/2., -width/2.)}
-        acol_shape_dict = {'shape_type': 'box', 'elasticity': .5, 
-            'collision_type': 2, 'shape_info': box_dict, 'friction': 1.0}
-        '''
         box_dict = {
-            'width': width, 
+            'width': width,
             'height': height,
             'mass': mass}
         #shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
         #    'mass': mass, 'offset': (0, 0)}
-        col_shape = {'shape_type': 'box', 'elasticity': elasticity, 
+        col_shape = {'shape_type': 'box', 'elasticity': elasticity,
             'collision_type': 1, 'shape_info': box_dict, 'friction': friction}
         col_shapes = [col_shape]
-        physics_component = {'main_shape': 'box', 
-            'velocity': (x_vel, y_vel), 
-            'position': pos, 'angle': angle, 
-            'angular_velocity': angular_velocity, 
-            'vel_limit': 2048, 
-            'ang_vel_limit': radians(2000), 
+        physics_component = {'main_shape': 'box',
+            'velocity': (x_vel, y_vel),
+            'position': pos, 'angle': angle,
+            'angular_velocity': angular_velocity,
+            'vel_limit': 2048,
+            'ang_vel_limit': radians(2000),
             'mass': mass, 'col_shapes': col_shapes}
-        create_component_dict = {'physics': physics_component, 
-            'physics_renderer': {'texture': texture, 'size': (width , height)}, 
+        create_component_dict = {'physics': physics_component,
+            'physics_renderer': {'texture': texture, 'size': (width , height)},
             'position': pos, 'rotate': 0}
-        component_order = ['position', 'rotate', 
+        component_order = ['position', 'rotate',
             'physics', 'physics_renderer']
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         #b1 = self.gameworld.entities[entityID]
@@ -194,12 +181,12 @@ class TestGame(Widget):
         spos = ctouch['pos']
         ctouch['newpos'] = pos
         ctouch['ownbody'].position = pos
-        
-        
+
+
         position = cy.Vec2d(pos[0], pos[1])
         shape = space.point_query_first(position)
         ctouch['touchingnow'] = shape
-        
+
         #print super(TestGame, self).on_touch_move(touch)
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
@@ -209,9 +196,9 @@ class TestGame(Widget):
         #  self.create_box(pos, mass=mass)
         #  print "There are: %i Asteroids" % len(self.entIDs)
         #print dir(touch)
-        if (ctouch['tool'] == "camera"):
+        if ctouch['tool'] == "camera":
           super(TestGame, self).on_touch_move(touch)
-          
+
         #a = self.gameworld.entities[ctouch['previewShape']]
         #print dir(self.gameworld.systems['renderer'])
         #self.gameworld.systems['renderer'].do_rotate = True
@@ -239,8 +226,6 @@ class TestGame(Widget):
         if ctouch['tool'] == "square" and ctouch["active"]:
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
-          midx = (spos[0]+pos[0])/2.0
-          midy = (spos[1]+pos[1])/2.0
           dist= sqrt(xd**2+yd**2)
           prect = self.gameworld.entities[ctouch['previewShape']]
           prect.position.x = spos[0]#(midx,midy)
@@ -282,7 +267,7 @@ class TestGame(Widget):
             print "angle = ",angle
             self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle,texture=self.maintools.spriteSpinner.text)
             ctouch['pos'] = pos
-            
+
         shape = ctouch['touching']
         if shape and (shape.body.is_static or self.maintools.paused) and (ctouch['tool'] == 'drag'):
             shape.body.position=(shape.body.position.x+touch.dx,shape.body.position.y+touch.dy)
@@ -293,7 +278,7 @@ class TestGame(Widget):
               (self.gameworld.systems['renderer'].update(0.00000001))
             #space.reindex_shape(shape)
 
-    def shapeToDict(self,shape):
+    def shapeToDict(self, shape):
       sd = {'collision_type':shape.collision_type, 'elasticity':shape.elasticity, 'friction':shape.friction, 'group':shape.group}
       if hasattr(shape, "radius"):
         sd['radius'] = shape.radius
@@ -302,30 +287,29 @@ class TestGame(Widget):
         sd['height'] = shape.height
       return sd
     def entToDict(self, e):
-      ed = {}
+      ed = {"orig_id": e.entity_id}
       #print dir(e)
       #print (e.entity_id)
-      ed["orig_id"] = e.entity_id
       #'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
       if hasattr(e, "load_order"):
         #print e.load_order
         ed["load_order"] = e.load_order
       if hasattr(e, "physics"):
         #print dir(e.physics)
-        b = (e.physics.body)
+        b = e.physics.body
         #for item in dir(b):
         #  print item, getattr(b, item)
-        bd = {'velocity': (b.velocity.x, b.velocity.y), 
+        bd = {'velocity': (b.velocity.x, b.velocity.y),
           'position': (b.position.x,b.position.y),
-          'angle': b.angle, 
-          'angular_velocity': b.angular_velocity, 
-          'vel_limit': b.velocity_limit, 
-          'ang_vel_limit': b.angular_velocity_limit, 
+          'angle': b.angle,
+          'angular_velocity': b.angular_velocity,
+          'vel_limit': b.velocity_limit,
+          'ang_vel_limit': b.angular_velocity_limit,
           'mass': b.mass
           }
         #print (e.physics.shape_type)
         shapes = []
-        for s in (e.physics.shapes):
+        for s in e.physics.shapes:
           #print s
           #print dir(s)
           shapes.append(self.shapeToDict(s))
@@ -354,9 +338,9 @@ class TestGame(Widget):
         anchor1 = j.anchor1
         #if None == j.a.data and j.a != space.static_body:
         #  anchor1 = {'x':j.a.position.x, 'y':j.a.position.y}
-        
+
         anchor2 = j.anchor2
-        if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data == None:
+        if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data is None:
           anchor2 = {'x':j.b.position.x, 'y':j.b.position.y}
         jd = {"type":jtype,"a":j.a.data, "b":j.b.data,
               "anchor1":anchor1,"anchor2":anchor2}
@@ -387,7 +371,6 @@ class TestGame(Widget):
       print "done"
       return worlddict
     def loadJSON(self, fileName="defaultlevel.json"):
-      space =self.gameworld.systems['physics'].space
       with open(dataDir+fileName, 'r') as fo:
         entsdict = json.load(fo)
       print entsdict
@@ -422,8 +405,6 @@ class TestGame(Widget):
       if "jointslist" in data:
         jointslist = data['jointslist']
         for j in jointslist:
-          b1 = None
-          b2 = None
           if j['a'] in idConvDict:
             b1id = idConvDict[j['a']]
             b1 = self.gameworld.entities[b1id].physics.body
@@ -444,7 +425,7 @@ class TestGame(Widget):
             qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),j['rest_length'],j['stiffness'],j['damping'])#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
           print j
-          
+
     def on_touch_up(self, touch):
         self.maintools.on_touch_up(touch)
         if touch.id not in self.touches:
@@ -457,18 +438,18 @@ class TestGame(Widget):
         if 'previewShape' in ctouch:
           self.gameworld.remove_entity(ctouch['previewShape'])
         #  self.canvas.before.remove(ctouch['previewShape'])
-        
+
         space =self.gameworld.systems['physics'].space
         position = cy.Vec2d(pos[0], pos[1])
         shape = space.point_query_first(position)
         ctouch['touchingnow'] = shape
-        
+
         if 'mousejoint' in ctouch and (ctouch['tool'] != "pin"):
           space.remove(ctouch['mousejoint'])
-        
-        
+
+
         if ctouch['onmenu']:return
-        
+
         tshape = ctouch['touching']
         if tshape and shape:
           if ctouch['tool'] == 'c2p':
@@ -479,7 +460,7 @@ class TestGame(Widget):
             #qj = cy.PivotJoint(b1, b2, pos)
             qj = cy.PinJoint(b1, b2, (0,0), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
-            
+
           if ctouch['tool'] == 'p2p':
             b1 = ctouch['touching'].body#self.gameworld.entities[entityID]
             b2 = shape.body#self.gameworld.entities[self.entIDs[-1]]
@@ -489,7 +470,7 @@ class TestGame(Widget):
             #qj = cy.PivotJoint(b1, b2, pos)
             qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
-            
+
           if ctouch['tool'] == 'p2ps':
             b1 = ctouch['touching'].body#self.gameworld.entities[entityID]
             b2 = shape.body#self.gameworld.entities[self.entIDs[-1]]
@@ -500,7 +481,7 @@ class TestGame(Widget):
             dist= sqrt(dvec.x**2+dvec.y**2)
             qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
-            
+
           if ctouch['tool'] == 'c2c':
             b1 = shape.body#self.gameworld.entities[entityID]
             b2 = ctouch['touching'].body#self.gameworld.entities[self.entIDs[-1]]
@@ -508,7 +489,7 @@ class TestGame(Widget):
             #b2.physics.shapes[0].group=1
             #b1.physics.shapes[0].group=1
             space.add(qj)
-        
+
         if (ctouch['tool'] == "draw" or ctouch['tool'] == "plank") and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
@@ -520,7 +501,7 @@ class TestGame(Widget):
           if dist<4:dist=8
           print "angle = ",angle
           self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle, texture=self.maintools.spriteSpinner.text)
-      
+
         if ctouch['tool'] == "circle" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           dist= sqrt((spos[0]-pos[0])**2+(spos[1]-pos[1])**2)
@@ -587,20 +568,20 @@ class TestGame(Widget):
         ct = self.maintools.currentTool
         print ct
         ctouch['active'] =  True
-        
+
         if ct in ["draw", "square", "box", "circle", "plank"]:
           ctouch['previewShape'] = self.create_decoration(pos=(0,0), width=0,height=0,texture=self.maintools.spriteSpinner.text)
-          '''with self.canvas.before:
-              ctouch['previewShape'] = Rectangle(
-                  texture=self.atlas[self.maintools.spriteSpinner.text],
-                  pos=(300,300),
-                  size=(300,300))'''
-        
+          #with self.canvas.before:
+          #    ctouch['previewShape'] = Rectangle(
+          #        texture=self.atlas[self.maintools.spriteSpinner.text],
+          #        pos=(300,300),
+          #        size=(300,300))'''
+
         self.maintools.setShape(shape)
-        
+
         #if self.maintools.currentTool == 'draw':
         #  ctouch.drawpoints={}
-          
+
         if shape and self.maintools.currentTool == 'del':
           #print dir(shape)
           #print dir(shape.body)
@@ -610,13 +591,13 @@ class TestGame(Widget):
           #space.remove(shape)
           #if shape.body in space.bodies:
           #  space.remove(shape.body)
-        
+
         if shape and not shape.body.is_static and (self.maintools.currentTool == 'drag' or self.maintools.currentTool == 'pin'):
           body = ctouch['ownbody']
           body.position = pos
           ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
           space.add(ctouch['mousejoint'])
-        
+
         #if (self.maintools.currentTool == "circle"):
         #  mass = 0 if self.maintools.staticOn else 3
         #  self.create_circle(pos, mass=mass)
@@ -628,9 +609,9 @@ class TestGame(Widget):
           self.gameworld.remove_entity(objid)
           if objid in self.entIDs: self.entIDs.remove(objid)
     def getWorldPosFromTouch(self,touch):
-    
+
         viewport = self.gameworld.systems['gameview']
-        return (touch.x- viewport.camera_pos[0],touch.y- viewport.camera_pos[1])
+        return touch.x- viewport.camera_pos[0],touch.y- viewport.camera_pos[1]
     def update(self, dt):
       self.maintools.update(dt)
       if not self.maintools.paused:
@@ -654,7 +635,7 @@ class TestGame(Widget):
           entity.physics.body.apply_impulse((dvecx,dvecy))
           #entity.physics.body.apply_force((dvecx,dvecy))
     def setup_states(self):
-        self.gameworld.add_state(state_name='main', 
+        self.gameworld.add_state(state_name='main',
             systems_added=['renderer', 'physics_renderer'],
             systems_removed=[], systems_paused=[],
             systems_unpaused=['renderer', 'physics_renderer'],
