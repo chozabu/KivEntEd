@@ -73,14 +73,14 @@ class MainTools(FloatLayout):
 		#self.selectedMenu.selectedLabel.text = str(shape)
 		#self.selectedMenu.xposLabel.text = ""
 		#self.selectedMenu.yposLabel.text = ""
-		if (shape):
+		if shape:
 			if not self.selectedMenu.xposLabel.focus:
-				self.selectedMenu.xposLabel.text = "%0.2f" % (shape.body.position.x)
+				self.selectedMenu.xposLabel.text = "%0.2f" % shape.body.position.x
 			if not self.selectedMenu.yposLabel.focus:
-				ypostr = "%0.2f" % (shape.body.position.y)
+				ypostr = "%0.2f" % shape.body.position.y
 				self.selectedMenu.yposLabel.text = ypostr
 			if not self.selectedMenu.angleLabel.focus:
-				tv = "%0.2f" % (shape.body.angle)
+				tv = "%0.2f" % shape.body.angle
 				self.selectedMenu.angleLabel.text = tv
 
 	def loadPressed(self, instance):
@@ -160,7 +160,7 @@ class MainTools(FloatLayout):
 		fval = float(instance.text)
 		if fval <= 0:
 			fval = 0.1
-			instance.text = "%0.2f" % (fval)
+			instance.text = "%0.2f" % fval
 		shape = self.selectedItem
 		if shape:
 			shape.body.mass = fval
@@ -228,24 +228,24 @@ class MainTools(FloatLayout):
 		self.selectedItem = shape
 		self.selectedMenu.selectedLabel.text = str(shape)
 		self.selectedEntity = None
-		if (shape):
+		if shape:
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
 			#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 			#self.selectedMenu.posLabel.text = tv
 			print shape.friction
-			self.selectedMenu.frictionLabel.text = "%0.2f" % (shape.friction)
-			self.selectedMenu.massLabel.text = "%0.2f" % (shape.body.mass)
-			self.selectedMenu.elasLabel.text = "%0.2f" % (shape.elasticity)
+			self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
+			self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
+			self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
 			self.selectedMenu.shapeInfo.clear_widgets()
 			if shape.__class__.__name__ == "Circle":
 				cs = CircleSettings()
-				cs.radiusLabel.text = "%0.2f" % (shape.radius)
+				cs.radiusLabel.text = "%0.2f" % shape.radius
 				cs.radiusLabel.bind(text=self.on_rad_change)
 				self.selectedMenu.shapeInfo.add_widget(cs)
 			if shape.__class__.__name__ == "BoxShape":
 				bs = BoxSettings()
-				bs.widthLabel.text = "%0.2f" % (shape.width)
-				bs.heightLabel.text = "%0.2f" % (shape.height)
+				bs.widthLabel.text = "%0.2f" % shape.width
+				bs.heightLabel.text = "%0.2f" % shape.height
 				bs.widthLabel.bind(text=self.on_width_change)
 				bs.heightLabel.bind(text=self.on_height_change)
 				self.selectedMenu.shapeInfo.add_widget(bs)
@@ -258,7 +258,7 @@ class MainTools(FloatLayout):
 			self.selectedMenu.texLabel.text = ent.physics_renderer.texture
 
 	def delSelPressed(self, instance):
-		if (self.selectedItem) and self.gameref:
+		if self.selectedItem and self.gameref:
 			self.gameref.delObj(self.selectedItem.body.data)
 			self.setShape(None)
 
