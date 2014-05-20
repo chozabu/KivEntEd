@@ -313,6 +313,7 @@ class TestGame(Widget):
         if jtype == "DampedSpring":
           jd['rest_length'] = j.rest_length
           jd['stiffness'] = j.stiffness
+          jd['damping'] = j.damping
         jds.append(jd)
       return jds
     def exportEntsToDicts(self):
@@ -388,8 +389,9 @@ class TestGame(Widget):
           if str(j['type']) == "PinJoint":
             qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']))#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
             space.add(qj)
-          #if str(j['type']) == "DampedSpring":
-          #  qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),dist,100,0.1)#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+          if str(j['type']) == "DampedSpring":
+            qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']),j['rest_length'],j['stiffness'],j['damping'])#, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+            space.add(qj)
           print j
           
     def on_touch_up(self, touch):
