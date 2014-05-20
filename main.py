@@ -108,8 +108,8 @@ class TestGame(Widget):
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		return entityID
 
-	def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle=0, x_vel=0, y_vel=0,
-					  angular_velocity=0, texture="sheep", selectNow=True):
+	def create_circle(self, pos, radius=6., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+					  angular_velocity=0., texture="sheep", selectNow=True):
 		shape_dict = {'inner_radius': 0, 'outer_radius': radius,
 					  'mass': mass, 'offset': (0, 0)}
 		col_shape = {'shape_type': 'circle', 'elasticity': elasticity,
@@ -133,8 +133,8 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		return entityID
 
-	def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle=0, x_vel=0, y_vel=0,
-				   angular_velocity=0, texture="face_box", selectNow=True):
+	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+				   angular_velocity=.0, texture="face_box", selectNow=True):
 		box_dict = {
 			'width': width,
 			'height': height,
