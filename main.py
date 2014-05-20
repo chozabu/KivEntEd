@@ -122,6 +122,7 @@ class TestGame(Widget):
         entityID = self.gameworld.init_entity(create_component_dict, component_order)
         self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
+        self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
         return entityID
       
     def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="face_box"):
@@ -163,6 +164,7 @@ class TestGame(Widget):
         #print (self.gameworld.systems['physics'].space)
         self.entIDs.append(entityID)
         if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
+        self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
         return entityID
 
     def setup_map(self):
