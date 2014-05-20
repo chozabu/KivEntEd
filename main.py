@@ -8,6 +8,8 @@ from random import random
 from math import radians
 from kivy.graphics import *
 
+from kivy.atlas import Atlas
+
 import json
 import os
 import cymunk as cy
@@ -30,6 +32,7 @@ class TestGame(Widget):
         self.startID = -1
         self.finishID = -1
         self.touches = {0:{"active":False , "pos":(0,0), "screenpos":(0,0)}}
+        self.atlas = Atlas('assets/myatlas.atlas')
         try: 
             self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
             self._keyboard.bind(on_key_down=self._on_keyboard_down)
@@ -101,6 +104,13 @@ class TestGame(Widget):
             print space.gravity
         return True
       
+    def create_decoration(self, pos=(0,0), width=40, height=40, angle = 0, texture="sheep"):
+        create_component_dict = {
+            'renderer': {'texture': texture, 'size': (width , height)}, 
+            'position': pos, 'rotate': 0}
+        component_order = ['position', 'rotate', 'renderer']
+        entityID = self.gameworld.init_entity(create_component_dict, component_order)
+        return entityID
     def create_circle(self, pos, radius=6, mass=10, friction=1.0, elasticity=.5, angle = 0, x_vel=0,y_vel=0,angular_velocity=0, texture="sheep"):
         shape_dict = {'inner_radius': 0, 'outer_radius': radius, 
             'mass': mass, 'offset': (0, 0)}
@@ -199,16 +209,70 @@ class TestGame(Widget):
         #print dir(touch)
         if (ctouch['tool'] == "camera"):
           super(TestGame, self).on_touch_move(touch)
+          
         
+        if ctouch['tool'] == "box" and ctouch["active"]:
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          prect = self.gameworld.entities[ctouch['previewShape']]
+          prect.position.x = midx#(midx,midy)
+          prect.position.y = midy#(midx,midy)
+          prect.renderer.width = xd
+          prect.renderer.height = yd
+        if ctouch['tool'] == "circle" and ctouch["active"]:
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          dist= sqrt(xd**2+yd**2)
+          prect = self.gameworld.entities[ctouch['previewShape']]
+          prect.position.x = spos[0]#(midx,midy)
+          prect.position.y = spos[1]#(midx,midy)
+          prect.rotate.r = angle
+          prect.renderer.width = dist*2
+          prect.renderer.height = dist*2
+        if ctouch['tool'] == "square" and ctouch["active"]:
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          dist= sqrt(xd**2+yd**2)
+          prect = self.gameworld.entities[ctouch['previewShape']]
+          prect.position.x = spos[0]#(midx,midy)
+          prect.position.y = spos[1]#(midx,midy)
+          prect.rotate.r = angle
+          prect.renderer.width = dist*2
+          prect.renderer.height = dist*2
+        if ctouch['tool'] == "plank" and ctouch["active"]:
+          xd = spos[0]-pos[0]
+          yd = spos[1]-pos[1]
+          dist= sqrt(xd**2+yd**2)
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          angle = atan2(yd,xd)
+          prect = self.gameworld.entities[ctouch['previewShape']]
+          prect.position.x = midx#(midx,midy)
+          prect.position.y = midy#(midx,midy)
+          prect.rotate.r = angle
+          prect.renderer.height = 10
+          prect.renderer.width = dist
         if ctouch['tool'] == "draw" and ctouch["active"]:
           mass = self.maintools.massSlider.value #0 if self.maintools.staticOn else 3
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
           dist= sqrt(xd**2+yd**2)
+          prect = self.gameworld.entities[ctouch['previewShape']]
+          midx = (spos[0]+pos[0])/2.0
+          midy = (spos[1]+pos[1])/2.0
+          angle = atan2(yd,xd)
+          prect.position.x = midx#(midx,midy)
+          prect.position.y = midy#(midx,midy)
+          prect.rotate.r = angle
+          prect.renderer.height = 10
+          prect.renderer.width = dist
+          #prect.size = (10,dist)
+          print dir(prect.renderer)
           if dist > 10:
-            midx = (spos[0]+pos[0])/2.0
-            midy = (spos[1]+pos[1])/2.0
-            angle = atan2(yd,xd)
             print "angle = ",angle
             self.create_box((midx,midy), mass=mass, width=dist, height=10, angle=angle,texture=self.maintools.spriteSpinner.text)
             ctouch['pos'] = pos
@@ -384,6 +448,9 @@ class TestGame(Widget):
         pos = self.getWorldPosFromTouch(touch)
         ctouch = self.touches[touch.id]
         spos = ctouch['pos']
+        if 'previewShape' in ctouch:
+          self.gameworld.remove_entity(ctouch['previewShape'])
+        #  self.canvas.before.remove(ctouch['previewShape'])
         
         space =self.gameworld.systems['physics'].space
         position = cy.Vec2d(pos[0], pos[1])
@@ -497,7 +564,6 @@ class TestGame(Widget):
         self.touches[touch.id] = {"active":False , "newpos":pos, "screenpos":(touch.x,touch.y)}
     def on_touch_down(self, touch):
         print "TOUCHDOWN\n"
-        #print os.listdir("./sprites")
         pos = self.getWorldPosFromTouch(touch)
         position = cy.Vec2d(pos[0], pos[1])
         space =self.gameworld.systems['physics'].space
@@ -512,8 +578,17 @@ class TestGame(Widget):
           print "clicked in menu"
           return
         print "not in menu"
-        print self.maintools.currentTool
+        ct = self.maintools.currentTool
+        print ct
         ctouch['active'] =  True
+        
+        if ct in ["draw", "square", "box", "circle", "plank"]:
+          ctouch['previewShape'] = self.create_decoration(pos=(0,0), width=0,height=0,texture=self.maintools.spriteSpinner.text)
+          '''with self.canvas.before:
+              ctouch['previewShape'] = Rectangle(
+                  texture=self.atlas[self.maintools.spriteSpinner.text],
+                  pos=(300,300),
+                  size=(300,300))'''
         
         self.maintools.setShape(shape)
         
