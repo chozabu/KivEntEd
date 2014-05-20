@@ -3,7 +3,7 @@ Games:
 -MyWheelz
 
 important:
--level settings (gravity, notes)preview object creation
+-level settings (gravity, notes)
 -show joints
 -edit joints
 
@@ -15,7 +15,6 @@ custom entitys? online library? scripts?
 
 
 Kivent:
--enable rotation
 -multi-quad renderer
 -texture importing and/or themes
 -polygons
@@ -35,3 +34,5 @@ create start/end pos
 save/load
 create start/end
 change shape texture
+preview object creation
+-fix preview rotation

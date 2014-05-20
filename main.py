@@ -652,9 +652,9 @@ class TestGame(Widget):
 
 	def setup_states(self):
 		self.gameworld.add_state(state_name='main',
-								 systems_added=['renderer', 'physics_renderer'],
+								 systems_added=['rotate', 'renderer', 'physics_renderer'],
 								 systems_removed=[], systems_paused=[],
-								 systems_unpaused=['renderer', 'physics_renderer'],
+								 systems_unpaused=['rotate', 'renderer', 'physics_renderer'],
 								 screenmanager_screen='main')
 
 	def set_state(self):
