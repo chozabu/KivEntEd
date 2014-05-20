@@ -264,8 +264,6 @@ class MainTools(FloatLayout):
 
 	def camPressed(self, instance):
 		self.setTool("camera")
-		#for i in range(10):
-		#  self.add_random_circle()
 
 	def dragPressed(self, instance):
 		self.setTool("drag")
@@ -317,15 +315,12 @@ class MainTools(FloatLayout):
 
 	def circlePressed(self, instance):
 		self.setTool("circle")
-		#self.spriteSpinner.text="sheep"
 
 	def squarePressed(self, instance):
 		self.setTool("square")
-		#self.spriteSpinner.text="grassyrock"
 
 	def boxPressed(self, instance):
 		self.setTool("box")
-		#self.spriteSpinner.text="face_box"
 
 	def massPressed(self, instance):
 		self.massSlider.value = 0 if self.massSlider.value > 0 else 10
@@ -342,11 +337,9 @@ class MainTools(FloatLayout):
 
 	def drawPressed(self, instance):
 		self.setTool("draw")
-		#self.spriteSpinner.text="Grass2"
 
 	def plankPressed(self, instance):
 		self.setTool("plank")
-		#self.spriteSpinner.text="plank"
 
 	def joinPinPressed(self, instance):
 		self.setTool("pin")

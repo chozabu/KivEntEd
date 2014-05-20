@@ -139,8 +139,6 @@ class TestGame(Widget):
 			'width': width,
 			'height': height,
 			'mass': mass}
-		#shape_dict = {'inner_radius': 0, 'outer_radius': radius,
-		#    'mass': mass, 'offset': (0, 0)}
 		col_shape = {'shape_type': 'box', 'elasticity': elasticity,
 					 'collision_type': 1, 'shape_info': box_dict, 'friction': friction}
 		col_shapes = [col_shape]
@@ -157,14 +155,6 @@ class TestGame(Widget):
 		component_order = ['position', 'rotate',
 						   'physics', 'physics_renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
-		#b1 = self.gameworld.entities[entityID]
-		#b2 = self.gameworld.entities[self.entIDs[-1]]
-		#qj = cy.PivotJoint(b1.physics.body, b2.physics.body, b2.physics.body.position)
-		#print (b2.physics.shapes[0])
-		#b2.physics.shapes[0].group=1
-		#b1.physics.shapes[0].group=1
-		#self.gameworld.systems['physics'].space.add(qj)
-		#print (self.gameworld.systems['physics'].space)
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
@@ -176,9 +166,6 @@ class TestGame(Widget):
 
 	def on_touch_move(self, touch):
 		self.mainTools.on_touch_move(touch)
-		#if touch.x < self.width*.1:
-		#  #print "menu?"
-		#  return
 		space = self.gameworld.systems['physics'].space
 		ctouch = self.touches[touch.id]
 		pos = self.getWorldPosFromTouch(touch)
@@ -255,7 +242,6 @@ class TestGame(Widget):
 			prect.rotate.r = angle
 			prect.renderer.height = 10
 			prect.renderer.width = dist
-			#prect.size = (10,dist)
 			print dir(prect.renderer)
 			if dist > 10:
 				print "angle = ", angle
