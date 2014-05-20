@@ -23,9 +23,9 @@ class TestGame(Widget):
 		super(TestGame, self).__init__(**kwargs)
 		Clock.schedule_once(self.init_game)
 		self.entIDs = []
-		self.maintools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
-		self.maintools.drawPressed(None)
-		self.maintools.setRef(self)
+		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
+		self.mainTools.drawPressed(None)
+		self.mainTools.setRef(self)
 		self.startID = -1
 		self.finishID = -1
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
@@ -61,8 +61,8 @@ class TestGame(Widget):
 		for k in usprites:
 			print k
 			if k != 'atlas_size' and k != 'main_texture': sprites.append(str(k))
-		self.maintools.spriteSpinner.values = sprites
-		self.maintools.selectedMenu.texLabel.values = sprites
+		self.mainTools.spriteSpinner.values = sprites
+		self.mainTools.selectedMenu.texLabel.values = sprites
 
 	def reindexEntID(self, entityID):
 		self.reindexEnt(self.gameworld.entities[entityID])
@@ -129,8 +129,8 @@ class TestGame(Widget):
 						   'physics', 'physics_renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
-		if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow: self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
+		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		return entityID
 
 	def create_box(self, pos, width=40, height=40, mass=10, friction=1.0, elasticity=.5, angle=0, x_vel=0, y_vel=0,
@@ -166,8 +166,8 @@ class TestGame(Widget):
 		#self.gameworld.systems['physics'].space.add(qj)
 		#print (self.gameworld.systems['physics'].space)
 		self.entIDs.append(entityID)
-		if self.maintools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow: self.maintools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
+		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		return entityID
 
 	def setup_map(self):
@@ -175,7 +175,7 @@ class TestGame(Widget):
 		gameworld.currentmap = gameworld.systems['map']
 
 	def on_touch_move(self, touch):
-		self.maintools.on_touch_move(touch)
+		self.mainTools.on_touch_move(touch)
 		#if touch.x < self.width*.1:
 		#  #print "menu?"
 		#  return
@@ -190,15 +190,6 @@ class TestGame(Widget):
 		shape = space.point_query_first(position)
 		ctouch['touchingnow'] = shape
 
-		#print super(TestGame, self).on_touch_move(touch)
-		#if (self.maintools.currentTool == "circle"):
-		#  mass = 0 if self.maintools.staticOn else 3
-		#  self.create_circle(pos, mass=mass)
-		#if (self.maintools.currentTool == "box"):
-		#  mass = 0 if self.maintools.staticOn else 3
-		#  self.create_box(pos, mass=mass)
-		#  print "There are: %i Asteroids" % len(self.entIDs)
-		#print dir(touch)
 		if ctouch['tool'] == "camera":
 			super(TestGame, self).on_touch_move(touch)
 
@@ -251,7 +242,7 @@ class TestGame(Widget):
 			prect.renderer.height = 10
 			prect.renderer.width = dist
 		if ctouch['tool'] == "draw" and ctouch["active"]:
-			mass = self.maintools.massSlider.value  #0 if self.maintools.staticOn else 3
+			mass = self.mainTools.massSlider.value
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			dist = sqrt(xd ** 2 + yd ** 2)
@@ -269,14 +260,14 @@ class TestGame(Widget):
 			if dist > 10:
 				print "angle = ", angle
 				self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-								texture=self.maintools.spriteSpinner.text)
+								texture=self.mainTools.spriteSpinner.text)
 				ctouch['pos'] = pos
 
 		shape = ctouch['touching']
-		if shape and (shape.body.is_static or self.maintools.paused) and (ctouch['tool'] == 'drag'):
+		if shape and (shape.body.is_static or self.mainTools.paused) and (ctouch['tool'] == 'drag'):
 			shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
 			self.reindexEntID(shape.body.data)
-			if self.maintools.paused:
+			if self.mainTools.paused:
 				(self.gameworld.systems['physics'].update(0.00000001))
 				(self.gameworld.systems['physics_renderer'].update(0.00000001))
 				(self.gameworld.systems['renderer'].update(0.00000001))
@@ -452,7 +443,7 @@ class TestGame(Widget):
 				print j
 
 	def on_touch_up(self, touch):
-		self.maintools.on_touch_up(touch)
+		self.mainTools.on_touch_up(touch)
 		if touch.id not in self.touches:
 			print super(TestGame, self).on_touch_up(touch)
 			print "touchdown not found, mousewheel?"
@@ -519,7 +510,7 @@ class TestGame(Widget):
 				space.add(qj)
 
 		if (ctouch['tool'] == "draw" or ctouch['tool'] == "plank") and ctouch["active"]:
-			mass = self.maintools.massSlider.value  #0 if self.maintools.staticOn else 3
+			mass = self.mainTools.massSlider.value
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			midx = (spos[0] + pos[0]) / 2.0
@@ -529,10 +520,10 @@ class TestGame(Widget):
 			if dist < 4: dist = 8
 			print "angle = ", angle
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-							texture=self.maintools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text)
 
 		if ctouch['tool'] == "circle" and ctouch["active"]:
-			mass = self.maintools.massSlider.value  #0 if self.maintools.staticOn else 3
+			mass = self.mainTools.massSlider.value
 			dist = sqrt((spos[0] - pos[0]) ** 2 + (spos[1] - pos[1]) ** 2)
 			if dist < 4: dist = 8
 			print dist
@@ -540,7 +531,7 @@ class TestGame(Widget):
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			angle = atan2(yd, xd)
-			self.create_circle(spos, mass=mass, radius=dist, texture=self.maintools.spriteSpinner.text, angle=angle)
+			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
 		if ctouch['tool'] == "start" and ctouch["active"]:
 			if self.startID < 0:
 				self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb")
@@ -556,20 +547,16 @@ class TestGame(Widget):
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
 		if ctouch['tool'] == "box" and ctouch["active"]:
-			mass = self.maintools.massSlider.value  #0 if self.maintools.staticOn else 3
+			mass = self.mainTools.massSlider.value
 			spos = ctouch['pos']
 			xd = max(5, abs(spos[0] - pos[0]))
 			yd = max(5, abs(spos[1] - pos[1]))
 			midx = (spos[0] + pos[0]) / 2.0
 			midy = (spos[1] + pos[1]) / 2.0
-			#angle = atan2(yd,xd)
-			#dist= sqrt(xd**2+yd**2)
-			#if dist<4:dist=8
-			#print "angle = ",angle
 			self.create_box((midx, midy), mass=mass, width=xd, height=yd, angle=0,
-							texture=self.maintools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text)
 		if ctouch['tool'] == "square" and ctouch["active"]:
-			mass = self.maintools.massSlider.value  #0 if self.maintools.staticOn else 3
+			mass = self.mainTools.massSlider.value
 			spos = ctouch['pos']
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
@@ -578,7 +565,7 @@ class TestGame(Widget):
 			if dist < 4: dist = 8
 			print "angle = ", angle
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
-							texture=self.maintools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text)
 		self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 
 	def on_touch_down(self, touch):
@@ -590,34 +577,31 @@ class TestGame(Widget):
 		#self.selectedShape = shape
 		print "touched shape:", shape
 		self.touches[touch.id] = {"active": False, "pos": pos, "newpos": pos, "screenpos": (touch.x, touch.y),
-								  "tool": self.maintools.currentTool, "onmenu": False, "touching": shape,
+								  "tool": self.mainTools.currentTool, "onmenu": False, "touching": shape,
 								  "touchingnow": shape, "ownbody": cy.Body()}
 		ctouch = self.touches[touch.id]
-		if self.maintools.on_touch_down(touch):  #True:#touch.x < self.width*.1:
+		if self.mainTools.on_touch_down(touch):  #True:#touch.x < self.width*.1:
 			ctouch["onmenu"] = True
 			#sresult = super(TestGame, self).on_touch_down(touch)
 			print "clicked in menu"
 			return
 		print "not in menu"
-		ct = self.maintools.currentTool
+		ct = self.mainTools.currentTool
 		print ct
 		ctouch['active'] = True
 
 		if ct in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
-															texture=self.maintools.spriteSpinner.text)
+															texture=self.mainTools.spriteSpinner.text)
 			#with self.canvas.before:
 			#    ctouch['previewShape'] = Rectangle(
-			#        texture=self.atlas[self.maintools.spriteSpinner.text],
+			#        texture=self.atlas[self.mainTools.spriteSpinner.text],
 			#        pos=(300,300),
 			#        size=(300,300))'''
 
-		self.maintools.setShape(shape)
+		self.mainTools.setShape(shape)
 
-		#if self.maintools.currentTool == 'draw':
-		#  ctouch.drawpoints={}
-
-		if shape and self.maintools.currentTool == 'del':
+		if shape and self.mainTools.currentTool == 'del':
 			#print dir(shape)
 			#print dir(shape.body)
 			self.delObj(shape.body.data)
@@ -628,18 +612,11 @@ class TestGame(Widget):
 			#  space.remove(shape.body)
 
 		if shape and not shape.body.is_static and (
-				self.maintools.currentTool == 'drag' or self.maintools.currentTool == 'pin'):
+				self.mainTools.currentTool == 'drag' or self.mainTools.currentTool == 'pin'):
 			body = ctouch['ownbody']
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
 			space.add(ctouch['mousejoint'])
-
-			#if (self.maintools.currentTool == "circle"):
-			#  mass = 0 if self.maintools.staticOn else 3
-			#  self.create_circle(pos, mass=mass)
-			#if (self.maintools.currentTool == "box"):
-			#  mass = 0 if self.maintools.staticOn else 3
-			#  self.create_box(pos, mass=mass)
 
 	def delObj(self, objid):
 		#todo check before removing these items
@@ -652,8 +629,8 @@ class TestGame(Widget):
 		return touch.x - viewport.camera_pos[0], touch.y - viewport.camera_pos[1]
 
 	def update(self, dt):
-		self.maintools.update(dt)
-		if not self.maintools.paused:
+		self.mainTools.update(dt)
+		if not self.mainTools.paused:
 			self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
