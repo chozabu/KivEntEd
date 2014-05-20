@@ -92,6 +92,7 @@ class MainTools(FloatLayout):
     def savePressed(self,instance):
         self.testsave = self.gameref.exportJSON()
     def clearPressed(self,instance):
+      space =self.gameref.gameworld.systems['physics'].space
       #print dir(self.gameref.gameworld)#.clear_entities()
       #print self.gameref.entIDs
       for eid in self.gameref.entIDs[:]:
@@ -101,6 +102,9 @@ class MainTools(FloatLayout):
         #self.gameref.delObj(e.entity_id)
         self.gameref.delObj(eid)
       #self.gameref.gameworld.clear_entities()
+      space.remove(list(space.constraints))
+      #for j in space.constraints:
+      #  space.remove(j)
     def setTool(self, tool):
        if self.currentTool not in self.toolSettings:
          self.toolSettings[self.currentTool] = {}

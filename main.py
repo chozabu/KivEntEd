@@ -364,6 +364,7 @@ class TestGame(Widget):
           mass = body['mass']
           texture = str(pr['texture'])
           if str(mass) == 'inf': mass = 0
+          print e['orig_id']
           if stype == "circle":
             idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass, friction=shape['friction'], elasticity=shape['elasticity'], angle = body['angle'], texture=texture)
           elif stype == "box":
