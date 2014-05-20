@@ -28,6 +28,7 @@ class TestGame(Widget):
 		self.mainTools.setRef(self)
 		self.startID = -1
 		self.finishID = -1
+		self.space = None
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
@@ -49,6 +50,7 @@ class TestGame(Widget):
 		self.set_state()
 
 		self.draw_some_stuff()
+		self.space = self.gameworld.systems['physics'].space
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
 
@@ -77,8 +79,8 @@ class TestGame(Widget):
 		size = Window.size
 		for x in range(50):
 			pos = (randint(size[0] / 3, size[0]), randint(0, size[1]))
-			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15)
-		self.create_box((size[0] / 2.0, 0), mass=0, width=size[0] * 2, height=10, angle=0)
+			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15, selectNow=False)
+		self.create_box((size[0] / 2.0, 0), mass=0, width=size[0] * 2, height=10, angle=0, selectNow=False)
 
 	def _keyboard_closed(self):
 		try:
