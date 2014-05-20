@@ -1,0 +1,25 @@
+
+level settings (gravity, notes)preview object creation
+create vortex/repeller
+create wrecker
+create grav/drag zone
+
+make simple wheelz, or tilt-maze game
+render joints
+
+needmorekivent:
+add shapes to body
+change shape pos
+
+
+
+
+done:
+add more textures
+change body pos/angle
+change shape pos/size
+change mass, elasticity, friction
+create start/end pos
+save/load
+create start/end
+change shape texture
