@@ -55,6 +55,8 @@ class TestGame(Widget):
         Clock.schedule_interval(self.update, 0)
         Clock.schedule_once(self.init_sprites)
     def init_sprites(self, dt):
+        #self.gameworld.systems['renderer'].do_rotate = True
+        #self.gameworld.systems['renderer'].on_do_rotate(None,None)
         usprites = self.gameworld.systems['renderer'].uv_dict.keys()
         sprites = []
         print usprites
@@ -210,7 +212,9 @@ class TestGame(Widget):
         if (ctouch['tool'] == "camera"):
           super(TestGame, self).on_touch_move(touch)
           
-        
+        #a = self.gameworld.entities[ctouch['previewShape']]
+        #print dir(self.gameworld.systems['renderer'])
+        #self.gameworld.systems['renderer'].do_rotate = True
         if ctouch['tool'] == "box" and ctouch["active"]:
           xd = spos[0]-pos[0]
           yd = spos[1]-pos[1]
