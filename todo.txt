@@ -3,9 +3,9 @@ Games:
 -MyWheelz
 
 important:
--level settings (gravity, notes)
 -show joints
 -edit joints
+-level settings (gravity, notes)
 
 Entitys:
 -create vortex/repeller
