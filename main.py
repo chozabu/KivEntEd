@@ -674,6 +674,14 @@ class KivEntEd(App):
 		print self.get_application_config_dir()
 		print self.get_application_config()
 
+	def on_pause(self):
+		print "pausing"
+		self.root.exportJSON(fileName="pauselevel.json")
+		return True
+	def on_resume(self):
+		self.root.loadJSON(fileName="pauselevel.json")
+
+
 	def get_application_config_dir(self, extra=""):
 		return super(KivEntEd, self).get_application_config(
 			'~/.%(appname)s/' + extra)
