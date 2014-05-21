@@ -20,6 +20,7 @@ import ui_elements
 
 class TestGame(Widget):
 	def __init__(self, **kwargs):
+		self.dataDir = ""
 		super(TestGame, self).__init__(**kwargs)
 		Clock.schedule_once(self.init_game)
 		self.entIDs = []
@@ -350,7 +351,7 @@ class TestGame(Widget):
 		return entsdict
 
 	def exportJSON(self, fileName="defaultlevel.json"):
-		global dataDir
+		dataDir = self.dataDir
 		entslist = self.exportEntsToDicts()
 		jointslist = self.exportJointsToDicts()
 		#print dir(space.constraints[0])
@@ -364,9 +365,8 @@ class TestGame(Widget):
 		return worlddict
 
 	def loadJSON(self, fileName="defaultlevel.json"):
-		with open(dataDir + fileName, 'r') as fo:
+		with open(self.dataDir + fileName, 'r') as fo:
 			entsdict = json.load(fo)
-		print entsdict
 		self.loadFromDict(entsdict)
 		#print dir(space.constraints[0])
 		#print (space.constraints[0].a)
@@ -663,16 +663,17 @@ class TestGame(Widget):
 
 dataDir = ""
 
+from kivy.utils import platform
+from os.path import dirname, join, exists, sep, expanduser, isfile
 
 class KivEntEd(App):
 	def build(self):
-		global dataDir
 		Window.clearcolor = (0, 0, 0, 1.)
-		dataDir = self.get_application_config_dir()
+		dataDir = self.get_application_storage_dir()
+		print "dd="+dataDir
 		if not os.path.exists(dataDir):
 			os.makedirs(dataDir)
-		print self.get_application_config_dir()
-		print self.get_application_config()
+		self.root.dataDir = dataDir
 
 	def on_pause(self):
 		print "pausing"
@@ -682,12 +683,22 @@ class KivEntEd(App):
 		self.root.loadJSON(fileName="pauselevel.json")
 
 
-	def get_application_config_dir(self, extra=""):
-		return super(KivEntEd, self).get_application_config(
-			'~/.%(appname)s/' + extra)
+	def get_application_storage_dir(self, extra=""):
+		defaultpath = '~/.%(appname)s/'
+		if platform == 'android':
+			defaultpath = '/sdcard/.%(appname)s/'
+		elif platform == 'ios':
+			defaultpath = '~/Documents/%(appname)s/'
+		elif platform == 'win':
+			defaultpath = defaultpath.replace('/', sep)
+		defaultpath+=extra
+		return expanduser(defaultpath) % {
+			'appname': self.name, 'appdir': self.directory}
+		#return super(KivEntEd, self).get_application_config(
+		#	'~/.%(appname)s/' + extra)
 
 	def get_application_config(self):
-		return self.get_application_config_dir("%(appname)s.ini")
+		return self.get_application_storage_dir("%(appname)s.ini")
 
 
 if __name__ == '__main__':
