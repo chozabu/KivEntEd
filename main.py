@@ -25,8 +25,8 @@ class TestGame(Widget):
 		Clock.schedule_once(self.init_game)
 		self.entIDs = []
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
-		self.mainTools.drawPressed(None)
 		self.mainTools.setRef(self)
+		self.mainTools.setTool("draw")
 		self.startID = -1
 		self.finishID = -1
 		self.space = None
@@ -357,7 +357,8 @@ class TestGame(Widget):
 		#print dir(space.constraints[0])
 		space = self.space
 		worlddict = {"ents": entslist, "jointslist": jointslist,
-					 "settings": {"gravity": (space.gravity.x, space.gravity.y)}}
+					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
+					              "startID":self.startID, "finishID": self.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
 		print "dir=", dataDir
@@ -374,9 +375,6 @@ class TestGame(Widget):
 	def loadFromDict(self, data):
 		print "LOADING"
 		space = self.space
-		if "settings" in data:
-			g = data['settings']['gravity']
-			space.gravity = (g[0], g[1])
 		ents = data['ents']
 		idConvDict = {}
 		for e in ents:
@@ -430,6 +428,18 @@ class TestGame(Widget):
 										 j['damping'])  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
 					space.add(qj)
 				print j
+		if "settings" in data:
+			settings = data['settings']
+			g = settings['gravity']
+			space.gravity = (g[0], g[1])
+			if "startID" in settings:
+				sid = settings['startID']
+				if sid != -1:
+					self.startID = idConvDict[sid]
+			if "finishID" in settings:
+				fid = settings['finishID']
+				if fid != -1:
+					self.finishID = idConvDict[fid]
 
 	def on_touch_up(self, touch):
 		self.mainTools.on_touch_up(touch)

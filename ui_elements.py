@@ -62,7 +62,7 @@ class MainTools(FloatLayout):
 		Clock.schedule_once(self.init_tools)
 
 	def init_tools(self, dt):
-		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu]
+		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu, self.fileMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
 		self.rightMenu.remove_widget(self.selectedMenu)
@@ -251,96 +251,26 @@ class MainTools(FloatLayout):
 			self.gameref.delObj(self.selectedItem.body.data)
 			self.setShape(None)
 
-	def camPressed(self, instance):
-		self.setTool("camera")
-
-	def dragPressed(self, instance):
-		self.setTool("drag")
 
 	def clearl2(self):
 		for i in self.l2menus:
 			if i in self.leftMenu.children:
 				self.leftMenu.remove_widget(i)
 
-	def startPressed(self, instance):
-		self.setTool("start")
-
-	def endPressed(self, instance):
-		self.setTool("end")
-
-	def blankPressed(self, instance):
-		self.setTool("blank")
-
-	def entityPressed(self, instance):
-		if self.entityMenu in self.leftMenu.children:
+	def changel2menu(self, newMenu):
+		if newMenu in self.leftMenu.children:
 			self.clearl2()
 			self.leftMenu.size_hint_x = .1
 		else:
 			self.clearl2()
-			self.leftMenu.add_widget(self.entityMenu)
+			self.leftMenu.add_widget(newMenu)
 			self.leftMenu.size_hint_x = .2
 
-	def joinPressed(self, instance):
-		if self.joinMenu in self.leftMenu.children:
-			self.clearl2()
-			self.leftMenu.size_hint_x = .1
-		else:
-			self.clearl2()
-			print self.leftMenu
-			print self.joinMenu
-			self.leftMenu.add_widget(self.joinMenu)
-			self.leftMenu.size_hint_x = .2
-
-	def createPressed(self, instance):
-		if self.createMenu in self.leftMenu.children:
-			self.clearl2()
-			self.leftMenu.size_hint_x = .1
-		else:
-			self.clearl2()
-			print self.leftMenu
-			print self.createMenu
-			self.leftMenu.add_widget(self.createMenu)
-			self.leftMenu.size_hint_x = .2
-
-	def circlePressed(self, instance):
-		self.setTool("circle")
-
-	def squarePressed(self, instance):
-		self.setTool("square")
-
-	def boxPressed(self, instance):
-		self.setTool("box")
 
 	def massPressed(self, instance):
 		self.massSlider.value = 0 if self.massSlider.value > 0 else 10
 
-	def delPressed(self, instance):
-		self.setTool("del")
 
 	def playPressed(self, instance):
 		self.paused = not self.paused
 		self.ids['playButton'].text = "Pause/Play" if self.paused else "Play/Pause"
-
-	def vortexPressed(self, instance):
-		self.setTool("vortex")
-
-	def drawPressed(self, instance):
-		self.setTool("draw")
-
-	def plankPressed(self, instance):
-		self.setTool("plank")
-
-	def joinPinPressed(self, instance):
-		self.setTool("pin")
-
-	def joinP2PPressed(self, instance):
-		self.setTool("p2p")
-
-	def joinP2PSPressed(self, instance):
-		self.setTool("p2ps")
-
-	def joinC2PPressed(self, instance):
-		self.setTool("c2p")
-
-	def joinC2CPressed(self, instance):
-		self.setTool("c2c")

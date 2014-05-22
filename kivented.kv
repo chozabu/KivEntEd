@@ -105,6 +105,7 @@ TestGame:
     massSlider: massSlider
     spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu.__self__
+    fileMenu: fileMenu.__self__
     
     BoxLayout:
         id: rightMenu
@@ -148,9 +149,6 @@ TestGame:
                     id: angleLabel
                     text: "angle"
                     on_text: root.angleChanged(self)
-            #Label:
-            #    id: texLabel
-            #    text: "texture"
             Spinner:
                 id: texLabel
                 text: "texture"
@@ -194,23 +192,24 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
+            Button:
+                text: 'File'
+                on_press: root.changel2menu(root.fileMenu)
             ToggleButton:
                 group: 'ToolGroup'
                 id: camButton
                 text: 'Camera'
-                on_press: root.camPressed(self)
+                on_press: root.setTool("camera")
             Button:
-                id: createButton
                 text: 'Create'
-                on_press: root.createPressed(self)
+                on_press: root.changel2menu(root.createMenu)
             Button:
-                id: createButton
                 text: 'Entity'
-                on_press: root.entityPressed(self)
+                on_press: root.changel2menu(root.entityMenu)
             Button:
                 id: joinButton
                 text: 'Join'
-                on_press: root.joinPressed(self)
+                on_press: root.changel2menu(root.joinMenu)
             Button:
                 id: playButton
                 text: 'pause/play'
@@ -219,26 +218,17 @@ TestGame:
                 group: 'ToolGroup'
                 id: vortexButton
                 text: 'Vortex'
-                on_press: root.vortexPressed(self)
+                on_press: root.setTool("vortex")
             ToggleButton:
                 group: 'ToolGroup'
                 id: dragButton
                 text: 'Drag'
-                on_press: root.dragPressed(self)
+                on_press: root.setTool("drag")
             ToggleButton:
                 group: 'ToolGroup'
                 id: deleteButton
                 text: 'Delete'
-                on_press: root.delPressed(self)
-            Button:
-                text: 'Save'
-                on_press: root.savePressed(self)
-            Button:
-                text: 'Load'
-                on_press: root.loadPressed(self)
-            Button:
-                text: 'Clear'
-                on_press: root.clearPressed(self)
+                on_press: root.setTool("del")
         BoxLayout:
             id: entityMenu
             orientation: 'vertical'
@@ -249,17 +239,17 @@ TestGame:
                 group: 'ToolGroup'
                 id: startButton
                 text: 'Start'
-                on_press: root.startPressed(self)
+                on_press: root.setTool("start")
             ToggleButton:
                 group: 'ToolGroup'
                 id: endButton
                 text: 'End'
-                on_press: root.endPressed(self)
+                on_press: root.setTool("end")
             ToggleButton:
                 group: 'ToolGroup'
                 id: blankButton
                 text: 'Blank'
-                on_press: root.blankPressed(self)
+                on_press: root.setTool("blank")
         BoxLayout:
             id: createMenu
             orientation: 'vertical'
@@ -270,27 +260,27 @@ TestGame:
                 group: 'ToolGroup'
                 id: circleButton
                 text: 'Circles'
-                on_press: root.circlePressed(self)
+                on_press: root.setTool("circle")
             ToggleButton:
                 group: 'ToolGroup'
                 id: squareButton
                 text: 'Square'
-                on_press: root.squarePressed(self)
+                on_press: root.setTool("square")
             ToggleButton:
                 group: 'ToolGroup'
                 id: boxButton
                 text: 'Box'
-                on_press: root.boxPressed(self)
+                on_press: root.setTool("box")
             ToggleButton:
                 group: 'ToolGroup'
                 id: linesButton
                 text: 'Lines'
-                on_press: root.drawPressed(self)
+                on_press: root.setTool("draw")
             ToggleButton:
                 group: 'ToolGroup'
                 id: plankButton
                 text: 'Plank'
-                on_press: root.plankPressed(self)
+                on_press: root.setTool("plank")
             Label:
                 size_hint: (1,0.2)
                 text: "Settings"
@@ -320,23 +310,39 @@ TestGame:
             ToggleButton:
                 group: 'ToolGroup'
                 text: 'Pin to World'
-                on_press: root.joinPinPressed(self)
+                on_press: root.setTool("pin")
             ToggleButton:
                 group: 'ToolGroup'
                 text: 'Point 2 Point'
-                on_press: root.joinP2PPressed(self)
+                on_press: root.setTool("p2p")
             ToggleButton:
                 group: 'ToolGroup'
                 text: 'P2P Spring'
-                on_press: root.joinP2PSPressed(self)
+                on_press: root.setTool("p2ps")
             ToggleButton:
                 group: 'ToolGroup'
                 text: 'Center 2 Point'
-                on_press: root.joinC2PPressed(self)
+                on_press: root.setTool("c2p")
             ToggleButton:
                 group: 'ToolGroup'
                 text: 'Center 2 Center'
-                on_press: root.joinC2CPressed(self)
+                on_press: root.setTool("c2c")
+
+        BoxLayout:
+            id: fileMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+            Button:
+                text: 'Save'
+                on_press: root.savePressed(self)
+            Button:
+                text: 'Load'
+                on_press: root.loadPressed(self)
+            Button:
+                text: 'Clear'
+                on_press: root.clearPressed(self)
         
 <PlainButton@Button>:
     
