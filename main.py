@@ -60,9 +60,7 @@ class TestGame(Widget):
 		#self.gameworld.systems['renderer'].on_do_rotate(None,None)
 		usprites = self.gameworld.systems['renderer'].uv_dict.keys()
 		sprites = []
-		print usprites
 		for k in usprites:
-			print k
 			if k != 'atlas_size' and k != 'main_texture': sprites.append(str(k))
 		self.mainTools.spriteSpinner.values = sprites
 		self.mainTools.selectedMenu.texLabel.values = sprites
@@ -100,7 +98,6 @@ class TestGame(Widget):
 			space.gravity = space.gravity.x - 10, space.gravity.y
 		if keycode[1] == 'right':
 			space.gravity = space.gravity.x + 10, space.gravity.y
-			print space.gravity
 		return True
 
 	def create_decoration(self, pos=(0, 0), width=40, height=40, angle=0, texture="sheep"):
@@ -185,9 +182,6 @@ class TestGame(Widget):
 		if ctouch['tool'] == "camera":
 			super(TestGame, self).on_touch_move(touch)
 
-		#a = self.gameworld.entities[ctouch['previewShape']]
-		#print dir(self.gameworld.systems['renderer'])
-		#self.gameworld.systems['renderer'].do_rotate = True
 		if ctouch['tool'] == "box" and ctouch["active"]:
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
@@ -247,9 +241,7 @@ class TestGame(Widget):
 			prect.rotate.r = angle
 			prect.renderer.height = 10
 			prect.renderer.width = dist
-			print dir(prect.renderer)
 			if dist > 10:
-				print "angle = ", angle
 				self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 								texture=self.mainTools.spriteSpinner.text)
 				ctouch['pos'] = pos
@@ -276,17 +268,11 @@ class TestGame(Widget):
 
 	def entToDict(self, e):
 		ed = {"orig_id": e.entity_id}
-		#print dir(e)
-		#print (e.entity_id)
 		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
 		if hasattr(e, "load_order"):
-			#print e.load_order
 			ed["load_order"] = e.load_order
 		if hasattr(e, "physics"):
-			#print dir(e.physics)
 			b = e.physics.body
-			#for item in dir(b):
-			#  print item, getattr(b, item)
 			bd = {'velocity': (b.velocity.x, b.velocity.y),
 				  'position': (b.position.x, b.position.y),
 				  'angle': b.angle,
@@ -295,7 +281,6 @@ class TestGame(Widget):
 				  'ang_vel_limit': b.angular_velocity_limit,
 				  'mass': b.mass
 			}
-			#print (e.physics.shape_type)
 			shapes = []
 			for s in e.physics.shapes:
 				#print s
@@ -304,18 +289,15 @@ class TestGame(Widget):
 			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
 			ed["physics"] = pd
 		if hasattr(e, "physics_renderer"):
-			#print dir(e.physics_renderer)
 			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
 				   "texture": e.physics_renderer.texture}
 			ed["physics_renderer"] = prd
 		if hasattr(e, "position"):
-			#print dir(e.position)
 			pd = {"x": e.position.x, "y": e.position.y}
 			ed["position"] = pd
 		if hasattr(e, "rotate"):
 			rd = {"r": e.rotate.r}
 			ed["rotate"] = rd
-			#print dir(e.rotate.r)
 		return ed
 
 	def exportJointsToDicts(self):
@@ -323,8 +305,6 @@ class TestGame(Widget):
 		jds = []
 		for j in space.constraints:
 			jtype = j.__class__.__name__
-			print jtype
-			print dir(j)
 			anchor1 = j.anchor1
 			#if None == j.a.data and j.a != space.static_body:
 			#  anchor1 = {'x':j.a.position.x, 'y':j.a.position.y}
@@ -354,7 +334,6 @@ class TestGame(Widget):
 		dataDir = self.dataDir
 		entslist = self.exportEntsToDicts()
 		jointslist = self.exportJointsToDicts()
-		#print dir(space.constraints[0])
 		space = self.space
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
@@ -369,8 +348,6 @@ class TestGame(Widget):
 		with open(self.dataDir + fileName, 'r') as fo:
 			entsdict = json.load(fo)
 		self.loadFromDict(entsdict)
-		#print dir(space.constraints[0])
-		#print (space.constraints[0].a)
 
 	def loadFromDict(self, data):
 		print "LOADING"
@@ -388,7 +365,6 @@ class TestGame(Widget):
 				mass = body['mass']
 				texture = str(pr['texture'])
 				if str(mass) == 'inf': mass = 0
-				print e['orig_id']
 				if stype == "circle":
 					idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass,
 																  friction=shape['friction'],
@@ -427,7 +403,6 @@ class TestGame(Widget):
 										 j['stiffness'],
 										 j['damping'])  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
 					space.add(qj)
-				print j
 		if "settings" in data:
 			settings = data['settings']
 			g = settings['gravity']
@@ -471,7 +446,6 @@ class TestGame(Widget):
 				b2 = shape.body  #self.gameworld.entities[self.entIDs[-1]]
 				b2l = b2.world_to_local(position)
 				print b2l
-				#qj = cy.PivotJoint(b1, b2, pos)
 				qj = cy.PinJoint(b1, b2, (0, 0),
 								 (b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
 				space.add(qj)
@@ -517,7 +491,6 @@ class TestGame(Widget):
 			angle = atan2(yd, xd)
 			dist = sqrt(xd ** 2 + yd ** 2)
 			if dist < 4: dist = 8
-			print "angle = ", angle
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
 
@@ -525,8 +498,6 @@ class TestGame(Widget):
 			mass = self.mainTools.massSlider.value
 			dist = sqrt((spos[0] - pos[0]) ** 2 + (spos[1] - pos[1]) ** 2)
 			if dist < 4: dist = 8
-			print dist
-			spos = ctouch['pos']
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			angle = atan2(yd, xd)
@@ -562,7 +533,6 @@ class TestGame(Widget):
 			angle = atan2(yd, xd)
 			dist = sqrt(xd ** 2 + yd ** 2)
 			if dist < 4: dist = 8
-			print "angle = ", angle
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
 		self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
@@ -586,17 +556,12 @@ class TestGame(Widget):
 			return
 		print "not in menu"
 		ct = self.mainTools.currentTool
-		print ct
+		print "Tool is: " + ct
 		ctouch['active'] = True
 
 		if ct in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
 															texture=self.mainTools.spriteSpinner.text)
-			#with self.canvas.before:
-			#    ctouch['previewShape'] = Rectangle(
-			#        texture=self.atlas[self.mainTools.spriteSpinner.text],
-			#        pos=(300,300),
-			#        size=(300,300))'''
 
 		self.mainTools.setShape(shape)
 
@@ -605,10 +570,6 @@ class TestGame(Widget):
 			#print dir(shape.body)
 			self.delObj(shape.body.data)
 			ctouch['touchingnow'] = None
-			#self.gameworld.remove_entity(shape.body.data)
-			#space.remove(shape)
-			#if shape.body in space.bodies:
-			#  space.remove(shape.body)
 
 		if shape and not shape.body.is_static and (
 				self.mainTools.currentTool == 'drag' or self.mainTools.currentTool == 'pin'):
