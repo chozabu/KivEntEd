@@ -103,6 +103,8 @@ TestGame:
     joinMenu: joinMenu.__self__
     entityMenu: entityMenu.__self__
     massSlider: massSlider
+    gravxSlider: gravxSlider
+    gravySlider: gravySlider
     spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu.__self__
     fileMenu: fileMenu.__self__
@@ -343,6 +345,26 @@ TestGame:
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: "Gravity"
+                    size_hint: (1, .2)
+                Slider:
+                    id: gravySlider
+                    orientation: "vertical"
+                    min:-1000
+                    max:1000
+                    value:0
+                    on_value: root.setygrav(self.value)
+                Slider:
+                    id: gravxSlider
+                    size_hint: (1, .2)
+                    orientation: "horizontal"
+                    min:-1000
+                    max:1000
+                    value:0
+                    on_value: root.setxgrav(self.value)
         
 <PlainButton@Button>:
     

@@ -85,11 +85,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.angleLabel.text = tv
 
 	def loadPressed(self, instance):
-		self.gameref.loadJSON()
+		self.gameref.serials.loadJSON()
 		#self.gameref.loadFromDict(self.testsave)
 
 	def savePressed(self, instance):
-		self.testsave = self.gameref.exportJSON()
+		self.testsave = self.gameref.serials.exportJSON()
 
 	def clearPressed(self, instance):
 		self.gameref.clearAll()
@@ -112,6 +112,14 @@ class MainTools(FloatLayout):
 	def setRef(self, ref):
 		self.gameref = ref
 		print ref
+
+
+	def setygrav(self, value):
+		space = self.gameref.space
+		space.gravity = space.gravity.y, value
+	def setxgrav(self, value):
+		space = self.gameref.space
+		space.gravity = value, space.gravity.y
 
 	def xposChanged(self, instance):
 		fval = float(instance.text)

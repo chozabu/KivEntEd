@@ -7,6 +7,8 @@ import cymunk as cy
 from math import *
 import os
 
+import serialisation
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -14,6 +16,10 @@ from kivy.core.window import Window
 import kivent
 from kivy.graphics import *
 from kivy.atlas import Atlas
+
+
+from kivy.utils import platform
+from os.path import dirname, join, exists, sep, expanduser, isfile
 
 import ui_elements
 
@@ -30,6 +36,7 @@ class TestGame(Widget):
 		self.startID = -1
 		self.finishID = -1
 		self.space = None
+		self.serials = None
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
@@ -52,6 +59,7 @@ class TestGame(Widget):
 
 		self.draw_some_stuff()
 		self.space = self.gameworld.systems['physics'].space
+		self.serials = serialisation.Serials(self)
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
 
@@ -167,6 +175,14 @@ class TestGame(Widget):
 		space = self.space
 		position = cy.Vec2d(x,y)
 		return space.point_query_first(position)
+	def setEntIDPosSizeRot(self, entID, x,y,w,h,r=0):
+		self.setEntPosSizeRot(self.gameworld.entities[entID], x,y,w,h,r)
+	def setEntPosSizeRot(self, ent, x,y,w,h,r=0):
+			ent.position.x = x  #(midx,midy)
+			ent.position.y = y  #(midx,midy)
+			ent.renderer.width = w
+			ent.renderer.height = h
+			ent.rotate.r = r
 	def on_touch_move(self, touch):
 		self.mainTools.on_touch_move(touch)
 		space = self.space
@@ -187,33 +203,19 @@ class TestGame(Widget):
 			yd = spos[1] - pos[1]
 			midx = (spos[0] + pos[0]) / 2.0
 			midy = (spos[1] + pos[1]) / 2.0
-			prect = self.gameworld.entities[ctouch['previewShape']]
-			prect.position.x = midx  #(midx,midy)
-			prect.position.y = midy  #(midx,midy)
-			prect.renderer.width = xd
-			prect.renderer.height = yd
+			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,xd,yd)
 		if ctouch['tool'] == "circle" and ctouch["active"]:
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			dist = sqrt(xd ** 2 + yd ** 2)
-			prect = self.gameworld.entities[ctouch['previewShape']]
-			prect.position.x = spos[0]  #(midx,midy)
-			prect.position.y = spos[1]  #(midx,midy)
 			angle = atan2(yd, xd)
-			prect.rotate.r = angle
-			prect.renderer.width = dist * 2
-			prect.renderer.height = dist * 2
+			self.setEntIDPosSizeRot(ctouch['previewShape'], spos[0],spos[1],dist*2,dist*2,angle)
 		if ctouch['tool'] == "square" and ctouch["active"]:
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			dist = sqrt(xd ** 2 + yd ** 2)
-			prect = self.gameworld.entities[ctouch['previewShape']]
-			prect.position.x = spos[0]  #(midx,midy)
-			prect.position.y = spos[1]  #(midx,midy)
 			angle = atan2(yd, xd)
-			prect.rotate.r = angle
-			prect.renderer.width = dist * 2
-			prect.renderer.height = dist * 2
+			self.setEntIDPosSizeRot(ctouch['previewShape'], spos[0],spos[1],dist*2,dist*2,angle)
 		if ctouch['tool'] == "plank" and ctouch["active"]:
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
@@ -221,12 +223,7 @@ class TestGame(Widget):
 			midx = (spos[0] + pos[0]) / 2.0
 			midy = (spos[1] + pos[1]) / 2.0
 			angle = atan2(yd, xd)
-			prect = self.gameworld.entities[ctouch['previewShape']]
-			prect.position.x = midx  #(midx,midy)
-			prect.position.y = midy  #(midx,midy)
-			prect.rotate.r = angle
-			prect.renderer.height = 10
-			prect.renderer.width = dist
+			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,dist,10, angle)
 		if ctouch['tool'] == "draw" and ctouch["active"]:
 			mass = self.mainTools.massSlider.value
 			xd = spos[0] - pos[0]
@@ -236,11 +233,7 @@ class TestGame(Widget):
 			midx = (spos[0] + pos[0]) / 2.0
 			midy = (spos[1] + pos[1]) / 2.0
 			angle = atan2(yd, xd)
-			prect.position.x = midx  #(midx,midy)
-			prect.position.y = midy  #(midx,midy)
-			prect.rotate.r = angle
-			prect.renderer.height = 10
-			prect.renderer.width = dist
+			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,dist,10, angle)
 			if dist > 10:
 				self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 								texture=self.mainTools.spriteSpinner.text)
@@ -256,165 +249,6 @@ class TestGame(Widget):
 				(self.gameworld.systems['renderer'].update(0.00000001))
 				#space.reindex_shape(shape)
 
-	def shapeToDict(self, shape):
-		sd = {'collision_type': shape.collision_type, 'elasticity': shape.elasticity, 'friction': shape.friction,
-			  'group': shape.group}
-		if hasattr(shape, "radius"):
-			sd['radius'] = shape.radius
-		else:
-			sd['width'] = shape.width
-			sd['height'] = shape.height
-		return sd
-
-	def entToDict(self, e):
-		ed = {"orig_id": e.entity_id}
-		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
-		if hasattr(e, "load_order"):
-			ed["load_order"] = e.load_order
-		if hasattr(e, "physics"):
-			b = e.physics.body
-			bd = {'velocity': (b.velocity.x, b.velocity.y),
-				  'position': (b.position.x, b.position.y),
-				  'angle': b.angle,
-				  'angular_velocity': b.angular_velocity,
-				  'vel_limit': b.velocity_limit,
-				  'ang_vel_limit': b.angular_velocity_limit,
-				  'mass': b.mass
-			}
-			shapes = []
-			for s in e.physics.shapes:
-				#print s
-				#print dir(s)
-				shapes.append(self.shapeToDict(s))
-			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
-			ed["physics"] = pd
-		if hasattr(e, "physics_renderer"):
-			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
-				   "texture": e.physics_renderer.texture}
-			ed["physics_renderer"] = prd
-		if hasattr(e, "position"):
-			pd = {"x": e.position.x, "y": e.position.y}
-			ed["position"] = pd
-		if hasattr(e, "rotate"):
-			rd = {"r": e.rotate.r}
-			ed["rotate"] = rd
-		return ed
-
-	def exportJointsToDicts(self):
-		space = self.space
-		jds = []
-		for j in space.constraints:
-			jtype = j.__class__.__name__
-			anchor1 = j.anchor1
-			#if None == j.a.data and j.a != space.static_body:
-			#  anchor1 = {'x':j.a.position.x, 'y':j.a.position.y}
-
-			anchor2 = j.anchor2
-			if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data is None:
-				anchor2 = {'x': j.b.position.x, 'y': j.b.position.y}
-			jd = {"type": jtype, "a": j.a.data, "b": j.b.data,
-				  "anchor1": anchor1, "anchor2": anchor2}
-			if jtype == "DampedSpring":
-				jd['rest_length'] = j.rest_length
-				jd['stiffness'] = j.stiffness
-				jd['damping'] = j.damping
-			jds.append(jd)
-		return jds
-
-	def exportEntsToDicts(self):
-		entsdict = []
-		for eid in self.entIDs:
-			e = self.gameworld.entities[eid]
-			#print "\n"
-			ed = self.entToDict(e)
-			entsdict.append(ed)
-		return entsdict
-
-	def exportJSON(self, fileName="defaultlevel.json"):
-		dataDir = self.dataDir
-		entslist = self.exportEntsToDicts()
-		jointslist = self.exportJointsToDicts()
-		space = self.space
-		worlddict = {"ents": entslist, "jointslist": jointslist,
-					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
-					              "startID":self.startID, "finishID": self.finishID}}
-		with open(dataDir + fileName, 'w') as fo:
-			json.dump(worlddict, fo)
-		print "dir=", dataDir
-		print "done"
-		return worlddict
-
-	def loadJSON(self, fileName="defaultlevel.json"):
-		with open(self.dataDir + fileName, 'r') as fo:
-			entsdict = json.load(fo)
-		self.loadFromDict(entsdict)
-
-	def loadFromDict(self, data):
-		print "LOADING"
-		space = self.space
-		ents = data['ents']
-		idConvDict = {}
-		for e in ents:
-			if "physics" in e:
-				stype = e['physics']['shape_type']
-				pr = e['physics_renderer']
-				p = e['physics']
-				body = p['body']
-				shape = p['shapes'][0]
-				bp = (body['position'][0], body['position'][1])
-				mass = body['mass']
-				texture = str(pr['texture'])
-				if str(mass) == 'inf': mass = 0
-				if stype == "circle":
-					idConvDict[e['orig_id']] = self.create_circle(bp, radius=shape['radius'], mass=mass,
-																  friction=shape['friction'],
-																  elasticity=shape['elasticity'], angle=body['angle'],
-																  texture=texture, selectNow=False)
-				elif stype == "box":
-					idConvDict[e['orig_id']] = self.create_box(bp, width=shape['width'], height=shape['height'],
-															   mass=mass, friction=shape['friction'],
-															   elasticity=shape['elasticity'], angle=body['angle'],
-															   texture=texture, selectNow=False)
-		if "jointslist" in data:
-			jointslist = data['jointslist']
-			for j in jointslist:
-				if j['a'] in idConvDict:
-					b1id = idConvDict[j['a']]
-					b1 = self.gameworld.entities[b1id].physics.body
-				else:
-					b1 = cy.Body()
-				if j['b'] in idConvDict:
-					b2id = idConvDict[j['b']]
-					b2 = self.gameworld.entities[b2id].physics.body
-				else:
-					b2 = cy.Body()
-				b1l = j['anchor1']
-				b2l = j['anchor2']
-				if str(j['type']) == "PivotJoint":
-					qj = cy.PivotJoint(b1, b2, (b1l['x'], b1l['y']), (
-					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
-				if str(j['type']) == "PinJoint":
-					qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (
-					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
-				if str(j['type']) == "DampedSpring":
-					qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']), j['rest_length'],
-										 j['stiffness'],
-										 j['damping'])  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
-		if "settings" in data:
-			settings = data['settings']
-			g = settings['gravity']
-			space.gravity = (g[0], g[1])
-			if "startID" in settings:
-				sid = settings['startID']
-				if sid != -1:
-					self.startID = idConvDict[sid]
-			if "finishID" in settings:
-				fid = settings['finishID']
-				if fid != -1:
-					self.finishID = idConvDict[fid]
 
 	def on_touch_up(self, touch):
 		self.mainTools.on_touch_up(touch)
@@ -632,10 +466,6 @@ class TestGame(Widget):
 		self.gameworld.state = 'main'
 
 
-dataDir = ""
-
-from kivy.utils import platform
-from os.path import dirname, join, exists, sep, expanduser, isfile
 
 class KivEntEd(App):
 	def build(self):
