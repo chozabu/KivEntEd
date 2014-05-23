@@ -301,19 +301,19 @@ class TestGame(Widget):
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
-		if (currentTool == "draw" or currentTool == "plank") and ctouch["active"]:
+		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
 
-		if currentTool == "start" and ctouch["active"]:
+		if currentTool == "start":
 			if self.startID < 0:
 				self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb")
 			else:
 				ent = self.gameworld.entities[self.startID]
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
-		if currentTool == "end" and ctouch["active"]:
+		if currentTool == "end":
 			if self.finishID < 0:
 				self.finishID = self.create_circle(pos, mass=0, radius=30, texture="checksphere")
 			else:
@@ -321,13 +321,13 @@ class TestGame(Widget):
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
 
-		if currentTool == "circle" and ctouch["active"]:
+		if currentTool == "circle":
 			if dist < 4: dist = 8
 			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
-		if currentTool == "box" and ctouch["active"]:
+		if currentTool == "box":
 			self.create_box((midx, midy), mass=mass, width=fabs(xd), height=fabs(yd), angle=0,
 							texture=self.mainTools.spriteSpinner.text)
-		if currentTool == "square" and ctouch["active"]:
+		if currentTool == "square":
 			if dist < 4: dist = 8
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
