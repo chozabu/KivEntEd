@@ -222,7 +222,7 @@ class TestGame(Widget):
 				if dist > 10:
 					mass = self.mainTools.massSlider.value
 					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-									texture=self.mainTools.spriteSpinner.text)
+									texture=self.mainTools.spriteSpinner.text, selectNow=False)
 					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
