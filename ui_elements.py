@@ -113,7 +113,7 @@ class MainTools(FloatLayout):
 
 	def setygrav(self, value):
 		space = self.gameref.space
-		space.gravity = space.gravity.y, value
+		space.gravity = space.gravity.x, value
 	def setxgrav(self, value):
 		space = self.gameref.space
 		space.gravity = value, space.gravity.y
