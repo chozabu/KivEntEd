@@ -99,7 +99,10 @@ class Serials():
 		return worlddict
 
 	def loadJSON(self, fileName="defaultlevel.json"):
-		with open(self.dataDir + fileName, 'r') as fo:
+		self.loadExtJSON(self.dataDir + fileName)
+
+	def loadExtJSON(self, fileNamePath):
+		with open(fileNamePath) as fo:
 			entsdict = json.load(fo)
 		self.loadFromDict(entsdict)
 

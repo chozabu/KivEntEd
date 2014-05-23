@@ -189,13 +189,14 @@ class TestGame(Widget):
 		ctouch = self.touches[touch.id]
 		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
+		currentTool = ctouch['tool']
 		ctouch['newpos'] = pos
 		ctouch['ownbody'].position = pos
 
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
-		if ctouch['tool'] == "camera":
+		if currentTool == "camera":
 			super(TestGame, self).on_touch_move(touch)
 		if 'previewShape' in ctouch:
 			psid = ctouch['previewShape']
@@ -203,33 +204,27 @@ class TestGame(Widget):
 			yd = spos[1] - pos[1]
 			midx = (spos[0] + pos[0]) / 2.0
 			midy = (spos[1] + pos[1]) / 2.0
+			dist = sqrt(xd ** 2 + yd ** 2)
+			angle = atan2(yd, xd)
 
-			if ctouch['tool'] == "box" and ctouch["active"]:
+			if currentTool == "box":
 				self.setEntIDPosSizeRot(psid, midx,midy,xd,yd)
-			if ctouch['tool'] == "circle" and ctouch["active"]:
-				dist = sqrt(xd ** 2 + yd ** 2)
-				angle = atan2(yd, xd)
+			if currentTool == "circle":
 				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
-			if ctouch['tool'] == "square" and ctouch["active"]:
-				dist = sqrt(xd ** 2 + yd ** 2)
-				angle = atan2(yd, xd)
+			if currentTool == "square":
 				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
-			if ctouch['tool'] == "plank" and ctouch["active"]:
-				dist = sqrt(xd ** 2 + yd ** 2)
-				angle = atan2(yd, xd)
+			if currentTool == "plank":
 				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
-			if ctouch['tool'] == "draw" and ctouch["active"]:
-				mass = self.mainTools.massSlider.value
-				dist = sqrt(xd ** 2 + yd ** 2)
-				angle = atan2(yd, xd)
+			if currentTool == "draw":
 				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
 				if dist > 10:
+					mass = self.mainTools.massSlider.value
 					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 									texture=self.mainTools.spriteSpinner.text)
 					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
-		if shape and (shape.body.is_static or self.mainTools.paused) and (ctouch['tool'] == 'drag'):
+		if shape and (shape.body.is_static or self.mainTools.paused) and (currentTool == 'drag'):
 			shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
 			self.reindexEntID(shape.body.data)
 			if self.mainTools.paused:
@@ -245,9 +240,10 @@ class TestGame(Widget):
 			print super(TestGame, self).on_touch_up(touch)
 			print "touchdown not found, mousewheel?"
 			return
-		pos = self.getWorldPosFromTouch(touch)
 		ctouch = self.touches[touch.id]
+		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
+		currentTool = ctouch['tool']
 		if 'previewShape' in ctouch:
 			self.gameworld.remove_entity(ctouch['previewShape'])
 		#  self.canvas.before.remove(ctouch['previewShape'])
@@ -257,104 +253,81 @@ class TestGame(Widget):
 		shape = space.point_query_first(position)
 		ctouch['touchingnow'] = shape
 
-		if 'mousejoint' in ctouch and (ctouch['tool'] != "pin"):
+		if 'mousejoint' in ctouch and (currentTool != "pin"):
 			space.remove(ctouch['mousejoint'])
 
 		if ctouch['onmenu']: return
 
 		tshape = ctouch['touching']
 		if tshape and shape:
-			if ctouch['tool'] == 'c2p':
-				b1 = ctouch['touching'].body  #self.gameworld.entities[entityID]
-				b2 = shape.body  #self.gameworld.entities[self.entIDs[-1]]
+			sposition = cy.Vec2d(spos[0], spos[1])
+			b1 = tshape.body
+			b2 = shape.body
+			b1l = b1.world_to_local(sposition)
+			b2l = b2.world_to_local(position)
+			if currentTool == 'c2p':
 				b2l = b2.world_to_local(position)
 				print b2l
 				qj = cy.PinJoint(b1, b2, (0, 0),
-								 (b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+								 (b2l['x'], b2l['y']))
 				space.add(qj)
 
-			if ctouch['tool'] == 'p2p':
-				b1 = ctouch['touching'].body  #self.gameworld.entities[entityID]
-				b2 = shape.body  #self.gameworld.entities[self.entIDs[-1]]
-				b2l = b2.world_to_local(position)
-				b1l = b1.world_to_local(cy.Vec2d(spos[0], spos[1]))
+			if currentTool == 'p2p':
 				print b2l
-				#qj = cy.PivotJoint(b1, b2, pos)
 				qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']),
-								 (b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+								 (b2l['x'], b2l['y']))
 				space.add(qj)
 
-			if ctouch['tool'] == 'p2ps':
-				b1 = ctouch['touching'].body  #self.gameworld.entities[entityID]
-				b2 = shape.body  #self.gameworld.entities[self.entIDs[-1]]
-				sposition = cy.Vec2d(spos[0], spos[1])
-				b2l = b2.world_to_local(position)
-				b1l = b1.world_to_local(sposition)
+			if currentTool == 'p2ps':
 				dvec = cy.Vec2d(position.x - sposition.x, position.y - sposition.y)
 				dist = sqrt(dvec.x ** 2 + dvec.y ** 2)
 				qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']), dist, 100,
-									 0.1)  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+									 0.1)
 				space.add(qj)
 
-			if ctouch['tool'] == 'c2c':
-				b1 = shape.body  #self.gameworld.entities[entityID]
-				b2 = ctouch['touching'].body  #self.gameworld.entities[self.entIDs[-1]]
+			if currentTool == 'c2c':
 				qj = cy.PinJoint(b1, b2, (0, 0),
-								 (0, 0))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
+								 (0, 0))
 				#b2.physics.shapes[0].group=1
 				#b1.physics.shapes[0].group=1
 				space.add(qj)
 
-		if (ctouch['tool'] == "draw" or ctouch['tool'] == "plank") and ctouch["active"]:
-			mass = self.mainTools.massSlider.value
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			angle = atan2(yd, xd)
-			dist = sqrt(xd ** 2 + yd ** 2)
+
+		xd = spos[0] - pos[0]
+		yd = spos[1] - pos[1]
+		midx = (spos[0] + pos[0]) / 2.0
+		midy = (spos[1] + pos[1]) / 2.0
+		mass = self.mainTools.massSlider.value
+		angle = atan2(yd, xd)
+		dist = sqrt(xd ** 2 + yd ** 2)
+
+		if (currentTool == "draw" or currentTool == "plank") and ctouch["active"]:
 			if dist < 4: dist = 8
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
 
-		if ctouch['tool'] == "circle" and ctouch["active"]:
-			mass = self.mainTools.massSlider.value
-			dist = sqrt((spos[0] - pos[0]) ** 2 + (spos[1] - pos[1]) ** 2)
-			if dist < 4: dist = 8
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			angle = atan2(yd, xd)
-			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
-		if ctouch['tool'] == "start" and ctouch["active"]:
+		if currentTool == "start" and ctouch["active"]:
 			if self.startID < 0:
 				self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb")
 			else:
 				ent = self.gameworld.entities[self.startID]
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
-		if ctouch['tool'] == "end" and ctouch["active"]:
+		if currentTool == "end" and ctouch["active"]:
 			if self.finishID < 0:
 				self.finishID = self.create_circle(pos, mass=0, radius=30, texture="checksphere")
 			else:
 				ent = self.gameworld.entities[self.finishID]
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
-		if ctouch['tool'] == "box" and ctouch["active"]:
-			mass = self.mainTools.massSlider.value
-			spos = ctouch['pos']
-			xd = max(5, abs(spos[0] - pos[0]))
-			yd = max(5, abs(spos[1] - pos[1]))
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			self.create_box((midx, midy), mass=mass, width=xd, height=yd, angle=0,
+
+		if currentTool == "circle" and ctouch["active"]:
+			if dist < 4: dist = 8
+			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
+		if currentTool == "box" and ctouch["active"]:
+			self.create_box((midx, midy), mass=mass, width=fabs(xd), height=fabs(yd), angle=0,
 							texture=self.mainTools.spriteSpinner.text)
-		if ctouch['tool'] == "square" and ctouch["active"]:
-			mass = self.mainTools.massSlider.value
-			spos = ctouch['pos']
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			angle = atan2(yd, xd)
-			dist = sqrt(xd ** 2 + yd ** 2)
+		if currentTool == "square" and ctouch["active"]:
 			if dist < 4: dist = 8
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
@@ -378,24 +351,24 @@ class TestGame(Widget):
 			print "clicked in menu"
 			return
 		print "not in menu"
-		ct = self.mainTools.currentTool
-		print "Tool is: " + ct
+		currentTool = self.mainTools.currentTool
+		print "Tool is: " + currentTool
 		ctouch['active'] = True
 
-		if ct in ["draw", "square", "box", "circle", "plank"]:
+		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
 															texture=self.mainTools.spriteSpinner.text)
 
 		self.mainTools.setShape(shape)
 
-		if shape and self.mainTools.currentTool == 'del':
+		if shape and currentTool == 'del':
 			#print dir(shape)
 			#print dir(shape.body)
 			self.delObj(shape.body.data)
 			ctouch['touchingnow'] = None
 
 		if shape and not shape.body.is_static and (
-				self.mainTools.currentTool == 'drag' or self.mainTools.currentTool == 'pin'):
+				currentTool == 'drag' or currentTool == 'pin'):
 			body = ctouch['ownbody']
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
@@ -467,10 +440,10 @@ class KivEntEd(App):
 
 	def on_pause(self):
 		print "pausing"
-		self.root.exportJSON(fileName="pauselevel.json")
+		self.root.serials.exportJSON(fileName="pauselevel.json")
 		return True
 	def on_resume(self):
-		self.root.loadJSON(fileName="pauselevel.json")
+		self.root.serials.loadJSON(fileName="pauselevel.json")
 
 
 	def get_application_storage_dir(self, extra=""):
