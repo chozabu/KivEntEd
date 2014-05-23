@@ -126,11 +126,13 @@ class Serials():
 					idConvDict[e['orig_id']] = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
 																  friction=shape['friction'],
 																  elasticity=shape['elasticity'], angle=body['angle'],
+																  x_vel=body['velocity'][1], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 																  texture=texture, selectNow=False)
 				elif stype == "box":
 					idConvDict[e['orig_id']] = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
 															   mass=mass, friction=shape['friction'],
 															   elasticity=shape['elasticity'], angle=body['angle'],
+															   x_vel=body['velocity'][1], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 															   texture=texture, selectNow=False)
 		if "jointslist" in data:
 			jointslist = data['jointslist']
@@ -167,9 +169,9 @@ class Serials():
 			if "startID" in settings:
 				sid = settings['startID']
 				if sid != -1:
-					self.startID = idConvDict[sid]
+					self.gameref.startID = idConvDict[sid]
 			if "finishID" in settings:
 				fid = settings['finishID']
 				if fid != -1:
-					self.finishID = idConvDict[fid]
+					self.gameref.finishID = idConvDict[fid]
 
