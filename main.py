@@ -197,47 +197,36 @@ class TestGame(Widget):
 
 		if ctouch['tool'] == "camera":
 			super(TestGame, self).on_touch_move(touch)
+		if 'previewShape' in ctouch:
+			psid = ctouch['previewShape']
+			xd = spos[0] - pos[0]
+			yd = spos[1] - pos[1]
+			midx = (spos[0] + pos[0]) / 2.0
+			midy = (spos[1] + pos[1]) / 2.0
 
-		if ctouch['tool'] == "box" and ctouch["active"]:
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,xd,yd)
-		if ctouch['tool'] == "circle" and ctouch["active"]:
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
-			angle = atan2(yd, xd)
-			self.setEntIDPosSizeRot(ctouch['previewShape'], spos[0],spos[1],dist*2,dist*2,angle)
-		if ctouch['tool'] == "square" and ctouch["active"]:
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
-			angle = atan2(yd, xd)
-			self.setEntIDPosSizeRot(ctouch['previewShape'], spos[0],spos[1],dist*2,dist*2,angle)
-		if ctouch['tool'] == "plank" and ctouch["active"]:
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			angle = atan2(yd, xd)
-			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,dist,10, angle)
-		if ctouch['tool'] == "draw" and ctouch["active"]:
-			mass = self.mainTools.massSlider.value
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
-			prect = self.gameworld.entities[ctouch['previewShape']]
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			angle = atan2(yd, xd)
-			self.setEntIDPosSizeRot(ctouch['previewShape'], midx,midy,dist,10, angle)
-			if dist > 10:
-				self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-								texture=self.mainTools.spriteSpinner.text)
-				ctouch['pos'] = pos
+			if ctouch['tool'] == "box" and ctouch["active"]:
+				self.setEntIDPosSizeRot(psid, midx,midy,xd,yd)
+			if ctouch['tool'] == "circle" and ctouch["active"]:
+				dist = sqrt(xd ** 2 + yd ** 2)
+				angle = atan2(yd, xd)
+				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
+			if ctouch['tool'] == "square" and ctouch["active"]:
+				dist = sqrt(xd ** 2 + yd ** 2)
+				angle = atan2(yd, xd)
+				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
+			if ctouch['tool'] == "plank" and ctouch["active"]:
+				dist = sqrt(xd ** 2 + yd ** 2)
+				angle = atan2(yd, xd)
+				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
+			if ctouch['tool'] == "draw" and ctouch["active"]:
+				mass = self.mainTools.massSlider.value
+				dist = sqrt(xd ** 2 + yd ** 2)
+				angle = atan2(yd, xd)
+				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
+				if dist > 10:
+					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
+									texture=self.mainTools.spriteSpinner.text)
+					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
 		if shape and (shape.body.is_static or self.mainTools.paused) and (ctouch['tool'] == 'drag'):
