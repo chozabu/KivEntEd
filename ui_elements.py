@@ -11,8 +11,6 @@ class PlainButton(Button):
 	def on_touch_down(self, touch):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
-		#print dir(self)
-		print "--"
 		return sres
 
 
@@ -111,7 +109,6 @@ class MainTools(FloatLayout):
 
 	def setRef(self, ref):
 		self.gameref = ref
-		print ref
 
 
 	def setygrav(self, value):
@@ -229,7 +226,6 @@ class MainTools(FloatLayout):
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
 			#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 			#self.selectedMenu.posLabel.text = tv
-			print shape.friction
 			self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
 			self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
 			self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
@@ -247,12 +243,13 @@ class MainTools(FloatLayout):
 				bs.heightLabel.bind(text=self.on_height_change)
 				self.selectedMenu.shapeInfo.add_widget(bs)
 
-		self.rightMenu.remove_widget(self.selectedMenu)
 		ent = self.selectedEntity
-		print "selected ent:", ent
 		if ent:
-			self.rightMenu.add_widget(self.selectedMenu)
+			if self.selectedMenu not in self.rightMenu.children:
+				self.rightMenu.add_widget(self.selectedMenu)
 			self.selectedMenu.texLabel.text = ent.physics_renderer.texture
+		else:
+			self.rightMenu.remove_widget(self.selectedMenu)
 
 	def delSelPressed(self, instance):
 		if self.selectedItem and self.gameref:

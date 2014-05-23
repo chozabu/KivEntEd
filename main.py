@@ -266,14 +266,11 @@ class TestGame(Widget):
 			b1l = b1.world_to_local(sposition)
 			b2l = b2.world_to_local(position)
 			if currentTool == 'c2p':
-				b2l = b2.world_to_local(position)
-				print b2l
 				qj = cy.PinJoint(b1, b2, (0, 0),
 								 (b2l['x'], b2l['y']))
 				space.add(qj)
 
 			if currentTool == 'p2p':
-				print b2l
 				qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']),
 								 (b2l['x'], b2l['y']))
 				space.add(qj)
