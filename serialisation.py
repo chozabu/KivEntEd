@@ -91,7 +91,7 @@ class Serials():
 		space = self.space
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
-					              "startID":self.startID, "finishID": self.finishID}}
+					              "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
 		print "dir=", dataDir
@@ -126,13 +126,13 @@ class Serials():
 					idConvDict[e['orig_id']] = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
 																  friction=shape['friction'],
 																  elasticity=shape['elasticity'], angle=body['angle'],
-																  x_vel=body['velocity'][1], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+																  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 																  texture=texture, selectNow=False)
 				elif stype == "box":
 					idConvDict[e['orig_id']] = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
 															   mass=mass, friction=shape['friction'],
 															   elasticity=shape['elasticity'], angle=body['angle'],
-															   x_vel=body['velocity'][1], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+															   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 															   texture=texture, selectNow=False)
 		if "jointslist" in data:
 			jointslist = data['jointslist']

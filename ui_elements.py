@@ -83,6 +83,7 @@ class MainTools(FloatLayout):
 				self.selectedMenu.angleLabel.text = tv
 
 	def loadPressed(self, instance):
+		self.gameref.clearAll()
 		self.gameref.serials.loadJSON()
 		#self.gameref.loadFromDict(self.testsave)
 
