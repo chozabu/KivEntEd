@@ -140,6 +140,7 @@ TestGame:
                 massLabel: massLabel
                 elasLabel: elasLabel
                 texLabel: texLabel
+                colTypeSpinner: colTypeSpinner
                 delButton: delButton
                 Label:
                     id: selectedLabel
@@ -191,10 +192,15 @@ TestGame:
                         id: elasLabel
                         text: "Elasticity"
                         on_text: root.elasChanged(self)
-                ToggleButton:
-                    id: sensorButton
-                    text:"Sensor"
-                    on_press: root.sensorPressed(self)
+                #ToggleButton:
+                #    id: sensorButton
+                #    text:"Sensor"
+                #    on_press: root.sensorPressed(self)
+                Spinner:
+                    id: colTypeSpinner
+                    text: "default"
+                    on_text: root.colTypeChanged(self)
+                    values: ["default", "vortex"]
                 BoxLayout:
                     id: shapeInfo
                     size_hint_y:None

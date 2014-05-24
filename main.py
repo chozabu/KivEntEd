@@ -8,6 +8,7 @@ from math import *
 import os
 
 import serialisation
+from util import TwoWayDict
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -30,6 +31,12 @@ class TestGame(Widget):
 		super(TestGame, self).__init__(**kwargs)
 		Clock.schedule_once(self.init_game)
 		self.entIDs = []
+		self.collision_types = TwoWayDict()
+		self.collision_types['default'] = 0
+		self.collision_types['vortex'] = 1
+		self.collision_types['physzone'] = 2
+		self.collision_funcs = {'pull2_first':self.pull2_first}
+		self.collision_handlers = {'vortex':{'pre_solve':('default','pull2_first')}}
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
 		self.mainTools.setTool("draw")
@@ -45,12 +52,25 @@ class TestGame(Widget):
 		except:
 			print 'Python python no keyboard'
 
+
 	def init_game(self, dt):
-		try:
-			self._init_game(0)
-		except:
-			print 'failed: rescheduling init'
-			Clock.schedule_once(self.init_game)
+		#try:
+		self._init_game(0)
+		#except:
+		#	print 'failed: rescheduling init'
+		#	Clock.schedule_once(self.init_game)
+
+	def pull2_first(self, space, arbiter):
+		first_body = arbiter.shapes[0].body
+		second_body = arbiter.shapes[1].body
+		first_pos = first_body.position
+		second_pos = second_body.position
+		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
+		#diff.x*=10
+		#diff.y*=10
+		second_body.apply_impulse(diff)
+		#print diff
+		return False
 
 	def _init_game(self, dt):
 		self.setup_map()
@@ -59,6 +79,15 @@ class TestGame(Widget):
 
 		self.draw_some_stuff()
 		self.space = self.gameworld.systems['physics'].space
+		for typeastr, ch in self.collision_handlers.iteritems():
+			typea = self.collision_types[typeastr]
+			for funcstr, argstr in ch.iteritems():
+				typeb = self.collision_types[argstr[0]]
+				func = self.collision_funcs[argstr[1]]
+				funcdict = {funcstr:func}
+				print typea, typeb, func
+				self.space.add_collision_handler(typea, typeb, **funcdict)
+		#self.space.add_collision_handler(1, 0, begin = self.pull2_first)
 		self.serials = serialisation.Serials(self)
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
@@ -86,7 +115,7 @@ class TestGame(Widget):
 		size = Window.size
 		for x in range(50):
 			pos = (randint(size[0] / 3, size[0]), randint(0, size[1]))
-			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15, selectNow=False)
+			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15, selectNow=False, collision_type=1)
 		self.create_box((size[0] / 2.0, 0), mass=0, width=size[0] * 2, height=10, angle=0, selectNow=False)
 
 	def _keyboard_closed(self):
@@ -117,11 +146,11 @@ class TestGame(Widget):
 		return entityID
 
 	def create_circle(self, pos, radius=6., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False):
+					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0):
 		shape_dict = {'inner_radius': 0, 'outer_radius': radius,
 					  'mass': mass, 'offset': (0, 0)}
 		col_shape = {'shape_type': 'circle', 'elasticity': elasticity,
-					 'collision_type': 1, 'shape_info': shape_dict, 'friction': friction}
+					 'collision_type': collision_type, 'shape_info': shape_dict, 'friction': friction}
 		col_shapes = [col_shape]
 		physics_component = {'main_shape': 'circle',
 							 'velocity': (x_vel, y_vel),
@@ -143,13 +172,13 @@ class TestGame(Widget):
 		return entityID
 
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False):
+				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0):
 		box_dict = {
 			'width': width,
 			'height': height,
 			'mass': mass}
 		col_shape = {'shape_type': 'box', 'elasticity': elasticity,
-					 'collision_type': 1, 'shape_info': box_dict, 'friction': friction}
+					 'collision_type': collision_type, 'shape_info': box_dict, 'friction': friction}
 		col_shapes = [col_shape]
 		physics_component = {'main_shape': 'box',
 							 'velocity': (x_vel, y_vel),
