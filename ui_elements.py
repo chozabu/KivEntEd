@@ -63,7 +63,7 @@ class MainTools(FloatLayout):
 		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu, self.fileMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
-		self.rightMenu.remove_widget(self.selectedMenu)
+		self.rightMenu.remove_widget(self.selectedMenuView)
 		self.clearl2()
 		#self.spriteSpinner.values = os.listdir("./sprites")
 
@@ -246,16 +246,21 @@ class MainTools(FloatLayout):
 
 		ent = self.selectedEntity
 		if ent:
-			if self.selectedMenu not in self.rightMenu.children:
-				self.rightMenu.add_widget(self.selectedMenu)
+			if self.selectedMenuView not in self.rightMenu.children:
+				self.rightMenu.add_widget(self.selectedMenuView)
 			self.selectedMenu.texLabel.text = ent.physics_renderer.texture
 		else:
-			self.rightMenu.remove_widget(self.selectedMenu)
+			self.rightMenu.remove_widget(self.selectedMenuView)
 
 	def delSelPressed(self, instance):
 		if self.selectedItem and self.gameref:
 			self.gameref.delObj(self.selectedItem.body.data)
 			self.setShape(None)
+	def sensorPressed(self, instance):
+		if self.selectedItem and self.gameref:
+			newval = not self.selectedItem.sensor
+			self.selectedItem.sensor = newval
+			instance.pressed = newval
 
 
 	def clearl2(self):

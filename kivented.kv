@@ -69,6 +69,8 @@ TestGame:
     multiline: False
 <CircleSettings@BoxLayout>
     radiusLabel:radiusLabel
+    size_hint_y:None
+    height:30
     BoxLayout:
         Label:
             text: "radius:"
@@ -80,6 +82,10 @@ TestGame:
     orientation: 'vertical'
     widthLabel:widthLabel
     heightLabel:heightLabel
+    spacing: 4
+    #size_hint_y:None
+    #height:60
+    #rows_minimum:60
     BoxLayout:
         Label:
             text: "width:"
@@ -106,7 +112,8 @@ TestGame:
     gravxSlider: gravxSlider
     gravySlider: gravySlider
     spriteSpinner: spriteSpinner
-    selectedMenu: selectedMenu.__self__
+    selectedMenu: selectedMenu
+    selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
     
     BoxLayout:
@@ -114,75 +121,89 @@ TestGame:
         size_hint: (.15, 1)
         orientation: 'horizontal'
         pos_hint: {'x':.85, 'y':0}
-        BoxLayout:
-            id: selectedMenu
-            selectedLabel: selectedLabel
-            xposLabel: xposLabel
-            yposLabel: yposLabel
-            angleLabel: angleLabel
-            shapeInfo: shapeInfo
-            frictionLabel: frictionLabel
-            massLabel: massLabel
-            elasLabel: elasLabel
-            texLabel: texLabel
-            delButton: delButton
-            orientation: 'vertical'
-            Label:
-                id: selectedLabel
-                text: "selected item"
-            BoxLayout:
+        ScrollView:
+            id: selectedMenuView
+            GridLayout:
+                cols: 1
+                spacing: 4
+                size_hint_y: None
+                row_default_height: 30
+                row_force_default: False
+                id: selectedMenu
+                selectedLabel: selectedLabel
+                xposLabel: xposLabel
+                yposLabel: yposLabel
+                angleLabel: angleLabel
+                shapeInfo: shapeInfo
+                height: self.minimum_height
+                frictionLabel: frictionLabel
+                massLabel: massLabel
+                elasLabel: elasLabel
+                texLabel: texLabel
+                delButton: delButton
                 Label:
-                    text: "x:"
-                tbox:
-                    id: xposLabel
-                    text: "position"
-                    on_text: root.xposChanged(self)
-            BoxLayout:
-                Label:
-                    text: "y:"
-                tbox:
-                    id: yposLabel
-                    text: "position"
-                    on_text: root.yposChanged(self)
-            BoxLayout:
-                Label:
-                    text: "angle:"
-                tbox:
-                    id: angleLabel
-                    text: "angle"
-                    on_text: root.angleChanged(self)
-            Spinner:
-                id: texLabel
-                text: "texture"
-                on_text: root.textureChanged(self)
-            BoxLayout:
-                Label:
-                    text: "Mass:"
-                tbox:
-                    id: massLabel
-                    text: "Mass"
-                    on_text: root.massChanged(self)
-            BoxLayout:
-                Label:
-                    text: "Friction:"
-                tbox:
-                    id: frictionLabel
-                    text: "Friction"
-                    on_text: root.frictionChanged(self)
-            BoxLayout:
-                Label:
-                    text: "Elasticity:"
-                tbox:
-                    id: elasLabel
-                    text: "Elasticity"
-                    on_text: root.elasChanged(self)
-            BoxLayout:
-                id: shapeInfo
-                orientation: 'vertical'
-            Button:
-                id: delButton
-                text: 'delete'
-                on_press: root.delSelPressed(self)
+                    id: selectedLabel
+                    text: "selected item"
+                BoxLayout:
+                    #height:100
+                    Label:
+                        text: "x:"
+                    tbox:
+                        id: xposLabel
+                        text: "position"
+                        on_text: root.xposChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "y:"
+                    tbox:
+                        id: yposLabel
+                        text: "position"
+                        on_text: root.yposChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "angle:"
+                    tbox:
+                        id: angleLabel
+                        text: "angle"
+                        on_text: root.angleChanged(self)
+                Spinner:
+                    id: texLabel
+                    text: "texture"
+                    on_text: root.textureChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "Mass:"
+                    tbox:
+                        id: massLabel
+                        text: "Mass"
+                        on_text: root.massChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "Friction:"
+                    tbox:
+                        id: frictionLabel
+                        text: "Friction"
+                        on_text: root.frictionChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "Elasticity:"
+                    tbox:
+                        id: elasLabel
+                        text: "Elasticity"
+                        on_text: root.elasChanged(self)
+                ToggleButton:
+                    id: sensorButton
+                    text:"Sensor"
+                    on_press: root.sensorPressed(self)
+                BoxLayout:
+                    id: shapeInfo
+                    size_hint_y:None
+                    height:60
+                    orientation: 'vertical'
+                Button:
+                    id: delButton
+                    text: 'delete'
+                    on_press: root.delSelPressed(self)
         
     BoxLayout:
         id: leftMenu
