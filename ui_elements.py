@@ -236,8 +236,8 @@ class MainTools(FloatLayout):
 			self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
 			self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
 			self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
-			print self.gameref.collision_types[shape.collision_type], shape.collision_type
-			self.selectedMenu.colTypeSpinner.text = self.gameref.collision_types[shape.collision_type]
+			print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
+			self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
 			self.selectedMenu.shapeInfo.clear_widgets()
 			if shape.__class__.__name__ == "Circle":
 				cs = CircleSettings()
@@ -271,7 +271,7 @@ class MainTools(FloatLayout):
 			instance.pressed = newval
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:
-			newval = self.gameref.collision_types[instance.text]
+			newval = self.gameref.scripty.collision_types[instance.text]
 			print newval, instance.text
 			self.selectedItem.collision_type = newval
 
