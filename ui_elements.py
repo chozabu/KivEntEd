@@ -161,6 +161,12 @@ class MainTools(FloatLayout):
 			shape.body.mass = fval
 			self.gameref.reindexEnt(self.selectedEntity)
 
+			if shape.__class__.__name__ == "BoxShape":
+				self.selectedItem.body.moment = cy.moment_for_box(self.selectedItem.body.mass, self.selectedItem.width, self.selectedItem.height)
+			if shape.__class__.__name__ == "Circle":
+				self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
+																 self.selectedItem.radius,0)  #seems ineffective?
+
 	def elasChanged(self, instance):
 		fval = float(instance.text)
 		shape = self.selectedItem
@@ -177,7 +183,7 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics_renderer.width = newrad * 2
 			self.selectedEntity.physics_renderer.height = newrad * 2
 			self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
-																 newrad)  #seems ineffective?
+																 newrad,0)  #seems ineffective?
 
 	def on_width_change(self, instance, value):
 		space = self.gameref.space
