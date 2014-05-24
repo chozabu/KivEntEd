@@ -8,7 +8,7 @@ from math import *
 import os
 
 import serialisation
-from util import TwoWayDict
+from objscripts import ObjScripts
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -31,12 +31,6 @@ class TestGame(Widget):
 		super(TestGame, self).__init__(**kwargs)
 		Clock.schedule_once(self.init_game)
 		self.entIDs = []
-		self.collision_types = TwoWayDict()
-		self.collision_types['default'] = 0
-		self.collision_types['vortex'] = 1
-		self.collision_types['physzone'] = 2
-		self.collision_funcs = {'pull2_first':self.pull2_first_invrad}
-		self.collision_handlers = {'vortex':{'pre_solve':('default','pull2_first')}}
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
 		self.mainTools.setTool("draw")
@@ -44,6 +38,7 @@ class TestGame(Widget):
 		self.finishID = -1
 		self.space = None
 		self.serials = None
+		self.scripty = None
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
@@ -60,34 +55,6 @@ class TestGame(Widget):
 		#	print 'failed: rescheduling init'
 		#	Clock.schedule_once(self.init_game)
 
-	def pull2_first(self, space, arbiter):
-		first_body = arbiter.shapes[0].body
-		second_body = arbiter.shapes[1].body
-		first_pos = first_body.position
-		second_pos = second_body.position
-		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
-		#diff.x*=10
-		#diff.y*=10
-		second_body.apply_impulse(diff)
-		#print diff
-		return False
-
-	def pull2_first_invrad(self, space, arbiter):
-		firstshape = arbiter.shapes[0]
-		if firstshape.__class__.__name__ != "Circle": return True
-		first_body = firstshape.body
-		second_body = arbiter.shapes[1].body
-		first_pos = first_body.position
-		second_pos = second_body.position
-		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
-		dist = sqrt(diff.x**2+diff.y**2)
-		uv = cy.Vec2d(diff.x/dist, diff.y/dist)
-		invrad = firstshape.radius-dist
-		if invrad <=0001: invrad = 0001
-		invrad = sqrt(invrad)*second_body.mass
-		force = cy.Vec2d(uv.x*invrad, uv.y*invrad)
-		second_body.apply_impulse(force)
-		return False
 
 	def _init_game(self, dt):
 		self.setup_map()
@@ -96,16 +63,9 @@ class TestGame(Widget):
 
 		self.draw_some_stuff()
 		self.space = self.gameworld.systems['physics'].space
-		for typeastr, ch in self.collision_handlers.iteritems():
-			typea = self.collision_types[typeastr]
-			for funcstr, argstr in ch.iteritems():
-				typeb = self.collision_types[argstr[0]]
-				func = self.collision_funcs[argstr[1]]
-				funcdict = {funcstr:func}
-				print typea, typeb, func
-				self.space.add_collision_handler(typea, typeb, **funcdict)
 		#self.space.add_collision_handler(1, 0, begin = self.pull2_first)
 		self.serials = serialisation.Serials(self)
+		self.scripty = ObjScripts(self)
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
 
