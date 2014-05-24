@@ -115,8 +115,9 @@ class TestGame(Widget):
 		size = Window.size
 		for x in range(50):
 			pos = (randint(size[0] / 3, size[0]), randint(0, size[1]))
-			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15, selectNow=False, collision_type=1)
+			self.create_circle(pos, y_vel=random() * -20, texture="sheep", radius=15, selectNow=False)
 		self.create_box((size[0] / 2.0, 0), mass=0, width=size[0] * 2, height=10, angle=0, selectNow=False)
+		self.create_circle((size[0] / 2.0,size[1] / 2.0), y_vel=random() * -20, texture="magicball", radius=150, mass=0, selectNow=False, collision_type=1)
 
 	def _keyboard_closed(self):
 		try:
