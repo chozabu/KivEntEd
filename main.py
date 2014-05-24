@@ -83,12 +83,10 @@ class TestGame(Widget):
 		dist = sqrt(diff.x**2+diff.y**2)
 		uv = cy.Vec2d(diff.x/dist, diff.y/dist)
 		invrad = firstshape.radius-dist
-		if invrad <=0: invrad = 0
+		if invrad <=0001: invrad = 0001
+		invrad = sqrt(invrad)*second_body.mass
 		force = cy.Vec2d(uv.x*invrad, uv.y*invrad)
-		#diff.x*=10
-		#diff.y*=10
 		second_body.apply_impulse(force)
-		#print diff
 		return False
 
 	def _init_game(self, dt):
