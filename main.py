@@ -35,7 +35,7 @@ class TestGame(Widget):
 		self.collision_types['default'] = 0
 		self.collision_types['vortex'] = 1
 		self.collision_types['physzone'] = 2
-		self.collision_funcs = {'pull2_first':self.pull2_first}
+		self.collision_funcs = {'pull2_first':self.pull2_first_invrad}
 		self.collision_handlers = {'vortex':{'pre_solve':('default','pull2_first')}}
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
@@ -69,6 +69,25 @@ class TestGame(Widget):
 		#diff.x*=10
 		#diff.y*=10
 		second_body.apply_impulse(diff)
+		#print diff
+		return False
+
+	def pull2_first_invrad(self, space, arbiter):
+		firstshape = arbiter.shapes[0]
+		if firstshape.__class__.__name__ != "Circle": return True
+		first_body = firstshape.body
+		second_body = arbiter.shapes[1].body
+		first_pos = first_body.position
+		second_pos = second_body.position
+		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
+		dist = sqrt(diff.x**2+diff.y**2)
+		uv = cy.Vec2d(diff.x/dist, diff.y/dist)
+		invrad = firstshape.radius-dist
+		if invrad <=0: invrad = 0
+		force = cy.Vec2d(uv.x*invrad, uv.y*invrad)
+		#diff.x*=10
+		#diff.y*=10
+		second_body.apply_impulse(force)
 		#print diff
 		return False
 
