@@ -131,27 +131,27 @@ TestGame:
         on_text: root.typeChanged(self)
     BoxLayout:
         Label:
-            text:"begin"
+            text:"Start Touching (begin)"
         Spinner:
             id: beginSpinner
             values: app.root.mainTools.col_funcs
             on_text: root.calleeChanged(self, "begin")
     BoxLayout:
         Label:
-            text:"pre_solve"
+            text:"Are Touching (pre_solve)"
         Spinner:
             id: pre_solveSpinner
             values: app.root.mainTools.col_funcs
             on_text: root.calleeChanged(self, "pre_solve")
     BoxLayout:
         Label:
-            text:"post_solve"
+            text:"Are Touching (post_solve)"
         Spinner:
             id: post_solveSpinner
             values: app.root.mainTools.col_funcs
     BoxLayout:
         Label:
-            text:"separate"
+            text:"Stop Touching (separate)"
         Spinner:
             id: separateSpinner
             values: app.root.mainTools.col_funcs
