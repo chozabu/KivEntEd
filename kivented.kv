@@ -110,11 +110,17 @@ TestGame:
     post_solveSpinner: post_solveSpinner
     separateSpinner: separateSpinner
 
-    Spinner:
-        id: colTypeASpinner
-        text: "default"
-        values: app.root.mainTools.col_types
-        on_text: root.typeChanged(self)
+    BoxLayout:
+        Spinner:
+            id: colTypeASpinner
+            text: "default"
+            values: app.root.mainTools.col_types
+            on_text: root.typeChanged(self)
+        Button:
+            text:"+"
+            size_hint_x: None
+            width: self.height
+            on_press: root.newType(self)
     Label:
         text: "and"
         #begin=None, pre_solve=None, post_solve=None, separate=None

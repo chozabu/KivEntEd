@@ -40,6 +40,15 @@ class callbacks(BoxLayout):
 			caller,
 			instance.text
 		)
+	def newType(self, btn):
+		Popup(title="Create New Collision Type",
+			  content=TextInput(focus=True,multiline = False),
+			  size_hint=(0.6, None), height=100,
+			  on_dismiss=self.setNewType).open()
+
+	def setNewType(self, popup):
+		self.scripty.add_col_type(popup.content.text)
+		#self.button.text = popup.content.text
 
 
 
@@ -90,8 +99,8 @@ class MainTools(FloatLayout):
 		self.currentTool = ""
 		self.testsave = []
 		self.gameref = None
-		self.col_types.append("default")
-		self.col_types.append("vortex")
+		#self.col_types.append("default")
+		#self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)
 
 	def init_tools(self, dt):
@@ -309,8 +318,8 @@ class MainTools(FloatLayout):
 		#
 		#	newval = self.gameref.scripty.collision_types[self.selectedItem.collision_type]
 		popup = Popup(title="when",
-			    content=callbacks(self),#Label(text='Hello world'),
-			    size_hint=(0.8, 0.8), size=(400, 400))
+				content=callbacks(self),#Label(text='Hello world'),
+				size_hint=(0.8, 0.8), size=(400, 400))
 		popup.open()
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:

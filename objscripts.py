@@ -44,6 +44,7 @@ class ObjScripts():
 	def add_col_type(self,namestr):
 		if namestr in self.collision_types: return
 		self.collision_types[namestr] = self.cctype
+		self.gameref.mainTools.col_types.append(namestr)
 		self.cctype+=1
 	def add_col_handler(self,typeastr,typebstr,caller,callee):
 		typea = self.collision_types[typeastr]
