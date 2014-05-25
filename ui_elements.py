@@ -21,7 +21,8 @@ class callbacks(BoxLayout):
 		self.mtref = mtref
 		self.scripty = mtref.gameref.scripty
 		super(callbacks,self).__init__()
-	def typeChanged(self, instance):
+		self.typeChanged()
+	def typeChanged(self, instance=None):
 		handlers = self.scripty.collision_handlers
 		if self.colTypeASpinner.text not in handlers: handlers[self.colTypeASpinner.text] = {}
 		tbd = handlers[self.colTypeASpinner.text]
