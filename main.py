@@ -76,8 +76,7 @@ class TestGame(Widget):
 		sprites = []
 		for k in usprites:
 			if k != 'atlas_size' and k != 'main_texture': sprites.append(str(k))
-		self.mainTools.spriteSpinner.values = sprites
-		self.mainTools.selectedMenu.texLabel.values = sprites
+		self.mainTools.sprite_list = sprites
 
 	def reindexEntID(self, entityID):
 		self.reindexEnt(self.gameworld.entities[entityID])

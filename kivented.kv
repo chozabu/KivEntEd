@@ -100,8 +100,40 @@ TestGame:
             id: heightLabel
             multiline: False
             text: "height"
+<callbacks@BoxLayout>
+    orientation: 'vertical'
+
+    Spinner:
+        id: colTypeSpinner
+        text: "default"
+        values: app.root.mainTools.col_types
+    Label:
+        text: "ObjectA"
+        #begin=None, pre_solve=None, post_solve=None, separate=None
+    BoxLayout:
+        Label:
+            text:"begin"
+        Label:
+            text:"None"
+    BoxLayout:
+        Label:
+            text:"pre_solve"
+        Label:
+            text:"None"
+    BoxLayout:
+        Label:
+            text:"post_solve"
+        Label:
+            text:"None"
+    BoxLayout:
+        Label:
+            text:"separate"
+        Label:
+            text:"None"
+
 
 <MainTools@FloatLayout>
+    id:mtid
     leftMenu: leftMenu
     rightMenu: rightMenu
     createMenu: createMenu.__self__
@@ -171,6 +203,7 @@ TestGame:
                     id: texLabel
                     text: "texture"
                     on_text: root.textureChanged(self)
+                    values: root.sprite_list
                 BoxLayout:
                     Label:
                         text: "Mass:"
@@ -196,16 +229,20 @@ TestGame:
                 #    id: sensorButton
                 #    text:"Sensor"
                 #    on_press: root.sensorPressed(self)
-                Spinner:
-                    id: colTypeSpinner
-                    text: "default"
-                    on_text: root.colTypeChanged(self)
-                    values: ["default", "vortex"]
                 BoxLayout:
                     id: shapeInfo
                     size_hint_y:None
                     height:60
                     orientation: 'vertical'
+                Spinner:
+                    id: colTypeSpinner
+                    text: "default"
+                    on_text: root.colTypeChanged(self)
+                    values: root.col_types
+                Button:
+                    id: Button
+                    text: 'scripts'
+                    on_press: root.scriptsPressed(self)
                 Button:
                     id: delButton
                     text: 'delete'
@@ -318,6 +355,7 @@ TestGame:
                 text: "  Image:"
             Spinner:
                 id: spriteSpinner
+                values: root.sprite_list
             BoxLayout:
                 orientation: 'horizontal'
                 Button:

@@ -5,6 +5,9 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.properties import ListProperty
 
 
 class PlainButton(Button):
@@ -12,6 +15,8 @@ class PlainButton(Button):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
 		return sres
+class callbacks(BoxLayout):
+	pass
 
 
 class tbox(TextInput):
@@ -42,6 +47,8 @@ class BoxSettings(BoxLayout):
 
 
 class MainTools(FloatLayout):
+	col_types = ListProperty()
+	sprite_list = ListProperty()
 	def __init__(self, **kwargs):
 		super(MainTools, self).__init__(**kwargs)
 		self.staticOn = False
@@ -56,7 +63,9 @@ class MainTools(FloatLayout):
 		}
 		self.currentTool = ""
 		self.testsave = []
-		#self.gameref = None
+		self.gameref = None
+		self.col_types.append("default")
+		self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)
 
 	def init_tools(self, dt):
@@ -269,6 +278,14 @@ class MainTools(FloatLayout):
 			newval = not self.selectedItem.sensor
 			self.selectedItem.sensor = newval
 			instance.pressed = newval
+	def scriptsPressed(self, instance):
+		if self.selectedItem and self.gameref:
+
+			newval = self.gameref.scripty.collision_types[self.selectedItem.collision_type]
+			popup = Popup(title=newval,
+				    content=callbacks(),#Label(text='Hello world'),
+				    size_hint=(0.8, 0.8), size=(400, 400))
+			popup.open()
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = self.gameref.scripty.collision_types[instance.text]

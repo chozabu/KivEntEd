@@ -17,17 +17,38 @@ class ObjScripts():
 		self.collision_types['vortex'] = 1
 		self.collision_types['physzone'] = 2
 		#self.collision_funcs = ['pull2_first','grav2_first']
-		self.collision_handlers = {'vortex':{'pre_solve':('default','grav2_first')}}
+		#self.collision_handlers = {'vortex':{'pre_solve':('default','grav2_first')}}
+		self.collision_handlers = {
+			'vortex':{
+				'default':{'pre_solve':'grav2_first'},
+				'vortex':{'pre_solve':'grav2_first'}
+			}
+		}
 
 
 		for typeastr, ch in self.collision_handlers.iteritems():
 			typea = self.collision_types[typeastr]
-			for funcstr, argstr in ch.iteritems():
-				typeb = self.collision_types[argstr[0]]
-				func = self.getCBFunc(argstr[1])
-				funcdict = {funcstr:func}
-				print typea, typeb, func
-				self.space.add_collision_handler(typea, typeb, **funcdict)
+			for typebstr, funcsargs in ch.iteritems():
+				typeb = self.collision_types[typebstr]
+				for caller, callee in funcsargs.iteritems():
+					func = self.getCBFunc(callee)
+					funcdict = {caller:func}
+					print typea, typeb, func
+					self.space.add_collision_handler(typea, typeb, **funcdict)
+	def add_col_handeler(self,typeastr,typebstr,caller,callee):
+		typea = self.collision_types[typeastr]
+		typeb = self.collision_types[typebstr]
+		func = self.getCBFunc(callee)
+		funcdict = {caller:func}
+		print typea, typeb, func
+		self.space.add_collision_handler(typea, typeb, **funcdict)
+		if typeastr not in self.collision_handlers:
+			self.collision_handlers[typeastr] = {}
+		otherTypes = self.collision_handlers[typeastr]
+		if typebstr not in otherTypes:
+			otherTypes[typebstr] = {}
+		callers = otherTypes[typebstr]
+		callers[caller] = callee
 	def pull2_first(self, space, arbiter):
 		first_body = arbiter.shapes[0].body
 		second_body = arbiter.shapes[1].body
