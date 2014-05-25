@@ -102,34 +102,53 @@ TestGame:
             text: "height"
 <callbacks@BoxLayout>
     orientation: 'vertical'
+    colTypeASpinner: colTypeASpinner
+    colTypeBSpinner: colTypeBSpinner
+
+    beginSpinner: beginSpinner
+    pre_solveSpinner: pre_solveSpinner
+    post_solveSpinner: post_solveSpinner
+    separateSpinner: separateSpinner
 
     Spinner:
-        id: colTypeSpinner
+        id: colTypeASpinner
         text: "default"
         values: app.root.mainTools.col_types
+        on_text: root.typeChanged(self)
     Label:
-        text: "ObjectA"
+        text: "and"
         #begin=None, pre_solve=None, post_solve=None, separate=None
+    Spinner:
+        id: colTypeBSpinner
+        text: "default"
+        values: app.root.mainTools.col_types
+        on_text: root.typeChanged(self)
     BoxLayout:
         Label:
             text:"begin"
-        Label:
-            text:"None"
+        Spinner:
+            id: beginSpinner
+            values: app.root.mainTools.col_funcs
+            on_text: root.calleeChanged(self, "begin")
     BoxLayout:
         Label:
             text:"pre_solve"
-        Label:
-            text:"None"
+        Spinner:
+            id: pre_solveSpinner
+            values: app.root.mainTools.col_funcs
+            on_text: root.calleeChanged(self, "pre_solve")
     BoxLayout:
         Label:
             text:"post_solve"
-        Label:
-            text:"None"
+        Spinner:
+            id: post_solveSpinner
+            values: app.root.mainTools.col_funcs
     BoxLayout:
         Label:
             text:"separate"
-        Label:
-            text:"None"
+        Spinner:
+            id: separateSpinner
+            values: app.root.mainTools.col_funcs
 
 
 <MainTools@FloatLayout>
@@ -240,10 +259,6 @@ TestGame:
                     on_text: root.colTypeChanged(self)
                     values: root.col_types
                 Button:
-                    id: Button
-                    text: 'scripts'
-                    on_press: root.scriptsPressed(self)
-                Button:
                     id: delButton
                     text: 'delete'
                     on_press: root.delSelPressed(self)
@@ -295,6 +310,10 @@ TestGame:
                 id: deleteButton
                 text: 'Delete'
                 on_press: root.setTool("del")
+            Button:
+                id: Button
+                text: 'scripts'
+                on_press: root.scriptsPressed(self)
         BoxLayout:
             id: entityMenu
             orientation: 'vertical'

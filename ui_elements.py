@@ -15,8 +15,33 @@ class PlainButton(Button):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
 		return sres
+
 class callbacks(BoxLayout):
-	pass
+	def __init__(self, mtref):
+		self.mtref = mtref
+		self.scripty = mtref.gameref.scripty
+		super(callbacks,self).__init__()
+	def typeChanged(self, instance):
+		handlers = self.scripty.collision_handlers
+		if self.colTypeASpinner.text not in handlers: handlers[self.colTypeASpinner.text] = {}
+		tbd = handlers[self.colTypeASpinner.text]
+		if self.colTypeBSpinner.text not in tbd: tbd[self.colTypeBSpinner.text] = {}
+		methods = tbd[self.colTypeBSpinner.text]
+
+		self.beginSpinner.text = methods["begin"] if "begin" in methods else "None"
+		self.pre_solveSpinner.text = methods["pre_solve"] if "pre_solve" in methods else "None"
+		self.post_solveSpinner.text = methods["post_solve"] if "post_solve" in methods else "None"
+		self.separateSpinner.text = methods["separate"] if "separate" in methods else "None"
+
+	def calleeChanged(self, instance, caller):
+		self.scripty.add_col_handler(
+			self.colTypeASpinner.text,
+			self.colTypeBSpinner.text,
+			caller,
+			instance.text
+		)
+
+
 
 
 class tbox(TextInput):
@@ -48,6 +73,7 @@ class BoxSettings(BoxLayout):
 
 class MainTools(FloatLayout):
 	col_types = ListProperty()
+	col_funcs = ListProperty()
 	sprite_list = ListProperty()
 	def __init__(self, **kwargs):
 		super(MainTools, self).__init__(**kwargs)
@@ -279,13 +305,13 @@ class MainTools(FloatLayout):
 			self.selectedItem.sensor = newval
 			instance.pressed = newval
 	def scriptsPressed(self, instance):
-		if self.selectedItem and self.gameref:
-
-			newval = self.gameref.scripty.collision_types[self.selectedItem.collision_type]
-			popup = Popup(title=newval,
-				    content=callbacks(),#Label(text='Hello world'),
-				    size_hint=(0.8, 0.8), size=(400, 400))
-			popup.open()
+		#if self.selectedItem and self.gameref:
+		#
+		#	newval = self.gameref.scripty.collision_types[self.selectedItem.collision_type]
+		popup = Popup(title="when",
+			    content=callbacks(self),#Label(text='Hello world'),
+			    size_hint=(0.8, 0.8), size=(400, 400))
+		popup.open()
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = self.gameref.scripty.collision_types[instance.text]

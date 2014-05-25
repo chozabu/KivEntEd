@@ -12,19 +12,23 @@ class ObjScripts():
 		self.gameworld = gameref.gameworld
 		self.space = gameref.space
 
+
 		self.collision_types = TwoWayDict()
-		self.collision_types['default'] = 0
-		self.collision_types['vortex'] = 1
-		self.collision_types['physzone'] = 2
+		self.cctype = 0
+		self.add_col_type('default')
+		self.add_col_type('vortex')
+		self.add_col_type('physzone')
 		#self.collision_funcs = ['pull2_first','grav2_first']
 		#self.collision_handlers = {'vortex':{'pre_solve':('default','grav2_first')}}
+		self.add_col_func('None')
+		self.add_col_func('grav2_first')
+		self.add_col_func('pull2_first')
 		self.collision_handlers = {
 			'vortex':{
 				'default':{'pre_solve':'grav2_first'},
 				'vortex':{'pre_solve':'grav2_first'}
 			}
 		}
-
 
 		for typeastr, ch in self.collision_handlers.iteritems():
 			typea = self.collision_types[typeastr]
@@ -35,7 +39,13 @@ class ObjScripts():
 					funcdict = {caller:func}
 					print typea, typeb, func
 					self.space.add_collision_handler(typea, typeb, **funcdict)
-	def add_col_handeler(self,typeastr,typebstr,caller,callee):
+	def add_col_func(self, funcstr):
+		self.gameref.mainTools.col_funcs.append(funcstr)
+	def add_col_type(self,namestr):
+		if namestr in self.collision_types: return
+		self.collision_types[namestr] = self.cctype
+		self.cctype+=1
+	def add_col_handler(self,typeastr,typebstr,caller,callee):
 		typea = self.collision_types[typeastr]
 		typeb = self.collision_types[typebstr]
 		func = self.getCBFunc(callee)
