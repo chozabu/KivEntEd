@@ -1,5 +1,4 @@
 pass variables into collision functions
-save collision dicts as json
 copy/paste
 add new collision scripts
 set on update behaviour
@@ -27,18 +26,3 @@ Kivent:
 -poly-painting
 -destructable/deformable polys
 -segments
-
-
-
-
-done:
-add more textures
-change body pos/angle
-change shape pos/size
-change mass, elasticity, friction
-create start/end pos
-save/load
-create start/end
-change shape texture
-preview object creation
--fix preview rotation
