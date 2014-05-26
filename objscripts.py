@@ -47,14 +47,15 @@ class ObjScripts():
 		self.loadHandlersFromDict(self.collision_handlers)
 	def loadHandlersFromDict(self, handlers):
 		for typeastr, ch in handlers.iteritems():
-			typea = self.collision_types[typeastr]
+			#typea = self.collision_types[typeastr]
 			for typebstr, funcsargs in ch.iteritems():
-				typeb = self.collision_types[typebstr]
+				#typeb = self.collision_types[typebstr]
 				for caller, callee in funcsargs.iteritems():
-					func = self.getCBFunc(callee)
-					funcdict = {caller:func,"love":"love"}
-					print typea, typeb, func
-					self.space.add_collision_handler(typea, typeb, **funcdict)
+					self.add_col_handler(typeastr,typebstr,caller,callee)
+					#func = self.getCBFunc(callee)
+					#funcdict = {caller:func}
+					#print typea, typeb, func
+					#self.space.add_collision_handler(typea, typeb, **funcdict)
 	def add_col_func(self, funcstr):
 		if funcstr in self.gameref.mainTools.col_funcs: return
 		self.gameref.mainTools.col_funcs.append(funcstr)
