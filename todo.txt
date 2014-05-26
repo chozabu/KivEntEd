@@ -1,7 +1,5 @@
 pass variables into collision functions
 set on update scripts
-add new collision scripts
-load external scripts
 load external entitys
 upload/download ents/levels/atlas/scripts to net
 

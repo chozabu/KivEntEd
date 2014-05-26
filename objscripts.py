@@ -4,6 +4,9 @@ __author__ = 'chozabu'
 import cymunk as cy
 from util import TwoWayDict
 from math import *
+import os
+import glob
+import importlib
 
 class ObjScripts():
 	def __init__(self, gameref):
@@ -12,6 +15,19 @@ class ObjScripts():
 		self.gameworld = gameref.gameworld
 		self.space = gameref.space
 
+		self.add_col_func('None')
+
+		self.colfuncs = {}
+
+		foundmods = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.py")]
+		#foundmods.remove("__init__")
+		basepath = "scripts.collision."
+		for m in foundmods:
+			inmod = importlib.import_module(basepath+m)
+			if hasattr(inmod, "collision_func"):
+				inmod.scripty = self
+				self.colfuncs[m] = inmod.collision_func
+				self.add_col_func(m)
 
 		self.collision_types = TwoWayDict()
 		self.cctype = 0
@@ -20,13 +36,12 @@ class ObjScripts():
 		self.add_col_type('physzone')
 		#self.collision_funcs = ['pull2_first','grav2_first']
 		#self.collision_handlers = {'vortex':{'pre_solve':('default','grav2_first')}}
-		self.add_col_func('None')
-		self.add_col_func('grav2_first')
-		self.add_col_func('pull2_first')
+		#self.add_col_func('grav2_first')
+		#self.add_col_func('pull2_first')
 		self.collision_handlers = {
 			'vortex':{
-				'default':{'pre_solve':'grav2_first'},
-				'vortex':{'pre_solve':'grav2_first'}
+				'default':{'pre_solve':'grav2first'},
+				'vortex':{'pre_solve':'grav2first'}
 			}
 		}
 		self.loadHandlersFromDict(self.collision_handlers)
@@ -37,7 +52,7 @@ class ObjScripts():
 				typeb = self.collision_types[typebstr]
 				for caller, callee in funcsargs.iteritems():
 					func = self.getCBFunc(callee)
-					funcdict = {caller:func}
+					funcdict = {caller:func,"love":"love"}
 					print typea, typeb, func
 					self.space.add_collision_handler(typea, typeb, **funcdict)
 	def add_col_func(self, funcstr):
@@ -62,35 +77,10 @@ class ObjScripts():
 			otherTypes[typebstr] = {}
 		callers = otherTypes[typebstr]
 		callers[caller] = callee
-	def pull2_first(self, space, arbiter):
-		first_body = arbiter.shapes[0].body
-		second_body = arbiter.shapes[1].body
-		first_pos = first_body.position
-		second_pos = second_body.position
-		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
-		#diff.x*=10
-		#diff.y*=10
-		second_body.apply_impulse(diff)
-		#print diff
-		return False
 
-	def grav2_first(self, space, arbiter):#TODO pass args in through UI for type and/or ent/body/shape?
-		firstshape = arbiter.shapes[0]
-		if firstshape.__class__.__name__ != "Circle": return True
-		first_body = firstshape.body
-		second_body = arbiter.shapes[1].body
-		first_pos = first_body.position
-		second_pos = second_body.position
-		diff = cy.Vec2d(first_pos.x-second_pos.x,first_pos.y-second_pos.y)
-		dist = sqrt(diff.x**2+diff.y**2)
-		uv = cy.Vec2d(diff.x/dist, diff.y/dist)
-		invrad = firstshape.radius-dist
-		if invrad <=0001: invrad = 0001
-		invrad = sqrt(invrad)*second_body.mass
-		force = cy.Vec2d(uv.x*invrad, uv.y*invrad)
-		second_body.apply_impulse(force)
-		return False
 	def getCBFunc(self, fname):
 		if hasattr(self, fname):
 			return getattr(self, fname)
+		if fname in self.colfuncs:
+			return self.colfuncs[fname]
 		return None
