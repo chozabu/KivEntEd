@@ -29,8 +29,9 @@ class ObjScripts():
 				'vortex':{'pre_solve':'grav2_first'}
 			}
 		}
-
-		for typeastr, ch in self.collision_handlers.iteritems():
+		self.loadHandlersFromDict(self.collision_handlers)
+	def loadHandlersFromDict(self, handlers):
+		for typeastr, ch in handlers.iteritems():
 			typea = self.collision_types[typeastr]
 			for typebstr, funcsargs in ch.iteritems():
 				typeb = self.collision_types[typebstr]
@@ -40,6 +41,7 @@ class ObjScripts():
 					print typea, typeb, func
 					self.space.add_collision_handler(typea, typeb, **funcdict)
 	def add_col_func(self, funcstr):
+		if funcstr in self.gameref.mainTools.col_funcs: return
 		self.gameref.mainTools.col_funcs.append(funcstr)
 	def add_col_type(self,namestr):
 		if namestr in self.collision_types: return

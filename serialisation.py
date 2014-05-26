@@ -11,7 +11,8 @@ class Serials():
 		self.gameworld = gameref.gameworld
 		self.space = gameref.space
 	def shapeToDict(self, shape):
-		sd = {'collision_type': shape.collision_type, 'elasticity': shape.elasticity, 'friction': shape.friction,
+		ct = self.gameref.scripty.collision_types
+		sd = {'collision_type': ct[shape.collision_type], 'elasticity': shape.elasticity, 'friction': shape.friction,
 			  'group': shape.group}
 		if hasattr(shape, "radius"):
 			sd['radius'] = shape.radius
@@ -86,10 +87,15 @@ class Serials():
 
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
+		space = self.space
 		entslist = self.exportEntsToDicts()
 		jointslist = self.exportJointsToDicts()
-		space = self.space
+
+		collision_typeslist = self.gameref.mainTools.col_types
+		collision_typesdict = self.gameref.scripty.collision_handlers
+
 		worlddict = {"ents": entslist, "jointslist": jointslist,
+		             "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
 					              "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
@@ -106,9 +112,17 @@ class Serials():
 			entsdict = json.load(fo)
 		self.loadFromDict(entsdict)
 
+	def loadCollisionTypesFromDict(self, clist, cdata):
+		scripty = self.gameref.scripty
+		for ct in clist:
+			scripty.add_col_type(ct)
+		scripty.loadHandlersFromDict(cdata)
+
 	def loadFromDict(self, data):
 		print "LOADING"
 		space = self.space
+		if "collision_typeslist" in data and "collision_typesdict" in data:
+			self.loadCollisionTypesFromDict(data["collision_typeslist"],data["collision_typesdict"])
 		ents = data['ents']
 		idConvDict = {}
 		for e in ents:
@@ -121,19 +135,25 @@ class Serials():
 				bp = (body['position'][0], body['position'][1])
 				mass = body['mass']
 				texture = str(pr['texture'])
+				collision_type = 0
+				if 'collision_type' in shape:
+					coltypestr = shape['collision_type']
+					ct = self.gameref.scripty.collision_types
+					if coltypestr in ct:
+						collision_type = ct[coltypestr]
 				if str(mass) == 'inf': mass = 0
 				if stype == "circle":
 					idConvDict[e['orig_id']] = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
 																  friction=shape['friction'],
 																  elasticity=shape['elasticity'], angle=body['angle'],
 																  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-																  texture=texture, selectNow=False)
+																  texture=texture, selectNow=False, collision_type=collision_type)
 				elif stype == "box":
 					idConvDict[e['orig_id']] = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
 															   mass=mass, friction=shape['friction'],
 															   elasticity=shape['elasticity'], angle=body['angle'],
 															   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-															   texture=texture, selectNow=False)
+															   texture=texture, selectNow=False, collision_type=collision_type)
 		if "jointslist" in data:
 			jointslist = data['jointslist']
 			for j in jointslist:
