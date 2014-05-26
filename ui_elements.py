@@ -100,6 +100,7 @@ class MainTools(FloatLayout):
 		self.currentTool = ""
 		self.testsave = []
 		self.gameref = None
+		self.entcpy = None #item on the clipboard
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)

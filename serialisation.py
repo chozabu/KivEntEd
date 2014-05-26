@@ -95,9 +95,9 @@ class Serials():
 		collision_typesdict = self.gameref.scripty.collision_handlers
 
 		worlddict = {"ents": entslist, "jointslist": jointslist,
-		             "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
+					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
-					              "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
+								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
 		print "dir=", dataDir
@@ -117,7 +117,39 @@ class Serials():
 		for ct in clist:
 			scripty.add_col_type(ct)
 		scripty.loadHandlersFromDict(cdata)
-
+	def loadEntFromDict(self, e, idConvDict=None):
+		if "physics" in e:
+			stype = e['physics']['shape_type']
+			pr = e['physics_renderer']
+			p = e['physics']
+			body = p['body']
+			shape = p['shapes'][0]
+			bp = (body['position'][0], body['position'][1])
+			mass = body['mass']
+			texture = str(pr['texture'])
+			collision_type = 0
+			if 'collision_type' in shape:
+				coltypestr = shape['collision_type']
+				ct = self.gameref.scripty.collision_types
+				if coltypestr in ct:
+					collision_type = ct[coltypestr]
+			if str(mass) == 'inf': mass = 0
+			if stype == "circle":
+				entID = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
+															  friction=shape['friction'],
+															  elasticity=shape['elasticity'], angle=body['angle'],
+															  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+															  texture=texture, selectNow=False, collision_type=collision_type)
+				if idConvDict: idConvDict[e['orig_id']] = entID
+				return entID
+			elif stype == "box":
+				entID = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
+														   mass=mass, friction=shape['friction'],
+														   elasticity=shape['elasticity'], angle=body['angle'],
+														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+														   texture=texture, selectNow=False, collision_type=collision_type)
+				if idConvDict: idConvDict[e['orig_id']] = entID
+				return entID
 	def loadFromDict(self, data):
 		print "LOADING"
 		space = self.space
@@ -126,34 +158,7 @@ class Serials():
 		ents = data['ents']
 		idConvDict = {}
 		for e in ents:
-			if "physics" in e:
-				stype = e['physics']['shape_type']
-				pr = e['physics_renderer']
-				p = e['physics']
-				body = p['body']
-				shape = p['shapes'][0]
-				bp = (body['position'][0], body['position'][1])
-				mass = body['mass']
-				texture = str(pr['texture'])
-				collision_type = 0
-				if 'collision_type' in shape:
-					coltypestr = shape['collision_type']
-					ct = self.gameref.scripty.collision_types
-					if coltypestr in ct:
-						collision_type = ct[coltypestr]
-				if str(mass) == 'inf': mass = 0
-				if stype == "circle":
-					idConvDict[e['orig_id']] = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
-																  friction=shape['friction'],
-																  elasticity=shape['elasticity'], angle=body['angle'],
-																  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-																  texture=texture, selectNow=False, collision_type=collision_type)
-				elif stype == "box":
-					idConvDict[e['orig_id']] = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
-															   mass=mass, friction=shape['friction'],
-															   elasticity=shape['elasticity'], angle=body['angle'],
-															   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-															   texture=texture, selectNow=False, collision_type=collision_type)
+			self.loadEntFromDict(e, idConvDict)
 		if "jointslist" in data:
 			jointslist = data['jointslist']
 			for j in jointslist:

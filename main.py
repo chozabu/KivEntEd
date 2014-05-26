@@ -201,6 +201,12 @@ class TestGame(Widget):
 		ctouch['newpos'] = pos
 		ctouch['ownbody'].position = pos
 
+		if currentTool == "paste":
+			if self.mainTools.selectedEntity:
+				phys = self.mainTools.selectedEntity.physics
+				phys.body.position = pos
+				space.reindex_shape(phys.shapes[0])
+
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
@@ -232,7 +238,7 @@ class TestGame(Widget):
 					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
-		if shape and (shape.body.is_static or self.mainTools.paused) and (currentTool == 'drag'):
+		if (currentTool == 'drag' or currentTool == 'paste') and shape and (shape.body.is_static or self.mainTools.paused):
 			shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
 			self.reindexEntID(shape.body.data)
 			if self.mainTools.paused:
@@ -265,6 +271,7 @@ class TestGame(Widget):
 			space.remove(ctouch['mousejoint'])
 
 		if ctouch['onmenu']: return
+
 
 		tshape = ctouch['touching']
 		if tshape and shape:
@@ -364,16 +371,26 @@ class TestGame(Widget):
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
 															texture=self.mainTools.spriteSpinner.text)
 
-		self.mainTools.setShape(shape)
-
 		if shape and currentTool == 'del':
-			#print dir(shape)
-			#print dir(shape.body)
+			if shape == self.mainTools.selectedItem:
+				self.mainTools.setShape(None)
 			self.delObj(shape.body.data)
 			ctouch['touchingnow'] = None
+			return
+
+
+		if currentTool == "paste" and self.mainTools.entcpy:
+			pastedEID = self.serials.loadEntFromDict(self.mainTools.entcpy)
+			phys = self.gameworld.entities[pastedEID].physics
+			phys.body.position = pos
+			shape = phys.shapes[0]
+			#self.mainTools.setShape(shape)
+			space.reindex_shape(shape)
+			ctouch['touching'] = shape
+		self.mainTools.setShape(shape)
 
 		if shape and not shape.body.is_static and (
-				currentTool == 'drag' or currentTool == 'pin'):
+				currentTool == 'drag' or currentTool == 'paste' or currentTool == 'pin'):
 			body = ctouch['ownbody']
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)

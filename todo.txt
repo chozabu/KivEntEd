@@ -1,7 +1,9 @@
 pass variables into collision functions
-copy/paste
+set on update scripts
 add new collision scripts
-set on update behaviour
+load external scripts
+load external entitys
+upload/download ents/levels/atlas/scripts to net
 
 Games:
 -extreme tilt maze
