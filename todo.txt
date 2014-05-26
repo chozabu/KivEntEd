@@ -1,6 +1,9 @@
 pass variables into collision functions
+-create vortex/repeller
+-create grav/drag zone
+
 set on update scripts
-load external entitys
+save/load external entitys
 upload/download ents/levels/atlas/scripts to net
 
 Games:
@@ -11,12 +14,6 @@ important:
 -show joints
 -edit joints
 -level settings (gravity, notes)
-
-Entitys:
--create vortex/repeller
--create wrecker?
--create grav/drag zone
-custom entitys? online library? scripts?
 
 
 Kivent:

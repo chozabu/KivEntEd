@@ -39,6 +39,7 @@ class TestGame(Widget):
 		self.space = None
 		self.serials = None
 		self.scripty = None
+		self.todelete = []
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
@@ -397,6 +398,8 @@ class TestGame(Widget):
 		for eid in list(self.entIDs):
 			self.delObj(eid)
 		space.remove(list(space.constraints))
+	def delObjNext(self, objid):
+		if objid not in self.todelete:self.todelete.append(objid)
 	def delObj(self, objid):
 		#todo check before removing these items
 		self.gameworld.remove_entity(objid)
@@ -408,6 +411,9 @@ class TestGame(Widget):
 		return touch.x - viewport.camera_pos[0], touch.y - viewport.camera_pos[1]
 
 	def update(self, dt):
+		for o in self.todelete:
+			self.delObj(o)
+		self.todelete = []
 		self.mainTools.update(dt)
 		if not self.mainTools.paused:
 			self.gameworld.update(dt)
