@@ -201,12 +201,6 @@ class TestGame(Widget):
 		ctouch['newpos'] = pos
 		ctouch['ownbody'].position = pos
 
-		if currentTool == "paste":
-			if self.mainTools.selectedEntity:
-				phys = self.mainTools.selectedEntity.physics
-				phys.body.position = pos
-				space.reindex_shape(phys.shapes[0])
-
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
