@@ -1,3 +1,9 @@
+pass variables into collision functions
+save collision dicts as json
+copy/paste
+add new collision scripts
+set on update behaviour
+
 Games:
 -extreme tilt maze
 -MyWheelz

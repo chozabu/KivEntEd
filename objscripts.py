@@ -72,7 +72,7 @@ class ObjScripts():
 		#print diff
 		return False
 
-	def grav2_first(self, space, arbiter):
+	def grav2_first(self, space, arbiter):#TODO pass args in through UI for type and/or ent/body/shape?
 		firstshape = arbiter.shapes[0]
 		if firstshape.__class__.__name__ != "Circle": return True
 		first_body = firstshape.body
