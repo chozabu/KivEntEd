@@ -2,6 +2,7 @@ __author__ = 'chozabu'
 
 import json
 import cymunk as cy
+import os
 
 
 class Serials():
@@ -108,6 +109,7 @@ class Serials():
 		self.loadExtJSON(self.dataDir + fileName)
 
 	def loadExtJSON(self, fileNamePath):
+		if not os.path.isfile(fileNamePath): return
 		with open(fileNamePath) as fo:
 			entsdict = json.load(fo)
 		self.loadFromDict(entsdict)
