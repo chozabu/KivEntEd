@@ -148,7 +148,8 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
-
+	def getEntFromID(self, entID):
+		return self.gameworld.entities[entID]
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0):
 		box_dict = {
