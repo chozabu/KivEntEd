@@ -142,7 +142,7 @@ class Serials():
 															  elasticity=shape['elasticity'], angle=body['angle'],
 															  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 															  texture=texture, selectNow=False, collision_type=collision_type)
-				if idConvDict: idConvDict[e['orig_id']] = entID
+				if idConvDict!=None: idConvDict[e['orig_id']] = entID
 				return entID
 			elif stype == "box":
 				entID = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
@@ -150,7 +150,7 @@ class Serials():
 														   elasticity=shape['elasticity'], angle=body['angle'],
 														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 														   texture=texture, selectNow=False, collision_type=collision_type)
-				if idConvDict: idConvDict[e['orig_id']] = entID
+				if idConvDict!=None: idConvDict[e['orig_id']] = entID
 				return entID
 	def loadFromDict(self, data):
 		print "LOADING"
@@ -160,18 +160,19 @@ class Serials():
 		ents = data['ents']
 		idConvDict = {}
 		for e in ents:
-			self.loadEntFromDict(e, idConvDict)
+			self.loadEntFromDict(e, idConvDict=idConvDict)
 		if "jointslist" in data:
 			jointslist = data['jointslist']
-			print jointslist
 			for j in jointslist:
 				if j['a'] in idConvDict:
 					b1id = idConvDict[j['a']]
+					print j['a'], b1id
 					b1 = self.gameworld.entities[b1id].physics.body
 				else:
 					b1 = cy.Body()
 				if j['b'] in idConvDict:
 					b2id = idConvDict[j['b']]
+					print j['b'], b2id
 					b2 = self.gameworld.entities[b2id].physics.body
 				else:
 					b2 = cy.Body()
