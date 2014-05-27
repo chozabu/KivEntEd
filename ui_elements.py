@@ -22,7 +22,7 @@ class entDataItem(BoxLayout):
 		self.ddict = prnt.ddict
 		self.iname = iname
 		self.keyLabel.text = iname
-		if iname in self.ddict: self.valueLabel.text = self.ddict[iname]
+		if iname in self.ddict: self.valueLabel.text = str(self.ddict[iname])
 
 
 	def valueChanged(self, instance):
@@ -393,6 +393,16 @@ class MainTools(FloatLayout):
 			if not hasattr(self.selectedEntity, "datadict"):
 				print "initing datadict"
 				self.selectedEntity.datadict = {}
+			scripty = self.gameref.scripty
+			colfunc = scripty.getHandlersForType(self.selectedItem.collision_type)
+			print scripty.defaults
+			print colfunc
+			if len(colfunc)>0 and colfunc[0] in scripty.defaults:
+				defaultdict = scripty.defaults[colfunc[0]]
+				print defaultdict
+				for i in defaultdict.keys():
+					if i not in self.selectedEntity.datadict:
+						self.selectedEntity.datadict[i] = defaultdict[i]
 			Popup(title="Entity Varables",
 				  content=entDataBox(ddict = self.selectedEntity.datadict),
 				  size_hint=(0.8, 0.8),

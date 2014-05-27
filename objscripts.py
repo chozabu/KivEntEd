@@ -18,6 +18,7 @@ class ObjScripts():
 		self.add_col_func('None')
 
 		self.colfuncs = {}
+		self.defaults = {}
 
 		foundmods = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.py")]
 		#foundmods.remove("__init__")
@@ -28,23 +29,39 @@ class ObjScripts():
 				inmod.scripty = self
 				self.colfuncs[m] = inmod.collision_func
 				self.add_col_func(m)
+				if hasattr(inmod, "defaults"):
+					self.defaults[m] = inmod.defaults
 
 		self.collision_types = TwoWayDict()
 		self.cctype = 0
 		self.add_col_type('default')
 		self.add_col_type('vortex')
 		self.add_col_type('physzone')
-		#self.collision_funcs = ['pull2_first','grav2_first']
-		#self.collision_handlers = {'vortex':{'pre_solve':('default','grav2_first')}}
-		#self.add_col_func('grav2_first')
-		#self.add_col_func('pull2_first')
 		self.collision_handlers = {
 			'vortex':{
 				'default':{'pre_solve':'grav2first'},
+				'physzone':{'pre_solve':'grav2first'},
 				'vortex':{'pre_solve':'grav2first'}
+			},
+			'physzone':{
+				'default':{'pre_solve':'physicsZone'}
 			}
 		}
 		self.loadHandlersFromDict(self.collision_handlers)
+	def getHandlersForType(self, ctype):
+		ctype = self.collision_types[ctype]
+		results = []
+		print "getting results for", ctype
+		if ctype in self.collision_handlers:
+			ch = self.collision_handlers[ctype]
+			print "ch", ch
+			for i in ch.values():
+				print "i", i
+				for j in i.values():
+					print "j", j
+					if j not in results:
+						results.append(j)
+		return results
 	def loadHandlersFromDict(self, handlers):
 		for typeastr, ch in handlers.iteritems():
 			#typea = self.collision_types[typeastr]

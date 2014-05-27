@@ -5,6 +5,11 @@ from math import *
 #this is a refrence to kiventeds scripting system
 scripty = None
 
+
+defaults  = {
+	"forcemul": 1
+}
+
 def collision_func(space, arbiter):
 	firstshape = arbiter.shapes[0]
 	if firstshape.__class__.__name__ != "Circle": return True
