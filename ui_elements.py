@@ -17,21 +17,56 @@ class PlainButton(Button):
 		return sres
 
 class entDataItem(BoxLayout):
+	def __init__(self,iname,prnt):
+		super(entDataItem, self).__init__()
+		self.ddict = prnt.ddict
+		self.iname = iname
+		self.keyLabel.text = iname
+		if iname in self.ddict: self.valueLabel.text = self.ddict[iname]
 
-	def newType(self, btn):
-		Popup(title="Create New Collision Type",
+
+	def valueChanged(self, instance):
+		self.ddict[self.iname] = instance.text
+		#print self.ddict
+	#def newType(self, btn):
+	#	Popup(title="Create New Collision Type",
+	#		  content=TextInput(focus=True,multiline = False),
+	#		  size_hint=(0.6, None), height=100,
+	#		  on_dismiss=self.setNewType).open()
+	#
+	#def setNewType(self, popup):
+	#	pw = self.get_parent_window()
+	#	print pw
+	#	pw.children[-1].mainTools.data_key_types.append(popup.content.text)
+	#	#self.button.text = popup.content.text
+class entDataBox(BoxLayout):
+	def __init__(self, ddict):
+		super(entDataBox, self).__init__()
+		print ddict
+		self.ddict = ddict
+		for key in ddict.keys():
+			self.add_widget(entDataItem(iname=key, prnt=self))
+
+	def newItem(self):
+		Popup(title="Create New Variable",
 			  content=TextInput(focus=True,multiline = False),
 			  size_hint=(0.6, None), height=100,
-			  on_dismiss=self.setNewType).open()
+			  on_dismiss=self.setNewVar).open()
 
-	def setNewType(self, popup):
-		pw = self.get_parent_window()
-		print pw
-		pw.children[-1].mainTools.data_key_types.append(popup.content.text)
+	def setNewVar(self, popup):
+		#pw = self.get_parent_window()
+		#print pw
+		#pw.children[-1].mainTools.data_key_types.append()
 		#self.button.text = popup.content.text
-class entDataBox(BoxLayout):
-	def newItem(self):
-		self.add_widget(entDataItem())
+		iname = popup.content.text
+		print iname
+		if iname in self.ddict:
+			Popup(title="Create New Variable",
+			  content=Label(text="variable already exists"),
+			  size_hint=(0.6, None), height=100).open()
+			return
+		self.ddict[iname] = ""
+		self.add_widget(entDataItem(iname=iname, prnt=self))
 	#def __init__(self, mtref):
 
 class callbacks(BoxLayout):
@@ -354,10 +389,14 @@ class MainTools(FloatLayout):
 		self.cbpopup.open()
 
 	def varsPressed(self, btn):
-		Popup(title="Configure Entity Varables",
-			  content=entDataBox(),
-			  size_hint=(0.8, 0.8),
-			  on_dismiss=None).open()
+		if self.selectedEntity:
+			if not hasattr(self.selectedEntity, "datadict"):
+				print "initing datadict"
+				self.selectedEntity.datadict = {}
+			Popup(title="Entity Varables",
+				  content=entDataBox(ddict = self.selectedEntity.datadict),
+				  size_hint=(0.8, 0.8),
+				  on_dismiss=None).open()
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = self.gameref.scripty.collision_types[instance.text]

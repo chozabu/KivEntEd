@@ -103,24 +103,27 @@ TestGame:
 <entDataItem@BoxLayout>
     size_hint_y: None
     height: 30
-    Button:
-        text:"+"
-        size_hint_x: None
-        width: self.height
-        on_press: root.newType(self)
-    Spinner:
-        id: keySpinner
+    keyLabel: keyLabel
+    valueLabel: valueLabel
+    #Button:
+    #    text:"+"
+    #    size_hint_x: None
+    #    width: self.height
+    #    on_press: root.newType(self)
+    Label:#make into a label
+        id: keyLabel
         text: ""
-        values: app.root.mainTools.data_key_types
+        #values: app.root.mainTools.data_key_types
         #on_text: root.typeChanged(self)
     Label:
         text:"="
         size_hint_x: None
         width: self.height
     TextInput:
-        id: heightLabel
+        id: valueLabel
         multiline: False
         text: ""
+        on_text: root.valueChanged(self)
 <entDataBox@BoxLayout>
     orientation: 'vertical'
     dataItems: dataItems
