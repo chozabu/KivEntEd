@@ -163,6 +163,7 @@ class Serials():
 			self.loadEntFromDict(e, idConvDict)
 		if "jointslist" in data:
 			jointslist = data['jointslist']
+			print jointslist
 			for j in jointslist:
 				if j['a'] in idConvDict:
 					b1id = idConvDict[j['a']]
@@ -181,6 +182,7 @@ class Serials():
 					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
 					space.add(qj)
 				if str(j['type']) == "PinJoint":
+					print "adding ", j
 					qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (
 					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
 					space.add(qj)

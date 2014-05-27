@@ -16,6 +16,24 @@ class PlainButton(Button):
 		print "pb=", sres
 		return sres
 
+class entDataItem(BoxLayout):
+
+	def newType(self, btn):
+		Popup(title="Create New Collision Type",
+			  content=TextInput(focus=True,multiline = False),
+			  size_hint=(0.6, None), height=100,
+			  on_dismiss=self.setNewType).open()
+
+	def setNewType(self, popup):
+		pw = self.get_parent_window()
+		print pw
+		pw.children[-1].mainTools.data_key_types.append(popup.content.text)
+		#self.button.text = popup.content.text
+class entDataBox(BoxLayout):
+	def newItem(self):
+		self.add_widget(entDataItem())
+	#def __init__(self, mtref):
+
 class callbacks(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -88,6 +106,7 @@ class MainTools(FloatLayout):
 	col_types = ListProperty()
 	col_funcs = ListProperty()
 	sprite_list = ListProperty()
+	data_key_types = ListProperty()
 	def __init__(self, **kwargs):
 		super(MainTools, self).__init__(**kwargs)
 		self.staticOn = False
@@ -281,10 +300,14 @@ class MainTools(FloatLayout):
 
 	def setShape(self, shape):
 		self.selectedItem = shape
-		self.selectedMenu.selectedLabel.text = str(shape)
+		self.selectedMenu.selectedLabel.text = "None"
 		self.selectedEntity = None
+		ent=None
 		if shape:
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
+			ent = self.selectedEntity
+			print dir(ent.physics)
+			self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
 			#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 			#self.selectedMenu.posLabel.text = tv
 			self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
@@ -306,7 +329,6 @@ class MainTools(FloatLayout):
 				bs.heightLabel.bind(text=self.on_height_change)
 				self.selectedMenu.shapeInfo.add_widget(bs)
 
-		ent = self.selectedEntity
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
@@ -330,6 +352,12 @@ class MainTools(FloatLayout):
 		if self.selectedItem:
 			self.callbacksBox.setTypeA(self.gameref.scripty.collision_types[self.selectedItem.collision_type])
 		self.cbpopup.open()
+
+	def varsPressed(self, btn):
+		Popup(title="Configure Entity Varables",
+			  content=entDataBox(),
+			  size_hint=(0.8, 0.8),
+			  on_dismiss=None).open()
 	def colTypeChanged(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = self.gameref.scripty.collision_types[instance.text]

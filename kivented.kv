@@ -100,6 +100,38 @@ TestGame:
             id: heightLabel
             multiline: False
             text: "height"
+<entDataItem@BoxLayout>
+    size_hint_y: None
+    height: 30
+    Button:
+        text:"+"
+        size_hint_x: None
+        width: self.height
+        on_press: root.newType(self)
+    Spinner:
+        id: keySpinner
+        text: ""
+        values: app.root.mainTools.data_key_types
+        #on_text: root.typeChanged(self)
+    Label:
+        text:"="
+        size_hint_x: None
+        width: self.height
+    TextInput:
+        id: heightLabel
+        multiline: False
+        text: ""
+<entDataBox@BoxLayout>
+    orientation: 'vertical'
+    dataItems: dataItems
+    BoxLayout:
+        id: dataItems
+    Button:
+        size_hint_y: None
+        height: 30
+        text: "Add Item"
+        on_press: root.newItem()#dataItems.add_widget(entDataItem())
+
 <callbacks@BoxLayout>
     orientation: 'vertical'
     colTypeASpinner: colTypeASpinner
@@ -272,6 +304,9 @@ TestGame:
                     id: copyButton
                     text: 'copy'
                     on_press: root.entcpy = root.gameref.serials.entToDict(root.selectedEntity)
+                Button:
+                    text: 'Variables'
+                    on_press: root.varsPressed(self)
         
     BoxLayout:
         id: leftMenu
