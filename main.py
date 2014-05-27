@@ -50,11 +50,11 @@ class TestGame(Widget):
 
 
 	def init_game(self, dt):
-		#try:
-		self._init_game(0)
-		#except:
-		#	print 'failed: rescheduling init'
-		#	Clock.schedule_once(self.init_game)
+		try:
+			self._init_game(0)
+		except KeyError:
+			print 'failed: rescheduling init'
+			Clock.schedule_once(self.init_game)
 
 
 	def _init_game(self, dt):
