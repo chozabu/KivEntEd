@@ -1,8 +1,4 @@
 multiple save/load
-fix joints save/load
-pass variables into collision functions
--create vortex/repeller
--create grav/drag zone
 
 set on update scripts
 save/load external entitys
