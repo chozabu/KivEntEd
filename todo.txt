@@ -1,20 +1,20 @@
-multiple save/load
+-multiple save/load
+-set on update scripts
+-save/load external entitys
+-upload/download ents/levels/atlas/scripts to net
+-show joints
+-edit joints
+-delete joints
+-level settings (gravity, notes)
+-enable RGBA system
 
-set on update scripts
-save/load external entitys
-upload/download ents/levels/atlas/scripts to net
 
 Games:
 -extreme tilt maze
 -MyWheelz
 
-important:
--show joints
--edit joints
--level settings (gravity, notes)
-
-
 Kivent:
+-zoom camera!
 -multi-quad renderer
 -texture importing and/or themes
 -polygons

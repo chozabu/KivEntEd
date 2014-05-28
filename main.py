@@ -403,8 +403,19 @@ class TestGame(Widget):
 		if objid not in self.todelete:self.todelete.append(objid)
 	def delObj(self, objid):
 		#todo check before removing these items
+		ent =  self.getEntFromID(objid)
+		if hasattr(ent, "physics"):
+			b = ent.physics.body
+			removeus = []
+			for c in self.space.constraints:
+				if c.a == b or c.b == b:
+					removeus.append(c)
+			for c in removeus:
+				self.space.remove(c)
+
 		self.gameworld.remove_entity(objid)
 		if objid in self.entIDs: self.entIDs.remove(objid)
+		print "constrains=",self.space.constraints
 
 	def getWorldPosFromTouch(self, touch):
 
