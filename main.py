@@ -264,7 +264,8 @@ class TestGame(Widget):
 		ctouch['touchingnow'] = shape
 
 		if 'mousejoint' in ctouch and (currentTool != "pin"):
-			space.remove(ctouch['mousejoint'])
+			if ctouch['mousejoint'] in self.space.constraints:
+				space.remove(ctouch['mousejoint'])
 
 		if ctouch['onmenu']: return
 
