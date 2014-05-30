@@ -232,9 +232,21 @@ class MainTools(FloatLayout):
 		space.gravity = value, space.gravity.y
 
 	def xvelChanged(self, instance):
-		pass
+		try:
+			fval = float(instance.text)
+		except ValueError:
+			return
+		shape = self.selectedItem
+		if shape:
+			shape.body.velocity = (fval, shape.body.velocity.y)
 	def yvelChanged(self, instance):
-		pass
+		try:
+			fval = float(instance.text)
+		except ValueError:
+			return
+		shape = self.selectedItem
+		if shape:
+			shape.body.velocity = (shape.body.velocity.x, fval)
 	def xposChanged(self, instance):
 		fval = float(instance.text)
 		shape = self.selectedItem
