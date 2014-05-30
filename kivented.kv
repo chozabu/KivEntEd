@@ -225,6 +225,8 @@ TestGame:
                 selectedLabel: selectedLabel
                 xposLabel: xposLabel
                 yposLabel: yposLabel
+                xvelLabel: xvelLabel
+                yvelLabel: yvelLabel
                 angleLabel: angleLabel
                 shapeInfo: shapeInfo
                 height: self.minimum_height
@@ -252,6 +254,18 @@ TestGame:
                         id: yposLabel
                         text: "position"
                         on_text: root.yposChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "xvel:"
+                    tbox:
+                        id: xvelLabel
+                        on_text: root.xvelChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "yvel:"
+                    tbox:
+                        id: yvelLabel
+                        on_text: root.yvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "angle:"

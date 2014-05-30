@@ -5,7 +5,6 @@
 -show joints
 -edit joints
 -delete joints
--level settings (gravity, notes)
 -enable RGBA system
 
 
@@ -15,7 +14,7 @@ Games:
 
 Kivent:
 -zoom camera!
--multi-quad renderer
+-multi-quad renderer + multi-shape body
 -texture importing and/or themes
 -polygons
 -poly-painting

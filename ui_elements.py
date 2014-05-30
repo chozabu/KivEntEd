@@ -181,6 +181,10 @@ class MainTools(FloatLayout):
 		#self.selectedMenu.xposLabel.text = ""
 		#self.selectedMenu.yposLabel.text = ""
 		if shape:
+			if not self.selectedMenu.xvelLabel.focus:
+				self.selectedMenu.xvelLabel.text = "%0.2f" % shape.body.velocity.x
+			if not self.selectedMenu.yvelLabel.focus:
+				self.selectedMenu.yvelLabel.text = "%0.2f" % shape.body.velocity.y
 			if not self.selectedMenu.xposLabel.focus:
 				self.selectedMenu.xposLabel.text = "%0.2f" % shape.body.position.x
 			if not self.selectedMenu.yposLabel.focus:
@@ -227,6 +231,10 @@ class MainTools(FloatLayout):
 		space = self.gameref.space
 		space.gravity = value, space.gravity.y
 
+	def xvelChanged(self, instance):
+		pass
+	def yvelChanged(self, instance):
+		pass
 	def xposChanged(self, instance):
 		fval = float(instance.text)
 		shape = self.selectedItem
