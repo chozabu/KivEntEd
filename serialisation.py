@@ -199,8 +199,8 @@ class Serials():
 					space.add(qj)
 		if "settings" in data:
 			settings = data['settings']
-			g = settings['gravity']
-			space.gravity = (g[0], g[1])
+			self.gameref.setGrav(settings['gravity'])
+			#space.gravity = (g[0], g[1])
 			if "startID" in settings:
 				sid = settings['startID']
 				if sid != -1:
