@@ -54,6 +54,8 @@ class Serials():
 		if hasattr(e, "rotate"):
 			rd = {"r": e.rotate.r}
 			ed["rotate"] = rd
+		if hasattr(e, 'datadict'):
+			ed['datadict'] = e.datadict
 		return ed
 
 	def exportJointsToDicts(self):
@@ -136,22 +138,25 @@ class Serials():
 				if coltypestr in ct:
 					collision_type = ct[coltypestr]
 			if str(mass) == 'inf': mass = 0
+			entID = None
 			if stype == "circle":
 				entID = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
 															  friction=shape['friction'],
 															  elasticity=shape['elasticity'], angle=body['angle'],
 															  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 															  texture=texture, selectNow=False, collision_type=collision_type)
-				if idConvDict!=None: idConvDict[e['orig_id']] = entID
-				return entID
 			elif stype == "box":
 				entID = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
 														   mass=mass, friction=shape['friction'],
 														   elasticity=shape['elasticity'], angle=body['angle'],
 														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 														   texture=texture, selectNow=False, collision_type=collision_type)
+			if entID != None:
 				if idConvDict!=None: idConvDict[e['orig_id']] = entID
-				return entID
+				newent = self.gameref.getEntFromID(entID)
+				if 'datadict' in e:
+					newent.datadict = e['datadict']
+			return entID
 	def loadFromDict(self, data):
 		print "LOADING"
 		space = self.space
