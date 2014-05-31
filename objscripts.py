@@ -21,15 +21,24 @@ class ObjScripts():
 		self.defaults = {}
 
 		foundmods = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.py")]
+		foundmods2 = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.pyo")]
+		foundmods = foundmods+foundmods2
 		#foundmods.remove("__init__")
 		basepath = "scripts.collision."
 		for m in foundmods:
-			inmod = importlib.import_module(basepath+m)
+			#basemod = __import__(basepath+m)
+			#inmod = getattr(basemod.collision, m)
+			inmod = __import__(basepath+m,
+			                 globals=globals(),
+			                 locals=locals(),
+			                 fromlist=[m], level=0)
+			#inmod = importlib.import_module(basepath+m)
 			if hasattr(inmod, "collision_func"):
 				inmod.scripty = self
 				self.colfuncs[m] = inmod.collision_func
 				self.add_col_func(m)
 				if hasattr(inmod, "defaults"):
+					print inmod.defaults
 					self.defaults[m] = inmod.defaults
 
 		self.collision_types = TwoWayDict()
