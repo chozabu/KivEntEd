@@ -133,8 +133,10 @@ class Serials():
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
 			texture = str(pr['texture'])
-			cl = e['color']
-			color = (cl[0],cl[1],cl[2],cl[3])
+			color = (1,1,1,1)
+			if 'color' in e:
+				cl = e['color']
+				color = (cl[0],cl[1],cl[2],cl[3])
 			collision_type = 0
 			if 'collision_type' in shape:
 				coltypestr = shape['collision_type']
