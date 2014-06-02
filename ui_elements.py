@@ -108,6 +108,7 @@ class callbacks(BoxLayout):
 
 	def setNewType(self, popup):
 		self.mtref.gameref.scripty.add_col_type(popup.content.text)
+		self.colTypeASpinner.text = popup.content.text
 		#self.button.text = popup.content.text
 
 
