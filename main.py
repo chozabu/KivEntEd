@@ -430,6 +430,8 @@ class TestGame(Widget):
 	def clearAll(self):
 		self.startID = -1
 		self.finishID = -1
+
+		self.mainTools.setShape(None)
 		space = self.space
 		for eid in list(self.entIDs):
 			self.delObj(eid)
