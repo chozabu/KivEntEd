@@ -447,6 +447,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
+
+			if self.gameref.selectedShapeID != None:self.gameref.delObj(self.gameref.selectedShapeID)
+			self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
+			                                                 width=ent.physics_renderer.width*1.1, height=ent.physics_renderer.height*1.1,
+															texture='emptybox')
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 

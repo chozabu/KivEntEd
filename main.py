@@ -419,13 +419,6 @@ class TestGame(Widget):
 			ctouch['touching'] = shape
 		self.mainTools.setShape(shape)
 
-		ent = self.mainTools.selectedEntity
-		if ent:
-			print dir(ent)
-			if self.selectedShapeID != None:self.delObj(self.selectedShapeID)
-			self.selectedShapeID = self.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
-			                                                 width=ent.physics_renderer.width*1.1, height=ent.physics_renderer.height*1.1,
-															texture='emptybox')
 
 		if shape and not shape.body.is_static and (
 				currentTool == 'drag' or currentTool == 'paste' or currentTool == 'pin'):
