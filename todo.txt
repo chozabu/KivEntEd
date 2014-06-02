@@ -6,7 +6,6 @@
 -show joints
 -edit joints
 -delete joints
--enable RGBA system
 -highlight selected item
 
 
