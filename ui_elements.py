@@ -450,7 +450,7 @@ class MainTools(FloatLayout):
 
 			if self.gameref.selectedShapeID != None:self.gameref.delObj(self.gameref.selectedShapeID)
 			self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
-			                                                 width=ent.physics_renderer.width*1.1, height=ent.physics_renderer.height*1.1,
+			                                                 width=ent.physics_renderer.width*1.1+10, height=ent.physics_renderer.height*1.1+10,
 															texture='emptybox')
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
