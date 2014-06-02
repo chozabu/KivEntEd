@@ -238,6 +238,12 @@ class TestGame(Widget):
 					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
+		if currentTool == 'rotate' and shape:
+			xd = shape.body.position.x - pos[0]
+			yd = shape.body.position.y - pos[1]
+			angle = atan2(yd, xd)
+			if 'origAngle' not in ctouch: ctouch['origAngle'] = shape.body.angle-angle
+			shape.body.angle = (angle+ctouch['origAngle'])
 		if (currentTool == 'drag' or currentTool == 'paste') and shape and (shape.body.is_static or self.mainTools.paused):
 			shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
 			self.reindexEntID(shape.body.data)

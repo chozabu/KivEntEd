@@ -416,6 +416,11 @@ TestGame:
                 on_press: root.setTool("drag")
             ToggleButton:
                 group: 'ToolGroup'
+                id: rotateButton
+                text: 'Rotate'
+                on_press: root.setTool("rotate")
+            ToggleButton:
+                group: 'ToolGroup'
                 id: deleteButton
                 text: 'Delete'
                 on_press: root.setTool("del")
