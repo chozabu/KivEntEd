@@ -1,10 +1,9 @@
--set on update scripts
--save/load external entitys
 -upload/download ents/levels/atlas/scripts to net
 -show joints
 -edit joints
 -delete joints
--highlight selected item
+-set on update scripts
+-save/load external entitys
 
 
 Games:
