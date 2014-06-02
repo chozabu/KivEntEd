@@ -214,6 +214,7 @@ TestGame:
     selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
     examplesMenu: examplesMenu.__self__
+    levelsMenu: levelsMenu.__self__
     
     BoxLayout:
         id: rightMenu
@@ -534,6 +535,12 @@ TestGame:
             padding: 4
             height: root.height
         BoxLayout:
+            id: levelsMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+        BoxLayout:
             id: fileMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
@@ -553,6 +560,9 @@ TestGame:
             Button:
                 text: 'Examples'
                 on_press: root.changel3menu(root.examplesMenu)
+            Button:
+                text: 'Custom'
+                on_press: root.customlvlPressed()#changel3menu(root.levelsMenu)
             Button:
                 text: 'Custom'
                 on_press: root.loadCustomPressed(selfLoad)

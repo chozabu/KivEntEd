@@ -171,11 +171,23 @@ class MainTools(FloatLayout):
 		self.gameref.clearAll()
 		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
 		self.gameref.serials.loadExtJSON(filename)
-		print instance.text
+		self.nameBox.text = instance.text
+	def loadCustom(self, instance):
+		self.gameref.clearAll()
+		self.gameref.serials.loadJSON(instance.text+".json")
+		self.nameBox.text = instance.text
+	def customlvlPressed(self):
+		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"*.json")]
+		for levelname in levels:
+			newb = Button(text=levelname, font_size=14)
+			newb.bind(on_press=self.loadCustom)
+			self.levelsMenu.add_widget(newb)
+		self.changel3menu(self.levelsMenu)
+
 
 	def init_tools(self, dt):
 		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu, self.fileMenu]
-		self.l3menus = [self.examplesMenu]
+		self.l3menus = [self.examplesMenu,self.levelsMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
 		self.rightMenu.remove_widget(self.selectedMenuView)
