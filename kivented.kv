@@ -234,6 +234,10 @@ TestGame:
                 yvelLabel: yvelLabel
                 angleLabel: angleLabel
                 shapeInfo: shapeInfo
+                redLabel: redLabel
+                greenLabel: greenLabel
+                blueLabel: blueLabel
+                opacityLabel: opacityLabel
                 height: self.minimum_height
                 frictionLabel: frictionLabel
                 massLabel: massLabel
@@ -283,6 +287,41 @@ TestGame:
                     text: "texture"
                     on_text: root.textureChanged(self)
                     values: root.sprite_list
+                BoxLayout:
+                    size_hint_y: None
+                    height: 60
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'R'
+                        tbox:
+                            id: redLabel
+                            text: '1'
+                            on_text: root.redChanged(self.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'G'
+                        tbox:
+                            id: greenLabel
+                            text: '1'
+                            on_text: root.greenChanged(self.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'B'
+                        tbox:
+                            id: blueLabel
+                            text: '1'
+                            on_text: root.blueChanged(self.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'O'
+                        tbox:
+                            id: opacityLabel
+                            text: '1'
+                            on_text: root.opacityChanged(self.text)
                 BoxLayout:
                     Label:
                         text: "Mass:"

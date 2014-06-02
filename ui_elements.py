@@ -272,6 +272,27 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		ent.physics_renderer.texture = instance.text
 
+	def redChanged(self, strval):
+		fval = float(strval)
+		ent = self.selectedEntity
+		if ent:
+			ent.color.r = fval
+	def greenChanged(self, strval):
+		fval = float(strval)
+		ent = self.selectedEntity
+		if ent:
+			ent.color.g = fval
+	def blueChanged(self, strval):
+		fval = float(strval)
+		ent = self.selectedEntity
+		if ent:
+			ent.color.b = fval
+	def opacityChanged(self, strval):
+		fval = float(strval)
+		ent = self.selectedEntity
+		if ent:
+			ent.color.a = fval
+
 	def frictionChanged(self, instance):
 		fval = float(instance.text)
 		shape = self.selectedItem
@@ -388,6 +409,11 @@ class MainTools(FloatLayout):
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
 			self.selectedMenu.texLabel.text = ent.physics_renderer.texture
+			if hasattr(ent, 'color'):
+				self.selectedMenu.redLabel.text = str(ent.color.r)
+				self.selectedMenu.greenLabel.text = str(ent.color.g)
+				self.selectedMenu.blueLabel.text = str(ent.color.b)
+				self.selectedMenu.opacityLabel.text = str(ent.color.a)
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 
