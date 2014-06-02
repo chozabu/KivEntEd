@@ -1,9 +1,14 @@
 -upload/download ents/levels/atlas/scripts to net
--show joints
 -edit joints
--delete joints
+--show joints
+--select joints
+--delete joints
+--change joint params
 -set on update scripts
 -save/load external entitys
+-multiple selection
+--select box, individual add/subtract
+--edit friction, mass, width, etc
 
 
 Games:
