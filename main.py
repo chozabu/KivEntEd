@@ -36,6 +36,7 @@ class TestGame(Widget):
 		self.mainTools.setTool("draw")
 		self.startID = -1
 		self.finishID = -1
+		self.selectedShapeID = None
 		self.space = None
 		self.serials = None
 		self.scripty = None
@@ -372,7 +373,7 @@ class TestGame(Widget):
 		shape = None#space.point_query_first(position)
 		shapes = self.getShapesAtVec(position)
 		if len(shapes) >0: shape = shapes[0]
-		if shapes==self.lastlist:
+		if shapes==self.lastlist and shapes != []:
 			self.selectedListIndex +=1
 			if self.selectedListIndex == len(shapes):self.selectedListIndex=0
 			shape=shapes[self.selectedListIndex]
@@ -395,6 +396,7 @@ class TestGame(Widget):
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
 
+
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
 															texture=self.mainTools.spriteSpinner.text)
@@ -416,6 +418,14 @@ class TestGame(Widget):
 			space.reindex_shape(shape)
 			ctouch['touching'] = shape
 		self.mainTools.setShape(shape)
+
+		ent = self.mainTools.selectedEntity
+		if ent:
+			print dir(ent)
+			if self.selectedShapeID != None:self.delObj(self.selectedShapeID)
+			self.selectedShapeID = self.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
+			                                                 width=ent.physics_renderer.width*1.1, height=ent.physics_renderer.height*1.1,
+															texture='emptybox')
 
 		if shape and not shape.body.is_static and (
 				currentTool == 'drag' or currentTool == 'paste' or currentTool == 'pin'):
@@ -459,6 +469,11 @@ class TestGame(Widget):
 			self.delObj(o)
 		self.todelete = []
 		self.mainTools.update(dt)
+		ent = self.mainTools.selectedEntity
+		if self.selectedShapeID != None and ent != None:
+			sbox = self.getEntFromID(self.selectedShapeID)
+			sbox.position.x =ent.position.x
+			sbox.position.y =ent.position.y
 		if not self.mainTools.paused:
 			self.gameworld.update(dt)
 			for t in self.touches:
