@@ -11,6 +11,7 @@ varying vec2 tex_coord0;
 attribute vec2     vPosition;
 attribute vec2     vTexCoords0;
 attribute vec2     vCenter;
+attribute vec4     vColor;
 attribute float    vRotation;
 
 /* uniform variables */
@@ -20,7 +21,7 @@ uniform vec4       color;
 uniform float      opacity;
 
 void main (void) {
-  frag_color = color * vec4(1.0, 1.0, 1.0, opacity);
+  frag_color = color * vec4(1.0, 1.0, 1.0, opacity)* vColor;
   tex_coord0 = vTexCoords0;
   float a_sin = sin(vRotation);
   float a_cos = cos(vRotation);

@@ -128,7 +128,7 @@ class TestGame(Widget):
 		return entityID
 
 	def create_circle(self, pos, radius=6., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0):
+					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
 		shape_dict = {'inner_radius': 0, 'outer_radius': radius,
 					  'mass': mass, 'offset': (0, 0)}
 		col_shape = {'shape_type': 'circle', 'elasticity': elasticity,
@@ -142,9 +142,9 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'physics': physics_component,
-								 'physics_renderer': {'texture': texture, 'size': (radius * 2, radius * 2)},
+								 'physics_renderer': {'texture': texture, 'size': (radius * 2, radius * 2)}, 'color':color,
 								 'position': pos, 'rotate': 0}
-		component_order = ['position', 'rotate',
+		component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
@@ -155,7 +155,7 @@ class TestGame(Widget):
 	def getEntFromID(self, entID):
 		return self.gameworld.entities[entID]
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0):
+				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
 		box_dict = {
 			'width': width,
 			'height': height,
@@ -171,9 +171,9 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'physics': physics_component,
-								 'physics_renderer': {'texture': texture, 'size': (width, height)},
+								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
 								 'position': pos, 'rotate': 0}
-		component_order = ['position', 'rotate',
+		component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
@@ -458,9 +458,9 @@ class TestGame(Widget):
 
 	def setup_states(self):
 		self.gameworld.add_state(state_name='main',
-								 systems_added=['rotate', 'renderer', 'physics_renderer'],
+								 systems_added=['color', 'rotate', 'renderer', 'physics_renderer'],
 								 systems_removed=[], systems_paused=[],
-								 systems_unpaused=['rotate', 'renderer', 'physics_renderer'],
+								 systems_unpaused=['color', 'rotate', 'renderer', 'physics_renderer'],
 								 screenmanager_screen='main')
 
 	def set_state(self):
