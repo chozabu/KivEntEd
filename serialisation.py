@@ -27,6 +27,8 @@ class Serials():
 		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
 		if hasattr(e, "load_order"):
 			ed["load_order"] = e.load_order
+		if hasattr(e, "color"):
+			ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
 		if hasattr(e, "physics"):
 			b = e.physics.body
 			bd = {'velocity': (b.velocity.x, b.velocity.y),
@@ -131,6 +133,8 @@ class Serials():
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
 			texture = str(pr['texture'])
+			cl = e['color']
+			color = (cl[0],cl[1],cl[2],cl[3])
 			collision_type = 0
 			if 'collision_type' in shape:
 				coltypestr = shape['collision_type']
@@ -144,13 +148,13 @@ class Serials():
 															  friction=shape['friction'],
 															  elasticity=shape['elasticity'], angle=body['angle'],
 															  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-															  texture=texture, selectNow=False, collision_type=collision_type)
+															  texture=texture, selectNow=False, collision_type=collision_type, color=color)
 			elif stype == "box":
 				entID = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
 														   mass=mass, friction=shape['friction'],
 														   elasticity=shape['elasticity'], angle=body['angle'],
 														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-														   texture=texture, selectNow=False, collision_type=collision_type)
+														   texture=texture, selectNow=False, collision_type=collision_type, color=color)
 			if entID != None:
 				if idConvDict!=None: idConvDict[e['orig_id']] = entID
 				newent = self.gameref.getEntFromID(entID)
