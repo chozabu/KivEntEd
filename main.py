@@ -40,6 +40,8 @@ class TestGame(Widget):
 		self.serials = None
 		self.scripty = None
 		self.todelete = []
+		self.selectedListIndex = 0
+		self.lastlist = None
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
@@ -186,9 +188,15 @@ class TestGame(Widget):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
 	def getShapeAt(self, x,y):
-		space = self.space
 		position = cy.Vec2d(x,y)
-		return space.point_query_first(position)
+		return self.space.point_query_first(position)
+	def getShapesAt(self, x,y):
+		return self.getShapesAtVec(cy.Vec2d(x,y))
+	def getShapesAtVec(self, position):
+		b = cy.Body()
+		b.position = position
+		shapeos = cy.Circle(b, 1)
+		return self.space.shape_query(shapeos)
 	def setEntIDPosSizeRot(self, entID, x,y,w,h,r=0):
 		self.setEntPosSizeRot(self.gameworld.entities[entID], x,y,w,h,r)
 	def setEntPosSizeRot(self, ent, x,y,w,h,r=0):
@@ -361,9 +369,18 @@ class TestGame(Widget):
 		pos = self.getWorldPosFromTouch(touch)
 		position = cy.Vec2d(pos[0], pos[1])
 		space = self.space
-		shape = space.point_query_first(position)
+		shape = None#space.point_query_first(position)
+		shapes = self.getShapesAtVec(position)
+		if len(shapes) >0: shape = shapes[0]
+		if shapes==self.lastlist:
+			self.selectedListIndex +=1
+			if self.selectedListIndex == len(shapes):self.selectedListIndex=0
+			shape=shapes[self.selectedListIndex]
+		else: self.selectedListIndex =0
+		self.lastlist = shapes
 		#self.selectedShape = shape
 		print "touched shape:", shape
+		print "touched shapes:", shapes
 		self.touches[touch.id] = {"active": False, "pos": pos, "newpos": pos, "screenpos": (touch.x, touch.y),
 								  "tool": self.mainTools.currentTool, "onmenu": False, "touching": shape,
 								  "touchingnow": shape, "ownbody": cy.Body()}
