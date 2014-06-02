@@ -469,6 +469,9 @@ class TestGame(Widget):
 			sbox = self.getEntFromID(self.selectedShapeID)
 			sbox.position.x =ent.position.x
 			sbox.position.y =ent.position.y
+			bb = ent.physics.shapes[0].cache_bb()
+			sbox.renderer.width = bb['r']-bb['l']+5
+			sbox.renderer.height = bb['t']-bb['b']+5
 		if not self.mainTools.paused:
 			self.gameworld.update(dt)
 			for t in self.touches:

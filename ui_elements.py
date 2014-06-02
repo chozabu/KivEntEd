@@ -438,7 +438,9 @@ class MainTools(FloatLayout):
 				bs.heightLabel.bind(text=self.on_height_change)
 				self.selectedMenu.shapeInfo.add_widget(bs)
 
-		if self.gameref.selectedShapeID != None:self.gameref.delObj(self.gameref.selectedShapeID)
+		if self.gameref.selectedShapeID != None:
+			self.gameref.delObj(self.gameref.selectedShapeID)
+			self.gameref.selectedShapeID = None
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
