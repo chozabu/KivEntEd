@@ -196,11 +196,11 @@ class MainTools(FloatLayout):
 
 	def loadPressed(self, instance):
 		self.gameref.clearAll()
-		self.gameref.serials.loadJSON()
+		self.gameref.serials.loadJSON(self.nameBox.text+".json")
 		#self.gameref.loadFromDict(self.testsave)
 
 	def savePressed(self, instance):
-		self.testsave = self.gameref.serials.exportJSON()
+		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
 
 	def clearPressed(self, instance):
 		self.gameref.clearAll()

@@ -210,6 +210,7 @@ TestGame:
     gravySlider: gravySlider
     spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu
+    nameBox: nameBox
     selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
     
@@ -537,6 +538,11 @@ TestGame:
             Button:
                 text: 'Load'
                 on_press: root.loadPressed(self)
+            tbox:
+                size_hint_y: None
+                height:40
+                id: nameBox
+                text: 'defaultlevel'
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)
