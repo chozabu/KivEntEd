@@ -1,5 +1,8 @@
 import cymunk as cy
 
+import os
+import glob
+
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -159,12 +162,20 @@ class MainTools(FloatLayout):
 		self.testsave = []
 		self.gameref = None
 		self.entcpy = None #item on the clipboard
+		#self.exampleLevels
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)
 
+	def loadExample(self, instance):
+		self.gameref.clearAll()
+		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
+		self.gameref.serials.loadExtJSON(filename)
+		print instance.text
+
 	def init_tools(self, dt):
 		self.l2menus = [self.joinMenu, self.createMenu, self.entityMenu, self.fileMenu]
+		self.l3menus = [self.examplesMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
 		self.rightMenu.remove_widget(self.selectedMenuView)
@@ -173,6 +184,11 @@ class MainTools(FloatLayout):
 		self.cbpopup = Popup(title="when",
 				content=self.callbacksBox,#Label(text='Hello world'),
 				size_hint=(0.8, 0.8), size=(400, 400))
+		exampleLevels = [ os.path.basename(f)[:-5] for f in glob.glob(os.path.dirname(__file__)+"/examples/*.json")]
+		for levelname in exampleLevels:
+			newb = Button(text=levelname, font_size=14)
+			newb.bind(on_press=self.loadExample)
+			self.examplesMenu.add_widget(newb)
 		#self.spriteSpinner.values = os.listdir("./sprites")
 
 	def update(self, dt):
@@ -193,6 +209,9 @@ class MainTools(FloatLayout):
 			if not self.selectedMenu.angleLabel.focus:
 				tv = "%0.2f" % shape.body.angle
 				self.selectedMenu.angleLabel.text = tv
+
+	#def examplesPressed(self, instance):
+
 
 	def loadPressed(self, instance):
 		self.gameref.clearAll()
@@ -461,7 +480,12 @@ class MainTools(FloatLayout):
 
 
 	def clearl2(self):
+		self.clearl3()
 		for i in self.l2menus:
+			if i in self.leftMenu.children:
+				self.leftMenu.remove_widget(i)
+	def clearl3(self):
+		for i in self.l3menus:
 			if i in self.leftMenu.children:
 				self.leftMenu.remove_widget(i)
 
@@ -473,6 +497,15 @@ class MainTools(FloatLayout):
 			self.clearl2()
 			self.leftMenu.add_widget(newMenu)
 			self.leftMenu.size_hint_x = .2
+
+	def changel3menu(self, newMenu):
+		if newMenu in self.leftMenu.children:
+			self.clearl3()
+			self.leftMenu.size_hint_x = .2
+		else:
+			self.clearl3()
+			self.leftMenu.add_widget(newMenu)
+			self.leftMenu.size_hint_x = .3
 
 
 	def massPressed(self, instance):

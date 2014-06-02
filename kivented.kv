@@ -213,6 +213,7 @@ TestGame:
     nameBox: nameBox
     selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
+    examplesMenu: examplesMenu.__self__
     
     BoxLayout:
         id: rightMenu
@@ -527,6 +528,12 @@ TestGame:
                 on_press: root.setTool("c2c")
 
         BoxLayout:
+            id: examplesMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+        BoxLayout:
             id: fileMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
@@ -543,6 +550,12 @@ TestGame:
                 height:40
                 id: nameBox
                 text: 'defaultlevel'
+            Button:
+                text: 'Examples'
+                on_press: root.changel3menu(root.examplesMenu)
+            Button:
+                text: 'Custom'
+                on_press: root.loadCustomPressed(selfLoad)
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)

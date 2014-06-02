@@ -21,7 +21,7 @@ class ObjScripts():
 		self.defaults = {}
 
 		foundmods = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.py")]
-		foundmods2 = [ os.path.basename(f)[:-3] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.pyo")]
+		foundmods2 = [ os.path.basename(f)[:-4] for f in glob.glob(os.path.dirname(__file__)+"/scripts/collision/*.pyo")]
 		foundmods = foundmods+foundmods2
 		#foundmods.remove("__init__")
 		basepath = "scripts.collision."
