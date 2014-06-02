@@ -178,6 +178,7 @@ class MainTools(FloatLayout):
 		self.nameBox.text = instance.text
 	def customlvlPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"*.json")]
+		self.levelsMenu.clear_widgets()
 		for levelname in levels:
 			newb = Button(text=levelname, font_size=14)
 			newb.bind(on_press=self.loadCustom)
