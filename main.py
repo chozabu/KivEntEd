@@ -338,7 +338,11 @@ class TestGame(Widget):
 			if dist < 4: dist = 8
 			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
 		if currentTool == "box":
-			self.create_box((midx, midy), mass=mass, width=fabs(xd), height=fabs(yd), angle=0,
+			width = fabs(xd)
+			height = fabs(yd)
+			if width< 4: width=8
+			if height< 4: height=8
+			self.create_box((midx, midy), mass=mass, width=width, height=height, angle=0,
 							texture=self.mainTools.spriteSpinner.text)
 		if currentTool == "square":
 			if dist < 4: dist = 8
