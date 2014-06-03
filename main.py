@@ -210,9 +210,10 @@ class TestGame(Widget):
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
 			print "removing ",j, " from space"
-			print self.space.constraints
+			print "constraints before joint removal: ", self.space.constraints
+			print j.a, j.b
 			self.space.remove(j)
-			print self.space.constraints
+			print "constraints after joint removal: ", self.space.constraints
 			#if j in self.space.constraints:
 			#	self.space.constraints.remove(j)
 		if j in  self.jointEnts:
@@ -224,6 +225,7 @@ class TestGame(Widget):
 			del self.jointEnts[j]
 	def create_joint(self, b1, b2, a1=(0, 0), a2=(0, 0),
 								 type='PivotJoint', **kwargs):
+		if b1 is b2:return
 		space = self.space
 		qj = None
 		if type == "PivotJoint":
