@@ -208,10 +208,20 @@ class TestGame(Widget):
 		ent.renderer.height = h
 		ent.rotate.r = r
 	def deleteJoint(self, j):
-		jent = self.jointEnts[j]
-		self.delObj(jent.entity_id)
-		self.space.remove(j)
-		del self.jointEnts[j]
+		if j in self.space.constraints:
+			print "removing ",j, " from space"
+			print self.space.constraints
+			self.space.remove(j)
+			print self.space.constraints
+			#if j in self.space.constraints:
+			#	self.space.constraints.remove(j)
+		if j in  self.jointEnts:
+			print "removing ent and from dict"
+			jent = self.jointEnts[j]
+			eid = jent.entity_id
+			self.gameworld.remove_entity(eid)
+			#if self.selectedShapeID == eid: self.mainTools.setShape(None)
+			del self.jointEnts[j]
 	def create_joint(self, b1, b2, a1=(0, 0), a2=(0, 0),
 								 type='PivotJoint', **kwargs):
 		space = self.space
@@ -469,15 +479,20 @@ class TestGame(Widget):
 
 		self.mainTools.setShape(None)
 		space = self.space
+		print "clearing objects"
 		for eid in list(self.entIDs):
+			print "beforedel"
 			self.delObj(eid)
+			print "afterdel"
 		#space.remove(list(space.constraints))
+		print "clearing joints"
 		for c in list(space.constraints):
 			self.deleteJoint(c)
 	def delObjNext(self, objid):
 		if objid not in self.todelete:self.todelete.append(objid)
 	def delObj(self, objid):
 		#todo check before removing these items
+		print "removing:", objid
 		ent =  self.getEntFromID(objid)
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
@@ -485,12 +500,20 @@ class TestGame(Widget):
 			for c in self.space.constraints:
 				if c.a == b or c.b == b:
 					removeus.append(c)
+			print "REMOVEUS, ",  removeus
+			for rmu in removeus:
+				print rmu in self.space.constraints
 			for c in removeus:
+				#print "removing", c
 				self.deleteJoint(c)
-
+				print "removed", c
+		print ent, self.mainTools.selectedEntity
+		if ent == self.mainTools.selectedEntity:
+			self.mainTools.setShape(None)
 		self.gameworld.remove_entity(objid)
 		if objid in self.entIDs: self.entIDs.remove(objid)
-		print "constrains=",self.space.constraints
+		#print "constrains=",self.space.constraints
+		print "cons"
 
 	def getWorldPosFromTouch(self, touch):
 
@@ -503,6 +526,7 @@ class TestGame(Widget):
 		self.todelete = []
 		self.mainTools.update(dt)
 		ent = self.mainTools.selectedEntity
+
 		if self.selectedShapeID != None and ent != None:
 			sbox = self.getEntFromID(self.selectedShapeID)
 			sbox.position.x =ent.position.x

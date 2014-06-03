@@ -1,6 +1,5 @@
 -upload/download ents/levels/atlas/scripts to net
 -edit joints
---show joints
 --select joints
 --delete joints
 --change joint params
