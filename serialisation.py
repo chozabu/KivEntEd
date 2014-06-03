@@ -187,22 +187,16 @@ class Serials():
 					b2 = self.gameworld.entities[b2id].physics.body
 				else:
 					b2 = cy.Body()
+				kwargs = {}
 				b1l = j['anchor1']
 				b2l = j['anchor2']
-				if str(j['type']) == "PivotJoint":
-					qj = cy.PivotJoint(b1, b2, (b1l['x'], b1l['y']), (
-					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
-				if str(j['type']) == "PinJoint":
-					print "adding ", j
-					qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']), (
-					b2l['x'], b2l['y']))  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
 				if str(j['type']) == "DampedSpring":
-					qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']), j['rest_length'],
-										 j['stiffness'],
-										 j['damping'])  #, (b1.position.x,b1.position.y),(b2.position.x,b2.position.y))
-					space.add(qj)
+					kwargs = {'rest_length':j['rest_length'],
+					'stiffness':j['stiffness'],
+					'damping':j['damping']}
+				self.gameref.create_joint(b1, b2, (b1l['x'], b1l['y']), (
+					b2l['x'], b2l['y']), str(j['type']), **kwargs)
+					#space.add(qj)
 		if "settings" in data:
 			settings = data['settings']
 			self.gameref.setGrav(settings['gravity'])

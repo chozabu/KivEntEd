@@ -41,6 +41,7 @@ class TestGame(Widget):
 		self.serials = None
 		self.scripty = None
 		self.todelete = []
+		self.jointEnts = {}
 		self.selectedListIndex = 0
 		self.lastlist = None
 		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
@@ -201,11 +202,41 @@ class TestGame(Widget):
 	def setEntIDPosSizeRot(self, entID, x,y,w,h,r=0):
 		self.setEntPosSizeRot(self.gameworld.entities[entID], x,y,w,h,r)
 	def setEntPosSizeRot(self, ent, x,y,w,h,r=0):
-			ent.position.x = x  #(midx,midy)
-			ent.position.y = y  #(midx,midy)
-			ent.renderer.width = w
-			ent.renderer.height = h
-			ent.rotate.r = r
+		ent.position.x = x
+		ent.position.y = y
+		ent.renderer.width = w
+		ent.renderer.height = h
+		ent.rotate.r = r
+	def deleteJoint(self, j):
+		jent = self.jointEnts[j]
+		self.delObj(jent.entity_id)
+		self.space.remove(j)
+		del self.jointEnts[j]
+	def create_joint(self, b1, b2, a1=(0, 0), a2=(0, 0),
+								 type='PivotJoint', **kwargs):
+		space = self.space
+		qj = None
+		if type == "PivotJoint":
+			qj = cy.PivotJoint(b1, b2, a1, a2)
+			space.add(qj)
+		if type == "PinJoint":
+			qj = cy.PinJoint(b1, b2, a1, a2)
+			space.add(qj)
+		if type == "DampedSpring":
+			qj = cy.DampedSpring(b1, b2, a1,a2, kwargs['rest_length'],
+								 kwargs['stiffness'],
+								 kwargs['damping'])
+			space.add(qj)
+
+		jrid = self.create_decoration(pos=(b1.position.x, b1.position.y), width=20, height=20,
+														texture='plank')
+		jrent = self.getEntFromID(jrid)
+		jrent.joint = qj
+		print dir(qj)
+		#qj.entity_id = jrid
+		self.jointEnts[qj] = jrent
+
+
 	def on_touch_move(self, touch):
 		self.mainTools.on_touch_move(touch)
 		space = self.space
@@ -297,28 +328,33 @@ class TestGame(Widget):
 			b1l = b1.world_to_local(sposition)
 			b2l = b2.world_to_local(position)
 			if currentTool == 'c2p':
-				qj = cy.PinJoint(b1, b2, (0, 0),
-								 (b2l['x'], b2l['y']))
-				space.add(qj)
+				self.create_joint(b1, b2, (0, 0),
+								 (b2l['x'], b2l['y']), "PinJoint")
+				#qj = cy.PinJoint(b1, b2, (0, 0),
+				#				 (b2l['x'], b2l['y']))
+				#space.add(qj)
 
 			if currentTool == 'p2p':
-				qj = cy.PinJoint(b1, b2, (b1l['x'], b1l['y']),
-								 (b2l['x'], b2l['y']))
-				space.add(qj)
+				self.create_joint(b1, b2, (b1l['x'], b1l['y']),
+								 (b2l['x'], b2l['y']), "PinJoint")
+				#space.add(qj)
 
 			if currentTool == 'p2ps':
 				dvec = cy.Vec2d(position.x - sposition.x, position.y - sposition.y)
 				dist = sqrt(dvec.x ** 2 + dvec.y ** 2)
-				qj = cy.DampedSpring(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']), dist, 100,
-									 0.1)
-				space.add(qj)
+				self.create_joint(b1, b2, (b1l['x'], b1l['y']), (b2l['x'], b2l['y']), "DampedSpring"
+				                     , rest_length=dist, stiffness=100,
+									 damping=0.1)
+				#space.add(qj) kwargs['rest_length'],
+								# kwargs['stiffness'],
+								# kwargs['damping'])
 
 			if currentTool == 'c2c':
-				qj = cy.PinJoint(b1, b2, (0, 0),
-								 (0, 0))
+				self.create_joint(b1, b2, (0, 0),
+								 (0, 0), "PinJoint")
 				#b2.physics.shapes[0].group=1
 				#b1.physics.shapes[0].group=1
-				space.add(qj)
+				#space.add(qj)
 
 
 		xd = spos[0] - pos[0]
@@ -435,7 +471,9 @@ class TestGame(Widget):
 		space = self.space
 		for eid in list(self.entIDs):
 			self.delObj(eid)
-		space.remove(list(space.constraints))
+		#space.remove(list(space.constraints))
+		for c in list(space.constraints):
+			self.deleteJoint(c)
 	def delObjNext(self, objid):
 		if objid not in self.todelete:self.todelete.append(objid)
 	def delObj(self, objid):
@@ -448,7 +486,7 @@ class TestGame(Widget):
 				if c.a == b or c.b == b:
 					removeus.append(c)
 			for c in removeus:
-				self.space.remove(c)
+				self.deleteJoint(c)
 
 		self.gameworld.remove_entity(objid)
 		if objid in self.entIDs: self.entIDs.remove(objid)
@@ -472,6 +510,20 @@ class TestGame(Widget):
 			bb = ent.physics.shapes[0].cache_bb()
 			sbox.renderer.width = bb['r']-bb['l']+5
 			sbox.renderer.height = bb['t']-bb['b']+5
+		for j, je in self.jointEnts.iteritems():
+			#j = je.joint
+			b1l = j.a.local_to_world(cy.Vec2d(j.anchor1['x'],j.anchor1['y']))
+			b2l = j.b.local_to_world(cy.Vec2d(j.anchor2['x'],j.anchor2['y']))
+			b1l = cy.Vec2d(b1l['x'], b1l['y'])
+			b2l = cy.Vec2d(b2l['x'], b2l['y'])
+			xd = b1l.x - b2l.x
+			yd = b1l.y - b2l.y
+			midx = (b1l.x + b2l.x) / 2.0
+			midy = (b1l.y + b2l.y) / 2.0
+			dist = sqrt(xd ** 2 + yd ** 2)
+			angle = atan2(yd, xd)
+			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
+			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if not self.mainTools.paused:
 			self.gameworld.update(dt)
 			for t in self.touches:
