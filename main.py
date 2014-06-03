@@ -534,8 +534,8 @@ class TestGame(Widget):
 			sbox.position.x =ent.position.x
 			sbox.position.y =ent.position.y
 			bb = ent.physics.shapes[0].cache_bb()
-			sbox.renderer.width = bb['r']-bb['l']+5
-			sbox.renderer.height = bb['t']-bb['b']+5
+			sbox.renderer.width = (bb['r']-bb['l'])*1.05+5
+			sbox.renderer.height = (bb['t']-bb['b'])*1.05+5
 		for j, je in self.jointEnts.iteritems():
 			#j = je.joint
 			b1l = j.a.local_to_world(cy.Vec2d(j.anchor1['x'],j.anchor1['y']))
