@@ -148,6 +148,8 @@ class Serials():
 		ed = ET.SubElement(root,'block')
 		ed.set("id", str(e.entity_id))
 
+
+
 		#info = ET.SubElement(root,'info')
 		#info.set('id','levelid')
 		#if hasattr(e, "color"):
@@ -161,6 +163,13 @@ class Serials():
 		pd.set("x", str(e.position.x*xmScale))
 		pd.set("y", str(e.position.y*xmScale))
 		pd.set("background", "false")
+
+		if not e.physics.body.is_static:
+			pd.set("physics", "true")
+			phd = ET.SubElement(ed,'physics')
+			phd.set("mass", str(e.physics.body.mass))
+			#<physics mass="1.0"/>
+
 		td = ET.SubElement(ed,'usetexture')
 		td.set("id", e.physics_renderer.texture)
 		verts = []
