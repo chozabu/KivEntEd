@@ -115,25 +115,6 @@ class Serials():
 		return [(( (x)*cosa + (y)*sina),
 		         (-(x)*sina + (y)*cosa)) for x, y in pts]
 
-	def oldgetboxverts(self, angle, width, height):
-		xn = cos(angle)
-		yn = sin(angle)
-		w2=width/2
-		h2=height/2
-		wxn=w2*xn
-		hxn=h2*xn
-		wyn=w2*yn
-		hyn=h2*yn
-		#x' = x*cos(t) - y*sin(t)
-		#y' = x*sin(t) + y*cos(t)
-		print wxn
-		return [
-			(wxn-hyn , wyn+hxn),
-			(wxn+hyn , -wyn+hxn),
-			(-wxn-hyn , -wyn-hxn),
-			(-wxn+hyn , wyn-hxn),
-		]
-
 
 	def entToXML(self, e, root):
 		'''
