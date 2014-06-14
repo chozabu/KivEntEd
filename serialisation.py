@@ -110,7 +110,7 @@ class Serials():
 		"""
 		l, r, b, t = -width/2, width/2,-height/2, height/2
 		a = angle#radians(degrees)
-		cosa, sina = cos(a), sin(a)
+		cosa, sina = cos(-a), sin(-a)
 		pts = [(l, b), (l, t), (r, t), (r, b)]
 		return [(( (x)*cosa + (y)*sina),
 		         (-(x)*sina + (y)*cosa)) for x, y in pts]

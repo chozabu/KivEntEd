@@ -153,9 +153,9 @@ class MainTools(FloatLayout):
 		self.selectedItem = None
 		self.selectedEntity = None
 		self.toolSettings = {"circle": {"texture": "sheep"},
-							 "square": {"texture": "grassyrock"},
+							 "square": {"texture": "Dirt"},
 							 "box": {"texture": "face_box"},
-							 "draw": {"texture": "Grass2"},
+							 "draw": {"texture": "Grass1"},
 							 "plank": {"texture": "plank"},
 		}
 		self.callbacksBox = None
