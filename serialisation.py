@@ -3,7 +3,11 @@ __author__ = 'chozabu'
 import json
 import cymunk as cy
 import os
+import xml.etree.ElementTree as ET
+from math import cos, sin
+import math
 
+xmScale = 0.08
 
 class Serials():
 	def __init__(self, gameref):
@@ -80,7 +84,6 @@ class Serials():
 				jd['damping'] = j.damping
 			jds.append(jd)
 		return jds
-
 	def exportEntsToDicts(self):
 		entsdict = []
 		for eid in self.gameref.entIDs:
@@ -90,6 +93,131 @@ class Serials():
 			entsdict.append(ed)
 		return entsdict
 
+	def getcircleverts(self, radius):
+		angle = 0
+		count = 12.0
+		step = math.pi/count
+		verts = []
+		for i in range(int(count*2)):
+			angle = step*i
+			verts.append((cos(angle)*radius,sin(angle)*radius))
+		return verts
+
+#http://stackoverflow.com/questions/22364828/create-a-square-polygon-random-oriented-from-midpoints-in-python
+	def getboxverts(self, angle, width, height):
+		""" Calculate coordinates of a rotated square centered at 'cx, cy'
+		    given its 'size' and rotation by 'degrees' about its center.
+		"""
+		l, r, b, t = -width/2, width/2,-height/2, height/2
+		a = angle#radians(degrees)
+		cosa, sina = cos(a), sin(a)
+		pts = [(l, b), (l, t), (r, t), (r, b)]
+		return [(( (x)*cosa + (y)*sina),
+		         (-(x)*sina + (y)*cosa)) for x, y in pts]
+
+	def oldgetboxverts(self, angle, width, height):
+		xn = cos(angle)
+		yn = sin(angle)
+		w2=width/2
+		h2=height/2
+		wxn=w2*xn
+		hxn=h2*xn
+		wyn=w2*yn
+		hyn=h2*yn
+		#x' = x*cos(t) - y*sin(t)
+		#y' = x*sin(t) + y*cos(t)
+		print wxn
+		return [
+			(wxn-hyn , wyn+hxn),
+			(wxn+hyn , -wyn+hxn),
+			(-wxn-hyn , -wyn-hxn),
+			(-wxn+hyn , wyn-hxn),
+		]
+
+
+	def entToXML(self, e, root):
+		'''
+	<block id="path4821">
+		<position y="31.9388731278" x="8.00786973338" background="true"/>
+		<usetexture id="Dirt"/>
+		<vertex x="-40.035368" y="-33.729557"/>
+		'''
+		'''
+		info = ET.SubElement(root,'info')
+		info.set('id','levelid')
+		name = ET.SubElement(info,'name')
+		name.text="LevelName"
+		'''
+
+		if not hasattr(e, "physics") or not hasattr(e, "physics_renderer"):
+			return None
+
+		if e.entity_id == self.gameref.startID or e.entity_id == self.gameref.finishID:
+			ed = ET.SubElement(root,'entity')
+			pd = ET.SubElement(ed,'position')
+			if e.entity_id == self.gameref.startID:
+				ed.set('typeid', 'PlayerStart')
+			if e.entity_id == self.gameref.finishID:
+				ed.set('typeid', 'EndOfLevel')
+			pd.set("x", str(e.position.x*xmScale))
+			pd.set("y", str(e.position.y*xmScale))
+			sd = ET.SubElement(ed,'size')
+			sd.set("r", "0.5")
+			return
+		ed = ET.SubElement(root,'block')
+		ed.set("id", str(e.entity_id))
+
+		#info = ET.SubElement(root,'info')
+		#info.set('id','levelid')
+		#if hasattr(e, "color"):
+		#	ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
+		b = e.physics.body
+		shape_type = e.physics.shape_type
+		print shape_type
+		#<position y="31.9388731278" x="8.00786973338" background="true"/>
+		#<usetexture id="Dirt"/>
+		pd = ET.SubElement(ed,'position')
+		pd.set("x", str(e.position.x*xmScale))
+		pd.set("y", str(e.position.y*xmScale))
+		pd.set("background", "false")
+		td = ET.SubElement(ed,'usetexture')
+		td.set("id", e.physics_renderer.texture)
+		verts = []
+		if shape_type == "box":
+			verts = self.getboxverts(b.angle, e.physics_renderer.width, e.physics_renderer.height)
+		if shape_type == "circle":
+			verts = self.getcircleverts(e.physics_renderer.width/2.0)
+		for v in verts:
+			vd = ET.SubElement(ed,'vertex')
+			vd.set("x", str(v[0]*xmScale))
+			vd.set("y", str(v[1]*xmScale))
+
+		#e.physics_renderer.texture
+
+	def exportEntsToXML(self, root):
+		entsdict = []
+		for eid in self.gameref.entIDs:
+			e = self.gameworld.entities[eid]
+			self.entToXML(e, root)
+
+	def exportXML(self, fileName="defaultlevel.lvl"):
+		root = ET.Element('level')
+		info = ET.SubElement(root,'info')
+		info.set('id','levelid')
+		name = ET.SubElement(info,'name')
+		name.text="LevelName"
+		sky = ET.SubElement(info,'sky')
+		sky.text="sky1"
+
+		limits = ET.SubElement(root,'info')
+		limits.set('id','levelid')
+		self.exportEntsToXML(root)
+
+		#info = ET.SubElement(root,'info')
+		#info.set('id','levelid')
+
+		tree = ET.ElementTree(root)
+		tree.write(fileName)
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
 		space = self.space
