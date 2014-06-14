@@ -251,6 +251,7 @@ class Serials():
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
 			texture = str(pr['texture'])
+			if texture == "Grass2": texture = "Grass1"
 			color = (1,1,1,1)
 			if 'color' in e:
 				cl = e['color']
