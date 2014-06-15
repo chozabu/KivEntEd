@@ -156,7 +156,6 @@ class Serials():
 		#	ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
 		b = e.physics.body
 		shape_type = e.physics.shape_type
-		print shape_type
 		#<position y="31.9388731278" x="8.00786973338" background="true"/>
 		#<usetexture id="Dirt"/>
 		pd = ET.SubElement(ed,'position')
@@ -207,7 +206,11 @@ class Serials():
 		#info.set('id','levelid')
 
 		tree = ET.ElementTree(root)
+		from kivy.utils import platform
+		if platform == 'android':
+			fileName = '/sdcard/xlvls/'+fileName
 		tree.write(fileName)
+		print "saved", fileName
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
 		space = self.space
@@ -223,8 +226,9 @@ class Serials():
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
-		print "dir=", dataDir
-		print "done"
+		#print "dir=", dataDir
+		#print "done"
+		print "saved", fileName
 		return worlddict
 
 	def loadJSON(self, fileName="defaultlevel.json"):

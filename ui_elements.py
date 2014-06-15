@@ -234,7 +234,7 @@ class MainTools(FloatLayout):
 
 	def savePressed(self, instance):
 		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
-		self.gameref.serials.exportXML()
+		self.gameref.serials.exportXML(self.nameBox.text+".lvl")
 
 	def clearPressed(self, instance):
 		self.gameref.clearAll()
