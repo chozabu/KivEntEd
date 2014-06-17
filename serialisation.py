@@ -209,7 +209,7 @@ class Serials():
 			if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data is None:
 				anchor2 = {'x': j.b.position.x, 'y': j.b.position.y}
 			print jtype
-			if jtype == "PivotJoint":
+			if jtype == "PivotJoint" or jtype == "PinJoint":
 				ed = ET.SubElement(root,'entity')
 				ed.set('id', str(j))
 				ed.set('typeid', 'Joint')
