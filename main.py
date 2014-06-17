@@ -244,7 +244,7 @@ class TestGame(Widget):
 														texture='plank')
 		jrent = self.getEntFromID(jrid)
 		jrent.joint = qj
-		print dir(qj)
+		#print dir(qj)
 		#qj.entity_id = jrid
 		self.jointEnts[qj] = jrent
 
@@ -494,7 +494,7 @@ class TestGame(Widget):
 		if objid not in self.todelete:self.todelete.append(objid)
 	def delObj(self, objid):
 		#todo check before removing these items
-		print "removing:", objid
+		#print "removing:", objid
 		ent =  self.getEntFromID(objid)
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
@@ -514,8 +514,6 @@ class TestGame(Widget):
 			self.mainTools.setShape(None)
 		self.gameworld.remove_entity(objid)
 		if objid in self.entIDs: self.entIDs.remove(objid)
-		#print "constrains=",self.space.constraints
-		print "cons"
 
 	def getWorldPosFromTouch(self, touch):
 

@@ -416,7 +416,7 @@ class MainTools(FloatLayout):
 		if shape:
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
 			ent = self.selectedEntity
-			print dir(ent.physics)
+			#print dir(ent.physics)
 			self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
 			#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 			#self.selectedMenu.posLabel.text = tv
