@@ -168,6 +168,8 @@ class Serials():
 			phd = ET.SubElement(ed,'physics')
 			phd.set("mass", str(e.physics.body.mass))
 			#<physics mass="1.0"/>
+		else:
+			self.laststatic = e.entity_id
 
 		td = ET.SubElement(ed,'usetexture')
 		td.set("id", e.physics_renderer.texture)
@@ -189,6 +191,52 @@ class Serials():
 			e = self.gameworld.entities[eid]
 			self.entToXML(e, root)
 
+	'''
+	<entity id="rect14476jl_joint1" typeid="Joint">
+		<size r="0.5"/>
+		<position y="9.691309" x="-69.88762075"/>
+		<joint connection-end="rect14476jl_block1" type="pivot" connection-start="rect14476jl_block0"/>
+	</entity>'''
+	def exportJointsToXML(self, root):
+		space = self.space
+		for j in space.constraints:
+			jtype = j.__class__.__name__
+			anchor1 = j.anchor1
+			#if None == j.a.data and j.a != space.static_body:
+			#  anchor1 = {'x':j.a.position.x, 'y':j.a.position.y}
+
+			anchor2 = j.anchor2
+			if anchor2['x'] == 0 and anchor2['y'] == 0 and j.b.data is None:
+				anchor2 = {'x': j.b.position.x, 'y': j.b.position.y}
+			print jtype
+			if jtype == "PivotJoint":
+				ed = ET.SubElement(root,'entity')
+				ed.set('id', str(j))
+				ed.set('typeid', 'Joint')
+
+				pd = ET.SubElement(ed,'position')
+				#pd.set("x", str(e.position.x*xmScale))
+				#pd.set("y", str(e.position.y*xmScale))
+				pd.set("x", str(j.a.position.x*xmScale))
+				pd.set("y", str(j.a.position.y*xmScale))
+
+				sd = ET.SubElement(ed,'size')
+				sd.set("r", "0.5")
+				end = j.b.data
+				if end == None: end=self.laststatic
+				jd = ET.SubElement(ed,'joint')
+				jd.set("type", "pivot")
+				jd.set("connection-end", str(j.a.data))
+				jd.set("connection-start", str(end))
+			'''
+			jd = {"type": jtype, "a": j.a.data, "b": j.b.data,
+				  "anchor1": anchor1, "anchor2": anchor2}
+			if jtype == "DampedSpring":
+				jd['rest_length'] = j.rest_length
+				jd['stiffness'] = j.stiffness
+				jd['damping'] = j.damping
+			jds.append(jd)'''
+
 	def exportXML(self, fileName="defaultlevel.lvl"):
 		root = ET.Element('level')
 		info = ET.SubElement(root,'info')
@@ -201,6 +249,7 @@ class Serials():
 		limits = ET.SubElement(root,'info')
 		limits.set('id','levelid')
 		self.exportEntsToXML(root)
+		self.exportJointsToXML(root)
 
 		#info = ET.SubElement(root,'info')
 		#info.set('id','levelid')
