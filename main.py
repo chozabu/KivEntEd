@@ -600,6 +600,7 @@ class KivEntEd(App):
 		self.root.serials.exportJSON(fileName="pauselevel.json")
 		return True
 	def on_resume(self):
+		self.root.clearAll()
 		self.root.serials.loadJSON(fileName="pauselevel.json")
 
 
