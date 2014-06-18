@@ -95,7 +95,7 @@ class Serials():
 
 	def getcircleverts(self, radius):
 		angle = 0
-		count = 12.0
+		count = 6.0
 		step = math.pi/count
 		verts = []
 		for i in range(int(count*2)):
