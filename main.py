@@ -71,6 +71,7 @@ class TestGame(Widget):
 		self.serials = serialisation.Serials(self)
 		self.scripty = ObjScripts(self)
 
+		noload = False
 		fileNamePath = self.dataDir+"settings.jso"
 		if os.path.exists(self.dataDir+"settings.jso"):
 			print "settings.jso found, loading last level"
@@ -78,10 +79,11 @@ class TestGame(Widget):
 				with open(fileNamePath) as fo:
 					settingsDict = json.load(fo)
 					self.serials.loadJSON(settingsDict['lastSave'])
+					noload = True
 
-		else:
+		if noload:
 			self.draw_some_stuff()
-			print "no settings found - making some stuff"
+			print "level not loaded - making some stuff"
 
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
