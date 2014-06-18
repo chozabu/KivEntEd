@@ -234,7 +234,26 @@ class MainTools(FloatLayout):
 
 	def savePressed(self, instance):
 		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
-		self.gameref.serials.exportXML(self.nameBox.text+".lvl")
+
+	def wheelzPressed(self, instance):
+		fileName = self.nameBox.text+".lvl"
+		self.gameref.serials.exportXML(fileName)
+		from kivy.utils import platform
+		try:
+			if platform != 'android':
+				bashCommand = "adb push /home/chozabu/git/KivEntEd/" + fileName + " /sdcard/xlvls/"
+				#bashCommand = "pwd"
+				#os.system(bashCommand)
+				import subprocess
+				#print bashCommand
+				#print bashCommand.split()
+				process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+				output = process.communicate()[0]
+				print output
+				#fileName = '/sdcard/xlvls/'+fileName
+		except:
+			print "could not push wheelz level to phone"
+
 
 	def clearPressed(self, instance):
 		self.gameref.clearAll()
