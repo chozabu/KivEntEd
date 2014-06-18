@@ -66,11 +66,23 @@ class TestGame(Widget):
 		self.setup_states()
 		self.set_state()
 
-		self.draw_some_stuff()
 		self.space = self.gameworld.systems['physics'].space
 		#self.space.add_collision_handler(1, 0, begin = self.pull2_first)
 		self.serials = serialisation.Serials(self)
 		self.scripty = ObjScripts(self)
+
+		fileNamePath = self.dataDir+"settings.jso"
+		if os.path.exists(self.dataDir+"settings.jso"):
+			print "settings.jso found, loading last level"
+			if os.path.isfile(fileNamePath):
+				with open(fileNamePath) as fo:
+					settingsDict = json.load(fo)
+					self.serials.loadJSON(settingsDict['lastSave'])
+
+		else:
+			self.draw_some_stuff()
+			print "no settings found - making some stuff"
+
 		Clock.schedule_interval(self.update, 0)
 		Clock.schedule_once(self.init_sprites)
 

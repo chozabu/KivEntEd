@@ -277,8 +277,9 @@ class Serials():
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
-		with open(dataDir + "autosave.json", 'w') as fo:
-			json.dump(worlddict, fo)
+		settingsDict = {"lastSave":fileName}
+		with open(dataDir + "settings.jso", 'w') as fo:
+			json.dump(settingsDict, fo)
 		#print "dir=", dataDir
 		#print "done"
 		print "saved", fileName
