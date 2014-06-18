@@ -257,6 +257,8 @@ class Serials():
 		tree = ET.ElementTree(root)
 		from kivy.utils import platform
 		if platform == 'android':
+			if not os.path.exists('/sdcard/xlvls/'):
+				os.makedirs('/sdcard/xlvls/')
 			fileName = '/sdcard/xlvls/'+fileName
 		tree.write(fileName)
 		print "saved", fileName
@@ -274,6 +276,8 @@ class Serials():
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		with open(dataDir + fileName, 'w') as fo:
+			json.dump(worlddict, fo)
+		with open(dataDir + "autosave.json", 'w') as fo:
 			json.dump(worlddict, fo)
 		#print "dir=", dataDir
 		#print "done"
