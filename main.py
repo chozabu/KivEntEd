@@ -79,6 +79,7 @@ class TestGame(Widget):
 				with open(fileNamePath) as fo:
 					settingsDict = json.load(fo)
 					self.serials.loadJSON(settingsDict['lastSave'])
+					self.mainTools.nameBox.text = settingsDict['lastSave'][0:-5]
 					noload = False
 
 		if noload:
