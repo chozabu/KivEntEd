@@ -15,7 +15,7 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
-#serverURL = 'http://0.0.0.0:8080'
+serverURL = 'http://0.0.0.0:8080'
 
 
 class PlainButton(Button):
@@ -82,19 +82,36 @@ class downloads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
 		super(downloads,self).__init__()
+		self.cursor = 0
 
 	def bug_posted(req, result):
 	    print('Our bug is posted !')
 	    print(result)
 
 	#wget -qO- http://0.0.0.0:8080/listLevels
+	def prevPage(self):
+		self.cursor -=20
+		if self.cursor<0:self.cursor = 0
+		self.listLevels()
+	def nextPage(self):
+		self.cursor +=20
+		self.listLevels()
+	def goPressed(self, instance):
+		print "go pressed"
+		self.cursor = 0
+		self.listLevels()
 	def listLevels(self):
 		print "requesting levels", serverURL+'/listLevels'
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
-		req = UrlRequest(serverURL+'/listLevels', on_success=self.got_levels,
+
+		params = {"cursor":self.cursor, "limit":20,"sortKey": self.sortSpinner.text}
+		if self.reverseButton.state == 'down':params['reverse']=True
+		params = urllib.urlencode(params)
+		print self.reverseButton.state
+		req = UrlRequest(serverURL+'/queryLevels', on_success=self.got_levels,
 	        req_headers=headers
-	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)
+	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect,req_body=params)
 		print "waiting"
 		req.wait()
 		print "waited"
@@ -114,12 +131,13 @@ class downloads(BoxLayout):
 			print "OK"
 			self.setChildren(data['data'])
 	def setChildren(self, data):
-		data = json.loads(data)
+		#data = json.loads(data)
 		print data
 		self.levelBox.clear_widgets()
+		print len(data)
 		for item in data:
 			print item
-			i=data[item]
+			i=item#data[item]
 			b = Button(text=i['name'], on_press=self.dllevel)
 			b.info = i
 			self.levelBox.add_widget(b)

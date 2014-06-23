@@ -144,20 +144,44 @@ TestGame:
 <downloads@BoxLayout>
     orientation: 'vertical'
     levelBox: levelBox
+    sortSpinner: sortSpinner
+    reverseButton: reverseButton
 
     BoxLayout:
-        id: uploadBox
         size_hint_y: 0.1
-        size_hint_x: 0.9
         orientation: 'horizontal'
         Button:
             text: "Upload"
-            #size_hint_y: 0.1
-            size_hint_x: 0.9
             on_press: root.uploadLevel()
+    BoxLayout:
+        size_hint_y: 0.1
+        orientation: 'horizontal'
+        Label:
+            text: "sort by:"
+        Spinner:
+            id: sortSpinner
+            text: "name"
+            values: ['name', 'author', 'rating', 'dateAdded', 'downloads', 'dateModified']
+            #on_text: root.typeChanged(self)
+
+        ToggleButton:
+            id: reverseButton
+            text:"reverse"
+        Button:
+            text:"GO"
+            on_press: root.goPressed(self)
     BoxLayout:
         id: levelBox
         orientation: 'vertical'
+    BoxLayout:
+        size_hint_y: 0.1
+        orientation: 'horizontal'
+        Button:
+            text: "previous"
+            on_press: root.prevPage()
+        Button:
+            text: "next"
+            on_press: root.nextPage()
 
 <callbacks@BoxLayout>
     orientation: 'vertical'
