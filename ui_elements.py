@@ -78,6 +78,24 @@ class entDataBox(BoxLayout):
 	#def __init__(self, mtref):
 import urllib
 from kivy.network.urlrequest import UrlRequest
+class levelItem(BoxLayout):
+	def __init__(self, info=None,callback=None):
+		super(levelItem,self).__init__()
+		self.info = info
+		self.callback = callback
+		Clock.schedule_once(self.initUI)
+	def initUI(self, dt):
+		if self.info == None:
+			self.remove_widget(self.downloadButton)
+			self.add_widget(Label(text="Downloads"))
+			return
+		self.nameLabel.text = self.info['name']
+		self.authorLabel.text = self.info['author']
+		self.createdLabel.text = str(self.info['dateAdded'])[:10]
+		self.modifiedLabel.text = str(self.info['dateModified'])[:10]
+		self.downloadsLabel.text = str(self.info['downloads'])[:10]
+		self.downloadButton.bind(on_press=self.callback)
+		self.downloadButton.info = self.info
 class downloads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -135,12 +153,14 @@ class downloads(BoxLayout):
 		print data
 		self.levelBox.clear_widgets()
 		print len(data)
+		self.levelBox.add_widget(levelItem())
 		for item in data:
 			print item
 			i=item#data[item]
-			b = Button(text=i['name'], on_press=self.dllevel)
-			b.info = i
-			self.levelBox.add_widget(b)
+			#b = Button(text=i['name'], on_press=self.dllevel)
+			li = levelItem(i,self.dllevel)
+			#b.info = i
+			self.levelBox.add_widget(li)
 
 	def dllevel(self,instance):
 		print instance.info

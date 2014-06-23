@@ -140,6 +140,34 @@ TestGame:
         text: "Add Item"
         on_press: root.newItem()#dataItems.add_widget(entDataItem())
 
+<levelItem@BoxLayout>
+    orientation: 'horizontal'
+    nameLabel: nameLabel
+    authorLabel: authorLabel
+    createdLabel: createdLabel
+    modifiedLabel: modifiedLabel
+    downloadButton: downloadButton
+    downloadsLabel: downloadsLabel
+    Label:
+        id: nameLabel
+        text: "Name"
+    #Label:
+    #    text: "Rating"
+    Label:
+        id: authorLabel
+        text: "Author"
+    Label:
+        id: createdLabel
+        text: "Created"
+    Label:
+        id: modifiedLabel
+        text: "Modified"
+    Button:
+        id: downloadButton
+        text: "Download"
+    Label:
+        id: downloadsLabel
+        text: "Downloads"
 
 <downloads@BoxLayout>
     orientation: 'vertical'
