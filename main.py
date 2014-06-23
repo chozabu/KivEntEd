@@ -7,7 +7,7 @@ import cymunk as cy
 from math import *
 import os
 
-import cProfile
+#import cProfile
 
 import serialisation
 from objscripts import ObjScripts
