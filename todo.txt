@@ -1,16 +1,27 @@
--import wheelz levels?
 --kivent polygon support
 
 -upload/download ents/levels/atlas/scripts to net
+--search&sort on server
+--save/load external entitys
+
 -edit joints
 --select joints
 --delete joints
 --change joint params
--set on update scripts
--save/load external entitys
+
+more scripting?
+-set on update scripts?
+-keyboard/touch
+-tools as scripts?
+-script UI?
+
 -multiple selection
 --select box, individual add/subtract
 --edit friction, mass, width, etc
+
+-import wheelz levels?
+-improve wheelz export
+--dict to transform texture names
 
 
 Games:
