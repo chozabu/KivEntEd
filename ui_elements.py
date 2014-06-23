@@ -3,6 +3,8 @@ import cymunk as cy
 import os
 import glob
 
+import json
+
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -11,6 +13,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.properties import ListProperty
+
+serverURL = 'http://www.kiventedserve.chozabu.net'
+#serverURL = 'http://0.0.0.0:8080'
 
 
 class PlainButton(Button):
@@ -71,6 +76,97 @@ class entDataBox(BoxLayout):
 		self.ddict[iname] = ""
 		self.add_widget(entDataItem(iname=iname, prnt=self))
 	#def __init__(self, mtref):
+import urllib
+from kivy.network.urlrequest import UrlRequest
+class downloads(BoxLayout):
+	def __init__(self, mtref):
+		self.mtref = mtref
+		super(downloads,self).__init__()
+
+	def bug_posted(req, result):
+	    print('Our bug is posted !')
+	    print(result)
+
+	#wget -qO- http://0.0.0.0:8080/listLevels
+	def listLevels(self):
+		print "requesting levels", serverURL+'/listLevels'
+		headers = {'Content-type': 'application/x-www-form-urlencoded',
+	          'Accept': 'text/plain'}
+		req = UrlRequest(serverURL+'/listLevels', on_success=self.got_levels,
+	        req_headers=headers
+	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)
+		print "waiting"
+		req.wait()
+		print "waited"
+	def on_error(self, info, result):
+		print "on_error", info, result
+	def on_redirect(self, info, result):
+		print "on_redirect", info, result
+	def on_failure(self, info, result):
+		print "on_failure", info, result
+	def got_levels(self, info, result):
+		print "got levels:"
+		print info
+		print result
+		data = json.loads(result)
+		print data
+		if data['result'] == "OK":
+			print "OK"
+			self.setChildren(data['data'])
+	def setChildren(self, data):
+		data = json.loads(data)
+		print data
+		self.levelBox.clear_widgets()
+		for item in data:
+			print item
+			i=data[item]
+			b = Button(text=i['name'], on_press=self.dllevel)
+			b.info = i
+			self.levelBox.add_widget(b)
+
+	def dllevel(self,instance):
+		print instance.info
+		print "making request"
+		params = urllib.urlencode({'fullname': instance.info['filename']})
+		req = UrlRequest(serverURL+'/downloadLevel', on_success=self.got_level, timeout=1000, req_body=params
+	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)
+		print "made request"
+		req.wait()
+		print "wait over"
+	def got_level(self, info, result):
+		print "got level"
+		print "info=",info
+		print "result=",result
+		rd = json.loads(result)
+		dd = json.loads(rd['data'])
+		print "--------------"
+		print dd
+		for i in dd:
+			print i, dd[i]
+		self.mtref.gameref.clearAll()
+		self.mtref.gameref.serials.loadFromDict(dd)
+		#self.nameBox.text = instance.text
+
+
+
+	#wget -qO- --post-data "author=alex&passHash=123&name=test2&levelData=asdagrdh" http://0.0.0.0:8080/uploadLevel
+	def uploadLevel(self):
+		print "uploading level"
+		lname = self.mtref.nameBox.text
+		updata = self.mtref.gameref.serials.exportDict()
+		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
+		params = urllib.urlencode({
+		'author':'alex', 'passHash': 123, 'name':lname,"levelData":json.dumps(updata)
+		})
+		headers = {'Content-type': 'application/x-www-form-urlencoded',
+	          'Accept': 'text/plain'}
+		req = UrlRequest(serverURL+'/uploadLevel', on_success=self.level_posted, req_body=params,
+	        req_headers=headers)
+		req.wait()
+	def level_posted(self, info, result):
+		print "sent level"
+		print info
+		print result
 
 class callbacks(BoxLayout):
 	def __init__(self, mtref):
@@ -169,8 +265,8 @@ class MainTools(FloatLayout):
 		Clock.schedule_once(self.init_tools)
 
 	def loadExample(self, instance):
-		self.gameref.clearAll()
 		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
+		self.gameref.clearAll()
 		self.gameref.serials.loadExtJSON(filename)
 		self.nameBox.text = instance.text
 	def loadCustom(self, instance):
@@ -198,6 +294,12 @@ class MainTools(FloatLayout):
 		self.cbpopup = Popup(title="when",
 				content=self.callbacksBox,#Label(text='Hello world'),
 				size_hint=(0.8, 0.8), size=(400, 400))
+
+		self.downloadsBox = downloads(self)
+		self.dlpopup = Popup(title="Levels",
+				content=self.downloadsBox,#Label(text='Hello world'),
+				size_hint=(0.8, 0.8), size=(400, 400))
+
 		exampleLevels = [ os.path.basename(f)[:-5] for f in glob.glob(os.path.dirname(__file__)+"/examples/*.json")]
 		for levelname in exampleLevels:
 			newb = Button(text=levelname, font_size=14)
@@ -493,6 +595,9 @@ class MainTools(FloatLayout):
 		if self.selectedItem:
 			self.callbacksBox.setTypeA(self.gameref.scripty.collision_types[self.selectedItem.collision_type])
 		self.cbpopup.open()
+	def downloadsPressed(self, instance):
+		self.dlpopup.open()
+		self.downloadsBox.listLevels()
 
 	def varsPressed(self, btn):
 		if self.selectedEntity:

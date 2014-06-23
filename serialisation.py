@@ -262,8 +262,7 @@ class Serials():
 			fileName = '/sdcard/xlvls/'+fileName
 		tree.write(fileName)
 		print "saved", fileName
-	def exportJSON(self, fileName="defaultlevel.json"):
-		dataDir = self.dataDir
+	def exportDict(self):
 		space = self.space
 		entslist = self.exportEntsToDicts()
 		jointslist = self.exportJointsToDicts()
@@ -275,6 +274,11 @@ class Serials():
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
+		return worlddict
+
+	def exportJSON(self, fileName="defaultlevel.json"):
+		dataDir = self.dataDir
+		worlddict = self.exportDict()
 		with open(dataDir + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
 		settingsDict = {"lastSave":fileName}

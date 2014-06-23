@@ -140,6 +140,25 @@ TestGame:
         text: "Add Item"
         on_press: root.newItem()#dataItems.add_widget(entDataItem())
 
+
+<downloads@BoxLayout>
+    orientation: 'vertical'
+    levelBox: levelBox
+
+    BoxLayout:
+        id: uploadBox
+        size_hint_y: 0.1
+        size_hint_x: 0.9
+        orientation: 'horizontal'
+        Button:
+            text: "Upload"
+            #size_hint_y: 0.1
+            size_hint_x: 0.9
+            on_press: root.uploadLevel()
+    BoxLayout:
+        id: levelBox
+        orientation: 'vertical'
+
 <callbacks@BoxLayout>
     orientation: 'vertical'
     colTypeASpinner: colTypeASpinner
@@ -571,6 +590,9 @@ TestGame:
             Button:
                 text: 'Custom'
                 on_press: root.customlvlPressed()
+            Button:
+                text: 'Download'
+                on_press: root.downloadsPressed(self)
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)
