@@ -15,7 +15,7 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
-#serverURL = 'http://0.0.0.0:8080'
+if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 
 class PlainButton(Button):
