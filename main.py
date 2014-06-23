@@ -278,6 +278,7 @@ class TestGame(Widget):
 
 
 	def on_touch_move(self, touch):
+		if touch.id not in self.touches: return
 		self.mainTools.on_touch_move(touch)
 		space = self.space
 		ctouch = self.touches[touch.id]
