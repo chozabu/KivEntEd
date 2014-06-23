@@ -7,6 +7,8 @@ import cymunk as cy
 from math import *
 import os
 
+import cProfile
+
 import serialisation
 from objscripts import ObjScripts
 
@@ -648,7 +650,21 @@ class KivEntEd(App):
 
 	def get_application_config(self):
 		return self.get_application_storage_dir("%(appname)s.ini")
+'''    def on_start(self):
+        self.profile = cProfile.Profile()
+        self.profile.enable()
 
+    def on_stop(self):
+        self.profile.disable()
+        self.profile.dump_stats('myapp.profile')'''
 
 if __name__ == '__main__':
 	KivEntEd().run()
+	#cProfile.run('KivEntEd().run()', 'kivented.prof')
+	'''sd_card_path = os.path.dirname('/sdcard/profiles/')
+	print sd_card_path
+	if not os.path.exists(sd_card_path):
+		print 'making directory'
+		os.mkdir(sd_card_path)
+	print 'path: ', sd_card_path
+	cProfile.run('KivEntEd().run()', sd_card_path + '/kivented.prof')'''
