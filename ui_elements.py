@@ -130,6 +130,7 @@ class downloads(BoxLayout):
 		params = urllib.urlencode({'fullname': instance.info['filename']})
 		req = UrlRequest(serverURL+'/downloadLevel', on_success=self.got_level, timeout=1000, req_body=params
 	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)
+		req.levelname = instance.info['name']
 		print "made request"
 		req.wait()
 		print "wait over"
@@ -145,7 +146,8 @@ class downloads(BoxLayout):
 			print i, dd[i]
 		self.mtref.gameref.clearAll()
 		self.mtref.gameref.serials.loadFromDict(dd)
-		#self.nameBox.text = instance.text
+		self.mtref.nameBox.text = info.levelname
+		self.mtref.dlpopup.dismiss()
 
 
 
