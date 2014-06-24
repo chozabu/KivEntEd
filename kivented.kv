@@ -178,12 +178,6 @@ TestGame:
     BoxLayout:
         size_hint_y: 0.1
         orientation: 'horizontal'
-        Button:
-            text: "Upload"
-            on_press: root.uploadLevel()
-    BoxLayout:
-        size_hint_y: 0.1
-        orientation: 'horizontal'
         Label:
             text: "sort by:"
         Spinner:
@@ -210,6 +204,26 @@ TestGame:
         Button:
             text: "next"
             on_press: root.nextPage()
+
+<uploads@BoxLayout>
+    orientation: 'vertical'
+
+    nameLabel: nameLabel
+    screenShot: screenShot
+    descLabel: descLabel
+
+    Label:
+        id: nameLabel
+        text:"LevelName"
+    Image:
+        id:screenShot
+    #tags? #compatible games?
+    tbox:
+        id: descLabel
+        text:"Description"
+    Button:
+        text:"UpLoad!"
+        on_press: root.uploadPressed(self)
 
 <callbacks@BoxLayout>
     orientation: 'vertical'
@@ -645,6 +659,9 @@ TestGame:
             Button:
                 text: 'Download'
                 on_press: root.downloadsPressed(self)
+            Button:
+                text: 'Upload'
+                on_press: root.uploadPressed(self)
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)

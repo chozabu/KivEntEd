@@ -96,6 +96,41 @@ class levelItem(BoxLayout):
 		self.downloadsLabel.text = str(self.info['downloads'])[:10]
 		self.downloadButton.bind(on_press=self.callback)
 		self.downloadButton.info = self.info
+class uploads(BoxLayout):
+	def __init__(self, mtref):
+		self.mtref = mtref
+		super(uploads,self).__init__()
+		Clock.schedule_once(self.initUI)
+	def initUI(self, dt=0):
+		self.nameLabel.text = self.mtref.nameBox.text
+		self.screenShot.source = self.nameLabel.text+".png"
+		#descLabel: descLabel
+		#self.gameref.export_to_png(filename=self.nameBox.text+".png")
+
+	#wget -qO- --post-data "author=alex&passHash=123&name=test2&levelData=asdagrdh" http://0.0.0.0:8080/uploadLevel
+	def uploadPressed(self, instance):
+		self.uploadLevel()
+	def uploadLevel(self):
+		print "uploading level"
+		lname = self.mtref.nameBox.text
+		updata = self.mtref.gameref.serials.exportDict()
+		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
+		params = urllib.urlencode({
+		'author':'alex', 'passHash': 123, 'name':lname,"levelData":json.dumps(updata)
+		})
+		headers = {'Content-type': 'application/x-www-form-urlencoded',
+	          'Accept': 'text/plain'}
+		req = UrlRequest(serverURL+'/uploadLevel', on_success=self.level_posted, req_body=params,
+	        req_headers=headers)
+		req.wait()
+	def level_posted(self, info, result):
+		print "sent level"
+		print info
+		print result
+		self.mtref.ulpopup.dismiss()
+		Popup(title="Uploaded",
+				content=Label(text=str(result)),
+				size_hint=(0.6, 0.4), size=(400, 400)).open()
 class downloads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -186,27 +221,6 @@ class downloads(BoxLayout):
 		self.mtref.gameref.serials.loadFromDict(dd)
 		self.mtref.nameBox.text = info.levelname
 		self.mtref.dlpopup.dismiss()
-
-
-
-	#wget -qO- --post-data "author=alex&passHash=123&name=test2&levelData=asdagrdh" http://0.0.0.0:8080/uploadLevel
-	def uploadLevel(self):
-		print "uploading level"
-		lname = self.mtref.nameBox.text
-		updata = self.mtref.gameref.serials.exportDict()
-		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
-		params = urllib.urlencode({
-		'author':'alex', 'passHash': 123, 'name':lname,"levelData":json.dumps(updata)
-		})
-		headers = {'Content-type': 'application/x-www-form-urlencoded',
-	          'Accept': 'text/plain'}
-		req = UrlRequest(serverURL+'/uploadLevel', on_success=self.level_posted, req_body=params,
-	        req_headers=headers)
-		req.wait()
-	def level_posted(self, info, result):
-		print "sent level"
-		print info
-		print result
 
 class callbacks(BoxLayout):
 	def __init__(self, mtref):
@@ -338,6 +352,11 @@ class MainTools(FloatLayout):
 		self.downloadsBox = downloads(self)
 		self.dlpopup = Popup(title="Levels",
 				content=self.downloadsBox,#Label(text='Hello world'),
+				size_hint=(0.8, 0.8), size=(400, 400))
+
+		self.uploadBox = uploads(self)
+		self.ulpopup = Popup(title="Upload",
+				content=self.uploadBox,
 				size_hint=(0.8, 0.8), size=(400, 400))
 
 		exampleLevels = [ os.path.basename(f)[:-5] for f in glob.glob(os.path.dirname(__file__)+"/examples/*.json")]
@@ -638,6 +657,11 @@ class MainTools(FloatLayout):
 	def downloadsPressed(self, instance):
 		self.dlpopup.open()
 		self.downloadsBox.listLevels()
+	def uploadPressed(self, instance):
+
+		self.gameref.export_to_png(filename=self.nameBox.text+".png")
+		self.ulpopup.open()
+		self.uploadBox.initUI()
 
 	def varsPressed(self, btn):
 		if self.selectedEntity:
