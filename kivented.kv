@@ -207,11 +207,29 @@ TestGame:
 
 <uploads@BoxLayout>
     orientation: 'vertical'
+    userName: userName
+    password: password
 
     nameLabel: nameLabel
     screenShot: screenShot
     descLabel: descLabel
 
+    BoxLayout:
+        Button:
+            text:""
+            size_hint_x: 0
+            width: 0
+        tbox:
+            id: userName
+            text: "Guest"
+        tbox:
+            id: password
+            text: "nopassword"
+        Button:
+            text:"Check/Create"
+            #size_hint_x: None
+            #width: self.height
+            on_press: root.userPressed(self)
     Label:
         id: nameLabel
         text:"LevelName"

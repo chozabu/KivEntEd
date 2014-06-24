@@ -107,6 +107,24 @@ class uploads(BoxLayout):
 		#descLabel: descLabel
 		#self.gameref.export_to_png(filename=self.nameBox.text+".png")
 
+	#wget -qO- --post-data "userName=alex&passHash=123&name=test2&creating=true" http://0.0.0.0:8080/createUser
+	def userPressed(self, instance):
+		params = urllib.urlencode({
+		'userName':self.userName.text, 'passHash': self.password.text, 'creating':"true"
+		})
+		headers = {'Content-type': 'application/x-www-form-urlencoded',
+	          'Accept': 'text/plain'}
+		req = UrlRequest(serverURL+'/createUser', on_success=self.user_posted, req_body=params,
+	        req_headers=headers)
+		req.wait()
+	def user_posted(self, info, result):
+		print "sent user"
+		print info
+		print result
+		self.mtref.ulpopup.dismiss()
+		Popup(title="Info",
+				content=Label(text=str(result)),
+				size_hint=(0.6, 0.4), size=(400, 400)).open()
 	#wget -qO- --post-data "author=alex&passHash=123&name=test2&levelData=asdagrdh" http://0.0.0.0:8080/uploadLevel
 	def uploadPressed(self, instance):
 		self.uploadLevel()
@@ -116,7 +134,7 @@ class uploads(BoxLayout):
 		updata = self.mtref.gameref.serials.exportDict()
 		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
 		params = urllib.urlencode({
-		'author':'alex', 'passHash': 123, 'name':lname,"levelData":json.dumps(updata)
+		'author':self.userName.text, 'passHash': self.password.text, 'name':lname,"levelData":json.dumps(updata)
 		})
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
