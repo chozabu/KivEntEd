@@ -96,6 +96,7 @@ class levelItem(BoxLayout):
 		self.downloadsLabel.text = str(self.info['downloads'])[:10]
 		self.downloadButton.bind(on_press=self.callback)
 		self.downloadButton.info = self.info
+		self.screenShot.source = serverURL+"/downloadSS?fullname="+self.info['filename']+".png"
 class uploads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -134,8 +135,11 @@ class uploads(BoxLayout):
 		lname = self.mtref.nameBox.text
 		updata = self.mtref.gameref.serials.exportDict()
 		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
+		import base64
 		params = urllib.urlencode({
-		'author':self.userName.text, 'passHash': self.password.text, 'name':lname,"levelData":json.dumps(updata)
+		'author':self.userName.text, 'passHash': self.password.text,
+		'name':lname,"levelData":json.dumps(updata),
+		"sshot":base64.b64encode(open(lname+".png", 'r').read())
 		})
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
@@ -677,8 +681,23 @@ class MainTools(FloatLayout):
 		self.dlpopup.open()
 		self.downloadsBox.listLevels()
 	def uploadPressed(self, instance):
+		filename = self.nameBox.text+".png"
+		self.gameref.export_to_png(filename=filename)
+		baseWidth = 150
+		from PIL import Image
+		# Open the image file.
+		img = Image.open(filename)
 
-		self.gameref.export_to_png(filename=self.nameBox.text+".png")
+		# Calculate the height using the same aspect ratio
+		widthPercent = (baseWidth / float(img.size[0]))
+		height = int((float(img.size[1]) * float(widthPercent)))
+
+		# Resize it.
+		img = img.resize((baseWidth, height), Image.BILINEAR)
+
+		# Save it back to disk.
+		img.save(filename)
+
 		self.ulpopup.open()
 		self.uploadBox.initUI()
 
