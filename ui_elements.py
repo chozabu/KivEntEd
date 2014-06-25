@@ -177,12 +177,12 @@ class downloads(BoxLayout):
 		self.cursor = 0
 		self.listLevels()
 	def listLevels(self):
-		print "requesting levels", serverURL+'/listLevels'
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
 
 		params = {"cursor":self.cursor, "limit":20,"sortKey": self.sortSpinner.text}
 		if self.reverseButton.state == 'down':params['reverse']=True
+		print "requesting levels", serverURL+'/queryLevels',params
 		params = urllib.urlencode(params)
 		print self.reverseButton.state
 		req = UrlRequest(serverURL+'/queryLevels', on_success=self.got_levels,
