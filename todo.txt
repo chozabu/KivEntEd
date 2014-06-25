@@ -1,8 +1,8 @@
 --kivent polygon support
 
--upload/download ents/levels/atlas/scripts to net
---search&sort on server
+-upload/download ents/atlas/scripts to net
 --save/load external entitys
+--save/load alternate atlas
 
 -edit joints
 --select joints

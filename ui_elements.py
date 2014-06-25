@@ -164,7 +164,16 @@ class downloads(BoxLayout):
 	    print('Our bug is posted !')
 	    print(result)
 
-	#wget -qO- http://0.0.0.0:8080/listLevels
+	def setSort(self, stype):
+		if stype == self.sortSpinner.text:
+			print self.reverseButton.state
+			if self.reverseButton.state == 'down':
+				self.reverseButton.state = 'normal'
+			else:
+				self.reverseButton.state = 'down'
+		else:
+			self.sortSpinner.text = stype
+		self.goPressed()
 	def prevPage(self):
 		self.cursor -=20
 		if self.cursor<0:self.cursor = 0
@@ -172,7 +181,7 @@ class downloads(BoxLayout):
 	def nextPage(self):
 		self.cursor +=20
 		self.listLevels()
-	def goPressed(self, instance):
+	def goPressed(self, instance=None):
 		print "go pressed"
 		self.cursor = 0
 		self.listLevels()
@@ -211,9 +220,9 @@ class downloads(BoxLayout):
 		print data
 		self.levelBox.clear_widgets()
 		print len(data)
-		self.levelBox.add_widget(levelItem())
+		#self.levelBox.add_widget(levelItem())
 		for item in data:
-			print item
+			#print item
 			i=item#data[item]
 			#b = Button(text=i['name'], on_press=self.dllevel)
 			li = levelItem(i,self.dllevel)

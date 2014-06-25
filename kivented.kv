@@ -196,6 +196,26 @@ TestGame:
             text:"GO"
             on_press: root.goPressed(self)
     BoxLayout:
+        size_hint_y: 0.1
+        orientation: 'horizontal'
+        Label:
+        Button:
+            text:"Name"
+            on_press: root.setSort('name')
+        Button:
+            on_press: root.setSort('author')
+            text: "Author"
+        Button:
+            on_press: root.setSort('dateAdded')
+            text: "Created"
+        Button:
+            on_press: root.setSort('dateModified')
+            text: "Modified"
+        Label:
+        Button:
+            on_press: root.setSort('downloads')
+            text: "Downloads"
+    BoxLayout:
         id: levelBox
         orientation: 'vertical'
     BoxLayout:
