@@ -104,6 +104,7 @@ class uploads(BoxLayout):
 	def initUI(self, dt=0):
 		self.nameLabel.text = self.mtref.nameBox.text
 		self.screenShot.source = self.nameLabel.text+".png"
+		self.screenShot.reload()
 		#descLabel: descLabel
 		#self.gameref.export_to_png(filename=self.nameBox.text+".png")
 
