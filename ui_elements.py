@@ -15,7 +15,7 @@ from kivy.uix.label import Label
 from kivy.properties import ListProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
-if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
+#if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 
 class PlainButton(Button):
@@ -101,7 +101,7 @@ class uploads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
 		super(uploads,self).__init__()
-		Clock.schedule_once(self.initUI)
+		#Clock.schedule_once(self.initUI)
 	def initUI(self, dt=0):
 		self.nameLabel.text = self.mtref.nameBox.text
 		self.screenShot.source = self.nameLabel.text+".png"
