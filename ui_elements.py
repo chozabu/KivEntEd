@@ -123,7 +123,7 @@ class uploads(BoxLayout):
 		print "sent user"
 		print info
 		print result
-		self.mtref.ulpopup.dismiss()
+		#self.mtref.ulpopup.dismiss()
 		Popup(title="Info",
 				content=Label(text=str(result)),
 				size_hint=(0.6, 0.4), size=(400, 400)).open()
