@@ -260,6 +260,7 @@ class callbacks(BoxLayout):
 		#self.scripty = mtref.gameref.scripty
 		super(callbacks,self).__init__()
 		#self.typeChanged()
+		self.nofire = True
 	def setTypeA(self,ta):
 		self.colTypeASpinner.text = ta
 		self.typeChanged()
@@ -267,26 +268,37 @@ class callbacks(BoxLayout):
 		handlers = self.mtref.gameref.scripty.collision_handlers
 		if self.colTypeASpinner.text not in handlers: handlers[self.colTypeASpinner.text] = {}
 		tbd = handlers[self.colTypeASpinner.text]
+		print "tbd=",tbd
 		if self.colTypeBSpinner.text not in tbd: tbd[self.colTypeBSpinner.text] = {}
 		methods = tbd[self.colTypeBSpinner.text]
-
+		print "methods=", methods
+		self.nofire = True
 		self.beginSpinner.text = methods["begin"] if "begin" in methods else "None"
 		self.pre_solveSpinner.text = methods["pre_solve"] if "pre_solve" in methods else "None"
 		self.post_solveSpinner.text = methods["post_solve"] if "post_solve" in methods else "None"
 		self.separateSpinner.text = methods["separate"] if "separate" in methods else "None"
+		self.nofire = False
 
 	def calleeChanged(self, instance, caller):
+		if self.nofire: return
 		print "changing col handler:",\
 			self.colTypeASpinner.text,\
 			self.colTypeBSpinner.text,\
 			caller,\
 			instance.text
-		self.mtref.gameref.scripty.add_col_handler(
+		'''self.mtref.gameref.scripty.add_col_handler(
 			self.colTypeASpinner.text,
 			self.colTypeBSpinner.text,
 			caller,
 			instance.text
-		)
+		)'''
+		self.mtref.gameref.scripty.set_col_handlers(
+			self.colTypeASpinner.text,
+			self.colTypeBSpinner.text,
+			begin=self.beginSpinner.text,
+			pre_solve=self.pre_solveSpinner.text,
+			post_solve=self.post_solveSpinner.text,
+			separate=self.separateSpinner.text)
 	def newType(self, btn):
 		Popup(title="Create New Collision Type",
 			  content=TextInput(focus=True,multiline = False),
