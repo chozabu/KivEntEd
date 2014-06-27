@@ -710,25 +710,31 @@ class MainTools(FloatLayout):
 		self.ulpopup.open()
 		self.uploadBox.initUI()
 
+	def makeEntDataDict(self, ent):
+		#create entity datadict if missing
+		if not hasattr(ent, "datadict"):
+			print "initing datadict"
+			ent.datadict = {}
+
+	def putDefaultsInDataDict(self):
+		if self.selectedEntity == None:return
+		self.makeEntDataDict(self.selectedEntity)
+		scripty = self.gameref.scripty
+		colfuncs = scripty.getHandlersForType(self.selectedItem.collision_type)
+		print "defaults=",scripty.defaults
+		print "colfuncs=",colfuncs
+		for cf in colfuncs:
+			if cf in scripty.defaults:
+			#if len(colfunc)>0 and colfunc[0] in scripty.defaults:
+				defaultdict = scripty.defaults[cf]
+				print "defaultdict=",defaultdict
+				for i in defaultdict.keys():
+					if i not in self.selectedEntity.datadict:
+						self.selectedEntity.datadict[i] = defaultdict[i]
+
 	def varsPressed(self, btn):
 		if self.selectedEntity:
-			#create entity datadict if missing
-			if not hasattr(self.selectedEntity, "datadict"):
-				print "initing datadict"
-				self.selectedEntity.datadict = {}
-
-			scripty = self.gameref.scripty
-			colfuncs = scripty.getHandlersForType(self.selectedItem.collision_type)
-			print "defaults=",scripty.defaults
-			print "colfuncs=",colfuncs
-			for cf in colfuncs:
-				if cf in scripty.defaults:
-				#if len(colfunc)>0 and colfunc[0] in scripty.defaults:
-					defaultdict = scripty.defaults[cf]
-					print "defaultdict=",defaultdict
-					for i in defaultdict.keys():
-						if i not in self.selectedEntity.datadict:
-							self.selectedEntity.datadict[i] = defaultdict[i]
+			self.putDefaultsInDataDict()
 			Popup(title="Entity Varables",
 				  content=entDataBox(ddict = self.selectedEntity.datadict),
 				  size_hint=(0.8, 0.8),
@@ -738,6 +744,7 @@ class MainTools(FloatLayout):
 			newval = self.gameref.scripty.collision_types[instance.text]
 			print newval, instance.text
 			self.selectedItem.collision_type = newval
+			self.putDefaultsInDataDict()
 
 
 	def clearl2(self):
