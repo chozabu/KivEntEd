@@ -712,19 +712,23 @@ class MainTools(FloatLayout):
 
 	def varsPressed(self, btn):
 		if self.selectedEntity:
+			#create entity datadict if missing
 			if not hasattr(self.selectedEntity, "datadict"):
 				print "initing datadict"
 				self.selectedEntity.datadict = {}
+
 			scripty = self.gameref.scripty
-			colfunc = scripty.getHandlersForType(self.selectedItem.collision_type)
-			print scripty.defaults
-			print colfunc
-			if len(colfunc)>0 and colfunc[0] in scripty.defaults:
-				defaultdict = scripty.defaults[colfunc[0]]
-				print defaultdict
-				for i in defaultdict.keys():
-					if i not in self.selectedEntity.datadict:
-						self.selectedEntity.datadict[i] = defaultdict[i]
+			colfuncs = scripty.getHandlersForType(self.selectedItem.collision_type)
+			print "defaults=",scripty.defaults
+			print "colfuncs=",colfuncs
+			for cf in colfuncs:
+				if cf in scripty.defaults:
+				#if len(colfunc)>0 and colfunc[0] in scripty.defaults:
+					defaultdict = scripty.defaults[cf]
+					print "defaultdict=",defaultdict
+					for i in defaultdict.keys():
+						if i not in self.selectedEntity.datadict:
+							self.selectedEntity.datadict[i] = defaultdict[i]
 			Popup(title="Entity Varables",
 				  content=entDataBox(ddict = self.selectedEntity.datadict),
 				  size_hint=(0.8, 0.8),
