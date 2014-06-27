@@ -95,7 +95,8 @@ class ObjScripts():
 		typeb = self.collision_types[typebstr]
 		func = self.getCBFunc(callee)
 		funcdict = {caller:func}
-		print typea, typeb, func
+		print "typea, typeb, func", typea, typeb, func
+		print funcdict
 		self.space.add_collision_handler(typea, typeb, **funcdict)
 		if typeastr not in self.collision_handlers:
 			self.collision_handlers[typeastr] = {}
