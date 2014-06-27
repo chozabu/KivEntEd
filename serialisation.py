@@ -61,7 +61,7 @@ class Serials():
 			rd = {"r": e.rotate.r}
 			ed["rotate"] = rd
 		if hasattr(e, 'datadict'):
-			ed['datadict'] = e.datadict
+			ed['datadict'] = dict(e.datadict)
 		return ed
 
 	def exportJointsToDicts(self):
