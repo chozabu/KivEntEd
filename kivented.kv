@@ -386,37 +386,37 @@ TestGame:
                     tbox:
                         id: xposLabel
                         text: "position"
-                        on_text: root.xposChanged(self)
+                        on_text: if root.fireText: root.xposChanged(self)
                 BoxLayout:
                     Label:
                         text: "y:"
                     tbox:
                         id: yposLabel
                         text: "position"
-                        on_text: root.yposChanged(self)
+                        on_text: if root.fireText: root.yposChanged(self)
                 BoxLayout:
                     Label:
                         text: "xvel:"
                     tbox:
                         id: xvelLabel
-                        on_text: root.xvelChanged(self)
+                        on_text: if root.fireText: root.xvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "yvel:"
                     tbox:
                         id: yvelLabel
-                        on_text: root.yvelChanged(self)
+                        on_text: if root.fireText: root.yvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "angle:"
                     tbox:
                         id: angleLabel
                         text: "angle"
-                        on_text: root.angleChanged(self)
+                        on_text: if root.fireText: root.angleChanged(self)
                 Spinner:
                     id: texLabel
                     text: "texture"
-                    on_text: root.textureChanged(self)
+                    on_text: if root.fireText: root.textureChanged(self)
                     values: root.sprite_list
                 BoxLayout:
                     size_hint_y: None
@@ -428,7 +428,7 @@ TestGame:
                         tbox:
                             id: redLabel
                             text: '1'
-                            on_text: root.redChanged(self.text)
+                            on_text: if root.fireText: root.redChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -436,7 +436,7 @@ TestGame:
                         tbox:
                             id: greenLabel
                             text: '1'
-                            on_text: root.greenChanged(self.text)
+                            on_text: if root.fireText: root.greenChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -444,7 +444,7 @@ TestGame:
                         tbox:
                             id: blueLabel
                             text: '1'
-                            on_text: root.blueChanged(self.text)
+                            on_text: if root.fireText: root.blueChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -452,28 +452,28 @@ TestGame:
                         tbox:
                             id: opacityLabel
                             text: '1'
-                            on_text: root.opacityChanged(self.text)
+                            on_text: if root.fireText: root.opacityChanged(self.text)
                 BoxLayout:
                     Label:
                         text: "Mass:"
                     tbox:
                         id: massLabel
                         text: "Mass"
-                        on_text: root.massChanged(self)
+                        on_text: if root.fireText: root.massChanged(self)
                 BoxLayout:
                     Label:
                         text: "Friction:"
                     tbox:
                         id: frictionLabel
                         text: "Friction"
-                        on_text: root.frictionChanged(self)
+                        on_text: if root.fireText: root.frictionChanged(self)
                 BoxLayout:
                     Label:
                         text: "Elasticity:"
                     tbox:
                         id: elasLabel
                         text: "Elasticity"
-                        on_text: root.elasChanged(self)
+                        on_text: if root.fireText: root.elasChanged(self)
                 #ToggleButton:
                 #    id: sensorButton
                 #    text:"Sensor"
@@ -486,7 +486,7 @@ TestGame:
                 Spinner:
                     id: colTypeSpinner
                     text: "default"
-                    on_text: root.colTypeChanged(self)
+                    on_text: if root.fireText: root.colTypeChanged(self)
                     values: root.col_types
                 Button:
                     id: delButton

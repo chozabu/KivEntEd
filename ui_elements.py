@@ -362,6 +362,7 @@ class MainTools(FloatLayout):
 		self.testsave = []
 		self.gameref = None
 		self.entcpy = None #item on the clipboard
+		self.fireText = True
 		#self.exampleLevels
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
@@ -416,6 +417,7 @@ class MainTools(FloatLayout):
 		#self.spriteSpinner.values = os.listdir("./sprites")
 
 	def update(self, dt):
+		self.fireText = False
 		shape = self.selectedItem
 		#self.selectedMenu.selectedLabel.text = str(shape)
 		#self.selectedMenu.xposLabel.text = ""
@@ -434,6 +436,7 @@ class MainTools(FloatLayout):
 				tv = "%0.2f" % shape.body.angle
 				self.selectedMenu.angleLabel.text = tv
 
+		self.fireText = True
 	#def examplesPressed(self, instance):
 
 
@@ -638,6 +641,7 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics_renderer.height = newrad
 
 	def setShape(self, shape):
+		self.fireText = False
 		self.selectedItem = shape
 		self.selectedMenu.selectedLabel.text = "None"
 		self.selectedEntity = None
@@ -686,6 +690,7 @@ class MainTools(FloatLayout):
 															texture='emptybox')
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
+		self.fireText = True
 
 	def delSelPressed(self, instance):
 		if self.selectedItem and self.gameref:
