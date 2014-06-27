@@ -9,6 +9,11 @@
 --delete joints
 --change joint params
 
+improve UI
+-images
+-reorganise (tools, level settings, more)
+-scroll tables, rather than box views?
+
 more scripting?
 -set on update scripts?
 -keyboard/touch
