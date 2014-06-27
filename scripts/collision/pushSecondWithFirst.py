@@ -20,7 +20,7 @@ def collision_func(space, arbiter):
 		dd = e1.datadict
 		impulse = cy.Vec2d(cos(first_body.angle),sin(first_body.angle))
 		forcemul = 0
-		if 'forcemul' in dd:
+		if 'pushforce' in dd:
 			forcemul=float(dd['pushforce'])
 		else:
 			forcemul=float(defaults['pushforce'])
