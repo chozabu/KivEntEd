@@ -76,15 +76,9 @@ class ObjScripts():
 			#typea = self.collision_types[typeastr]
 			for typebstr, funcsargs in ch.iteritems():
 				#typeb = self.collision_types[typebstr]
-				print "funcargs=",funcsargs
+				#print "funcargs=",funcsargs
 				self.set_col_handlers(typeastr,typebstr,
 				                **funcsargs)
-				'''for caller, callee in funcsargs.iteritems():
-					self.add_col_handler(typeastr,typebstr,caller,callee)
-					#func = self.getCBFunc(callee)
-					#funcdict = {caller:func}
-					#print typea, typeb, func
-					#self.space.add_collision_handler(typea, typeb, **funcdict)'''
 	def add_col_func(self, funcstr):
 		if funcstr in self.gameref.mainTools.col_funcs: return
 		self.gameref.mainTools.col_funcs.append(funcstr)
@@ -93,54 +87,29 @@ class ObjScripts():
 		self.collision_types[namestr] = self.cctype
 		self.gameref.mainTools.col_types.append(namestr)
 		self.cctype+=1
-	'''def add_col_handler(self,typeastr,typebstr,caller,callee):
-		print "caller,callee", caller, callee
-		typea = self.collision_types[typeastr]
-		typeb = self.collision_types[typebstr]
-		func = self.getCBFunc(callee)
-		funcdict = {caller:func}
-		print "typea, typeb, func", typea, typeb, func
-		print funcdict
-		self.space.add_collision_handler(typea, typeb, **funcdict)
-		if typeastr not in self.collision_handlers:
-			self.collision_handlers[typeastr] = {}
-		otherTypes = self.collision_handlers[typeastr]
-		if typebstr not in otherTypes:
-			otherTypes[typebstr] = {}
-		callers = otherTypes[typebstr]
-		callers[caller] = callee'''
 	def set_col_handlers(self,typeastr,typebstr,begin=None, pre_solve=None, post_solve=None, separate=None):
 		typea = self.collision_types[typeastr]
 		typeb = self.collision_types[typebstr]
-		beginstr = begin
-		pre_solvestr = pre_solve
-		post_solvestr = post_solve
-		separatestr = separate
-		if(begin): begin = self.getCBFunc(begin)
-		else: begin=None
-		if(pre_solve):pre_solve = self.getCBFunc(pre_solve)
-		else: pre_solve=None
-		if(post_solve):post_solve = self.getCBFunc(post_solve)
-		else: post_solve=None
-		if(separate):separate = self.getCBFunc(separate)
-		else: separate=None
-		#funcdict = {caller:func}
-		print "typea, typeb, func", typea, typeb
-		#print funcdict
-		self.space.add_collision_handler(typea, typeb, begin=begin, pre_solve=pre_solve, post_solve=post_solve, separate=separate)
+		beginF = self.getCBFunc(begin)
+		pre_solveF = self.getCBFunc(pre_solve)
+		post_solveF = self.getCBFunc(post_solve)
+		separateF = self.getCBFunc(separate)
+		#print "typea, typeb, func", typea, typeb
+		self.space.add_collision_handler(typea, typeb, begin=beginF, pre_solve=pre_solveF, post_solve=post_solveF, separate=separateF)
 		if typeastr not in self.collision_handlers:
 			self.collision_handlers[typeastr] = {}
 		otherTypes = self.collision_handlers[typeastr]
 		if typebstr not in otherTypes:
 			otherTypes[typebstr] = {}
 		callers = otherTypes[typebstr]
-		if begin: callers['begin'] = beginstr
-		if pre_solve: callers['pre_solve'] = pre_solvestr
-		if post_solve: callers['post_solve'] = post_solvestr
-		if separate: callers['separate'] = separatestr
+		callers.clear()
+		if begin: callers['begin'] = begin
+		if pre_solve: callers['pre_solve'] = pre_solve
+		if post_solve: callers['post_solve'] = post_solve
+		if separate: callers['separate'] = separate
 
 	def getCBFunc(self, fname):
-		print "fname=",fname
+		if fname  == None:return None
 		if hasattr(self, fname):
 			return getattr(self, fname)
 		if fname in self.colfuncs:

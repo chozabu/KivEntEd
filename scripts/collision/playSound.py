@@ -10,7 +10,7 @@ def collision_func(space, arbiter):
 		second_body = arbiter.shapes[1].body
 		bv= second_body.velocity
 		s2 = (bv.x*bv.x+bv.y*bv.y)
-		print s2
+		#print s2
 		if s2>1000:
 			sound.stop()
 			sound.play()
