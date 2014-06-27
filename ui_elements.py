@@ -276,6 +276,11 @@ class callbacks(BoxLayout):
 		self.separateSpinner.text = methods["separate"] if "separate" in methods else "None"
 
 	def calleeChanged(self, instance, caller):
+		print "changing col handler:",\
+			self.colTypeASpinner.text,\
+			self.colTypeBSpinner.text,\
+			caller,\
+			instance.text
 		self.mtref.gameref.scripty.add_col_handler(
 			self.colTypeASpinner.text,
 			self.colTypeBSpinner.text,

@@ -315,12 +315,14 @@ TestGame:
         Spinner:
             id: post_solveSpinner
             values: app.root.mainTools.col_funcs
+            on_text: root.calleeChanged(self, "post_solve")
     BoxLayout:
         Label:
             text:"Stop Touching (separate)"
         Spinner:
             id: separateSpinner
             values: app.root.mainTools.col_funcs
+            on_text: root.calleeChanged(self, "separate")
 
 
 <MainTools@FloatLayout>
