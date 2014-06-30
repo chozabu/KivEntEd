@@ -444,6 +444,7 @@ class TestGame(Widget):
 					else:
 						print "adding", pts
 						poly = cy.Poly(e.physics.body, pts)
+						poly.friction=0.3
 						space.add(poly)
 				print "done"
 				#print cross()
