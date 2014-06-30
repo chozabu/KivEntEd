@@ -36,8 +36,38 @@ class PolyGen():
 
 	def draw_from_Polygon(self):
 		#print p1
-		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
 		pts = self.poly[0]
+		writeSVG('Operations.svg', [self.poly], width=800)
+		#new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_tristrip(pts)
+		new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_triangle(pts)
+		return {'triangles': new_triangles, 'vertices': new_vertices,
+			'vert_count': vert_count, 'tri_count': tri_count,
+			'vert_data_count': 5}
+	def pts_to_tristrip(self, pts):
+		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
+
+		ts = self.poly.triStrip()
+		print "\n\n"
+		print "ts=",ts
+		print len(ts)
+
+		tri_indices = B['triangles']
+		new_triangles = []
+		new_vertices = []
+		tri_verts = B['vertices']
+		nv_ap = new_vertices.append
+		new_ap = new_triangles.append
+		tri_count = 0
+		for tri in tri_indices:
+			new_ap((tri[0], tri[1], tri[2]))
+			tri_count += 1
+		vert_count = 0
+		for tvert in tri_verts:
+			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
+			vert_count += 1
+		return new_triangles, new_vertices,  tri_count, vert_count
+	def pts_to_triangle(self, pts):
+		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
 		segments = []
 		for i in range(len(pts)-1):
 			segments.append([int(i),int(i+1)])
@@ -45,11 +75,6 @@ class PolyGen():
 		print "made segments"
 		A = {'vertices':array(pts), 'segments':array(segments)}#,
 			 #'segment_markers':array(segmark), 'vertex_markers':array(vertmark)}
-		writeSVG('Operations.svg', [self.poly], width=800)
-		ts = self.poly.triStrip()
-		print "\n\n"
-		print "ts=",ts
-		print len(ts)
 		command = 'p'#a' + size + 'YY'
 		B = triangle.triangulate(A, command)
 		print "triangulated"
@@ -68,9 +93,7 @@ class PolyGen():
 		for tvert in tri_verts:
 			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
 			vert_count += 1
-		return {'triangles': new_triangles, 'vertices': new_vertices,
-			'vert_count': vert_count, 'tri_count': tri_count,
-			'vert_data_count': 5}
+		return new_triangles, new_vertices,  tri_count, vert_count
 
 	def initentity(self):
 		#create_dict = self.draw_rect_polygon(

@@ -48,7 +48,7 @@ class TestGame(Widget):
 		self.entIDs = []
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
-		self.mainTools.setTool("draw")
+		self.mainTools.setTool("poly")
 		self.startID = -1
 		self.finishID = -1
 		self.selectedShapeID = None
