@@ -25,7 +25,8 @@ class PolyGen():
 			self.poly = p1
 			return
 		check = self.poly+p1
-		if len(check)<2:self.poly = check
+		#if len(check)<2:
+		self.poly = check
 		print self.poly
 		print len(self.poly)
 		print len(self.poly[0])
@@ -38,8 +39,13 @@ class PolyGen():
 		#print p1
 		pts = self.poly[0]
 		writeSVG('Operations.svg', [self.poly], width=800)
-		#new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_tristrip(pts)
-		new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_triangle(pts)
+		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
+		print "vertices=", new_vertices
+		print "triangles=", new_triangles
+
+		#new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_triangle(pts)
+		print "new_vertices=", new_vertices
+		print "new_triangles=", new_triangles
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
@@ -50,11 +56,22 @@ class PolyGen():
 		print "\n\n"
 		print "ts=",ts
 		print len(ts)
+		tri_verts = []
+		tri_indices = []
+		vindex = 0
+		for strip in ts:
+			sindex = 0
+			striplen = len(strip)-2
+			for vert in strip:
+				tri_verts.append(vert)
+				print sindex, striplen
+				if sindex < striplen:
+					tri_indices.append((vindex,vindex+1,vindex+2))
+				vindex+=1
+				sindex+=1
 
-		tri_indices = B['triangles']
 		new_triangles = []
 		new_vertices = []
-		tri_verts = B['vertices']
 		nv_ap = new_vertices.append
 		new_ap = new_triangles.append
 		tri_count = 0
