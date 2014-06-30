@@ -39,6 +39,14 @@ class TracePrints(object):
 
 sys.stdout = TracePrints()'''
 
+def cross(a, b):
+    return a[0]*b[1]-a[1]*b[0]
+
+def cross3d(a, b):
+    c = [a[1]*0 - 0*b[1],
+         0*b[0] - a[0]*0,
+         a[0]*b[1] - a[1]*b[0]]
+    return c
 
 class TestGame(Widget):
 	def __init__(self, **kwargs):
@@ -184,7 +192,10 @@ class TestGame(Widget):
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
+		phys = self.gameworld.entities[entityID].physics
+		phys.shapes[0].sensor = sensor
+		#c = cy.Circle(phys.body, 100)
+		#self.space.add(c)
 		return entityID
 	def getEntFromID(self, entID):
 		return self.gameworld.entities[entID]
@@ -380,6 +391,63 @@ class TestGame(Widget):
 
 
 
+		if 'polygen' in ctouch:
+			cid = self.create_circle((0,0),mass=0,selectNow=False)
+			xd = spos[0] - pos[0]
+			yd = spos[1] - pos[1]
+			dist = sqrt(xd ** 2 + yd ** 2)
+			pg = ctouch['polygen']
+			if True:
+				if 'lastpolyid' in ctouch:
+					self.gameworld.remove_entity(ctouch['lastpolyid'])
+					del ctouch['lastpolyid']
+				pg.draw_circle_polygon(pos)
+				create_dict = pg.draw_from_Polygon()
+				print create_dict
+				ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+				['noise_renderer2'])
+				e = self.getEntFromID(cid)
+
+				#pts=[(0,0),(300,0),(0,300)]
+				#poly = cy.Poly(e.physics.body, pts, pos)
+				#self.space.add(poly)
+				#space.add(poly)
+				#b = cy.Body()
+				#poly = cy.Circle(e.physics.body, 100, pos)
+				#space.add(b)
+				#space.add(poly)
+				triangles = create_dict['triangles']
+				verts = create_dict['vertices']
+				for t in triangles:
+					pts = []
+					for i in t:
+						v = verts[i]
+						pts.append((v[0],v[1]))
+					print 'pts=',pts
+					'''sum = 0
+					lastp = None
+					for p in pts:
+						if lastp:
+							sum+=(lastp[0]-p[0])*(lastp[1]-p[1])
+						lastp = p
+					p = pts[0]
+					sum+=(lastp[0]-p[0])*(lastp[1]-p[1])
+					print sum'''
+					a=pts[0]
+					b=pts[1]
+					c=pts[2]
+					cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
+					print "cross=",cro
+					if cro>0.00:
+						print "skipping"#should test better and reverse
+						#pts = [pts[0],pts[2],pts[1]]
+					else:
+						print "adding", pts
+						poly = cy.Poly(e.physics.body, pts)
+						space.add(poly)
+				print "done"
+				#print cross()
+				ctouch['pos'] = pos
 
 		tshape = ctouch['touching']
 		if tshape and shape:
@@ -605,7 +673,7 @@ class TestGame(Widget):
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if not self.mainTools.paused:
-			if random()>0.99: self.gameworld.update(dt)
+			if random()>0.0099: self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:

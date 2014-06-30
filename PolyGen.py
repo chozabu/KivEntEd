@@ -9,6 +9,8 @@ from random import random
 from Polygon.IO import *
 from numpy import array
 
+import cymunk
+
 import triangle
 
 class PolyGen():
@@ -51,13 +53,14 @@ class PolyGen():
 			'vert_data_count': 5}
 	def pts_to_tristrip(self, pts):
 		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
-
 		ts = self.poly.triStrip()
 		#print "\n\n"
 		#print "ts=",ts
 		#print len(ts)
 		tri_verts = []
 		tri_indices = []
+		lasti = None
+		llasti = None
 		vindex = 0
 		for strip in ts:
 			sindex = 0
@@ -67,6 +70,8 @@ class PolyGen():
 				if sindex < striplen:
 					tri_indices.append((vindex,vindex+1,vindex+2))
 				tri_verts.append(vert)
+				llasti = lasti
+				lasti = vert
 				vindex+=1
 				sindex+=1
 			#break #uncomment to see only 1 tristrip
@@ -92,7 +97,7 @@ class PolyGen():
 		segments.append([int(i+1),int(0)])
 		print "made segments"
 		A = {'vertices':array(pts), 'segments':array(segments)}#,
-			 #'segment_markers':array(segmark), 'vertex_markers':array(vertmark)}
+			#'segment_markers':array(segmark), 'vertex_markers':array(vertmark)}
 		command = 'p'#a' + size + 'YY'
 		B = triangle.triangulate(A, command)
 		print "triangulated"
