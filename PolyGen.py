@@ -27,9 +27,9 @@ class PolyGen():
 		check = self.poly+p1
 		#if len(check)<2:
 		self.poly = check
-		print self.poly
-		print len(self.poly)
-		print len(self.poly[0])
+		#print self.poly
+		#print len(self.poly)
+		#print len(self.poly[0])
 		#p2 = Circle(radius/2, pos, sides)
 		#p2.shift(-radius*2,-radius)
 		#p=p1 + p2
@@ -38,14 +38,14 @@ class PolyGen():
 	def draw_from_Polygon(self):
 		#print p1
 		pts = self.poly[0]
-		writeSVG('Operations.svg', [self.poly], width=800)
+		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
-		print "vertices=", new_vertices
-		print "triangles=", new_triangles
+		#print "vertices=", new_vertices
+		#print "triangles=", new_triangles
 
 		#new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_triangle(pts)
-		print "new_vertices=", new_vertices
-		print "new_triangles=", new_triangles
+		#print "new_vertices=", new_vertices
+		#print "new_triangles=", new_triangles
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
@@ -53,9 +53,9 @@ class PolyGen():
 		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
 
 		ts = self.poly.triStrip()
-		print "\n\n"
-		print "ts=",ts
-		print len(ts)
+		#print "\n\n"
+		#print "ts=",ts
+		#print len(ts)
 		tri_verts = []
 		tri_indices = []
 		vindex = 0
@@ -64,7 +64,7 @@ class PolyGen():
 			striplen = len(strip)-2
 			for vert in strip:
 				tri_verts.append(vert)
-				print sindex, striplen
+				#print sindex, striplen
 				if sindex < striplen:
 					tri_indices.append((vindex,vindex+1,vindex+2))
 				vindex+=1
