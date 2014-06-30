@@ -14,12 +14,12 @@ import cymunk
 import triangle
 
 class PolyGen():
-	def __init__(self, octaves=3, persistance=.5, scale=.005, size='150'):
+	def __init__(self, poly=None, octaves=3, persistance=.5, scale=.005, size='150'):
 		self.octaves = octaves
 		self.persistance = persistance
 		self.scale = scale
 		self.size = size
-		self.poly = None
+		self.poly = poly
 
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
@@ -118,11 +118,11 @@ class PolyGen():
 			vert_count += 1
 		return new_triangles, new_vertices,  tri_count, vert_count
 
-	def initentity(self):
+	'''def initentity(self):
 		#create_dict = self.draw_rect_polygon(
 		#	20, 100, (150, 150), 3, .5, .005, '150')
 		create_dict = self.draw_from_Polygon()
 		#create_dict['do_texture'] = True
 		#create_dict['texture'] = 'assets/planetgradient2.png'
 		a = self.gameworld.init_entity({'noise_renderer2': create_dict},
-			['noise_renderer2'])
+			['noise_renderer2'])'''
