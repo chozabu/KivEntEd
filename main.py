@@ -293,6 +293,22 @@ class TestGame(Widget):
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
+		if 'polygen' in ctouch:
+			xd = spos[0] - pos[0]
+			yd = spos[1] - pos[1]
+			dist = sqrt(xd ** 2 + yd ** 2)
+			pg = ctouch['polygen']
+			if dist > 10:
+				if 'lastpolyid' in ctouch:
+					self.gameworld.remove_entity(ctouch['lastpolyid'])
+					del ctouch['lastpolyid']
+				pg.draw_circle_polygon(pos)
+				create_dict = pg.draw_from_Polygon()
+				ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+				['noise_renderer2'])
+				ctouch['pos'] = pos
+
+
 		if currentTool == "camera":
 			super(TestGame, self).on_touch_move(touch)
 		if 'previewShape' in ctouch:
@@ -361,6 +377,8 @@ class TestGame(Widget):
 				space.remove(ctouch['mousejoint'])
 
 		if ctouch['onmenu']: return
+
+
 
 
 		tshape = ctouch['touching']
@@ -474,7 +492,14 @@ class TestGame(Widget):
 		currentTool = self.mainTools.currentTool
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
-
+		import PolyGen
+		if currentTool == 'poly':
+			pg = PolyGen.PolyGen()
+			pg.draw_circle_polygon(pos)
+			ctouch['polygen'] = pg
+			create_dict = pg.draw_from_Polygon()
+			ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+			['noise_renderer2'])
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
@@ -580,7 +605,7 @@ class TestGame(Widget):
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if not self.mainTools.paused:
-			self.gameworld.update(dt)
+			if random()>0.99: self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:
