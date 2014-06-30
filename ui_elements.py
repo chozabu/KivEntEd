@@ -159,6 +159,7 @@ class downloads(BoxLayout):
 		self.mtref = mtref
 		super(downloads,self).__init__()
 		self.cursor = 0
+		self.pagesize = 8
 
 	def bug_posted(req, result):
 	    print('Our bug is posted !')
@@ -175,11 +176,11 @@ class downloads(BoxLayout):
 			self.sortSpinner.text = stype
 		self.goPressed()
 	def prevPage(self):
-		self.cursor -=20
+		self.cursor -=self.pagesize
 		if self.cursor<0:self.cursor = 0
 		self.listLevels()
 	def nextPage(self):
-		self.cursor +=20
+		self.cursor +=self.pagesize
 		self.listLevels()
 	def goPressed(self, instance=None):
 		print "go pressed"
@@ -189,7 +190,7 @@ class downloads(BoxLayout):
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
 
-		params = {"cursor":self.cursor, "limit":20,"sortKey": self.sortSpinner.text}
+		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 		if self.reverseButton.state == 'down':params['reverse']=True
 		print "requesting levels", serverURL+'/queryLevels',params
 		params = urllib.urlencode(params)
