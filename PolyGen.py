@@ -50,7 +50,7 @@ class PolyGen():
 		print "\n\n"
 		print "ts=",ts
 		print len(ts)
-		command = 'qpa' + size + 'YY'
+		command = 'p'#a' + size + 'YY'
 		B = triangle.triangulate(A, command)
 		print "triangulated"
 		#print B
