@@ -5,7 +5,7 @@ __author__ = 'chozabu'
 #Polygon.
 from Polygon import *
 from Polygon.Shapes import Star, Circle, Rectangle, SierpinskiCarpet
-
+from random import random
 from Polygon.IO import *
 from numpy import array
 
@@ -63,12 +63,13 @@ class PolyGen():
 			sindex = 0
 			striplen = len(strip)-2
 			for vert in strip:
-				tri_verts.append(vert)
 				#print sindex, striplen
 				if sindex < striplen:
 					tri_indices.append((vindex,vindex+1,vindex+2))
+				tri_verts.append(vert)
 				vindex+=1
 				sindex+=1
+			#break #uncomment to see only 1 tristrip
 
 		new_triangles = []
 		new_vertices = []
