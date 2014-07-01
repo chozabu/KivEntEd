@@ -401,10 +401,9 @@ class TestGame(Widget):
 
 		if 'polygen' in ctouch:
 			cid = self.create_circle((0,0),mass=0,selectNow=False)
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
 			pg = ctouch['polygen']
+			#print pg.poly
+			#cross()
 			if True:
 				if 'lastpolyid' in ctouch:
 					self.gameworld.remove_entity(ctouch['lastpolyid'])

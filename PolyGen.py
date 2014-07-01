@@ -7,9 +7,9 @@ from Polygon import *
 from Polygon.Shapes import Star, Circle, Rectangle, SierpinskiCarpet
 from random import random
 from Polygon.IO import *
+import Polygon.IO as pio
 from Polygon.Utils import tileEqual, tileBSP, convexHull
 from numpy import array
-
 import cymunk
 
 import triangle
@@ -37,6 +37,9 @@ class PolyGen():
 
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
+		#pstr = pio.encodeBinary(p1)
+		#print pstr
+		#p1 = pio.decodeBinary(pstr)
 		if self.poly == None:
 			self.poly = p1
 			return
