@@ -459,6 +459,8 @@ class TestGame(Widget):
 						poly.friction=0.3
 						space.add(poly)
 				print "done"
+
+				#print len(triangles)
 				#print cross()
 				ctouch['pos'] = pos
 				'''print dir(cte.noise_renderer2)
@@ -591,8 +593,8 @@ class TestGame(Widget):
 					ents[id]=True
 				for eid in ents:
 					e = self.getEntFromID(eid)
-					if hasattr(e, "polyshape"):'''
-						math.sqrt()
+					if hasattr(e, "polyshape"):
+						math.sqrt()'''
 			pg = PolyGen.PolyGen()
 			pg.draw_circle_polygon(pos)
 			ctouch['polygen'] = pg
