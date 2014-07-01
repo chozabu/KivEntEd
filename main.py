@@ -320,8 +320,11 @@ class TestGame(Widget):
 					self.gameworld.remove_entity(ctouch['lastpolyid'])
 					del ctouch['lastpolyid']
 				if True:
-					ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+					newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
 					['noise_renderer2'])
+					newpoly = self.getEntFromID(newpolyID)
+					newpoly.polyshape = pg
+					ctouch['lastpolyid'] = newpolyID
 				ctouch['pos'] = pos
 
 
@@ -409,10 +412,13 @@ class TestGame(Widget):
 				pg.draw_circle_polygon(pos)
 				create_dict = pg.draw_from_Polygon()
 				print create_dict
-				ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+
+				newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
 				['noise_renderer2'])
+				newpoly = self.getEntFromID(newpolyID)
+				newpoly.polyshape = pg
+
 				e = self.getEntFromID(cid)
-				cte = self.getEntFromID(ctouch['lastpolyid'])
 
 				#pts=[(0,0),(300,0),(0,300)]
 				#poly = cy.Poly(e.physics.body, pts, pos)
