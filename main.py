@@ -580,6 +580,19 @@ class TestGame(Widget):
 		ctouch['active'] = True
 		import PolyGen
 		if currentTool == 'poly':
+			'''cs = cy.Circle(None, radius=30, offset=pos)
+			colshapes = space.shape_query(cs)
+			print colshapes
+			if len(colshapes)>0:
+				print colshapes
+				ents = {}
+				for shape in colshapes:
+					id = shape.body.data
+					ents[id]=True
+				for eid in ents:
+					e = self.getEntFromID(eid)
+					if hasattr(e, "polyshape"):'''
+						math.sqrt()
 			pg = PolyGen.PolyGen()
 			pg.draw_circle_polygon(pos)
 			ctouch['polygen'] = pg
