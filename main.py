@@ -310,13 +310,18 @@ class TestGame(Widget):
 			dist = sqrt(xd ** 2 + yd ** 2)
 			pg = ctouch['polygen']
 			if dist > 10:
-				if 'lastpolyid' in ctouch:
-					self.gameworld.remove_entity(ctouch['lastpolyid'])
-					del ctouch['lastpolyid']
 				pg.draw_circle_polygon(pos)
 				create_dict = pg.draw_from_Polygon()
-				ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
-				['noise_renderer2'])
+				if 'lastpolyid' in ctouch:
+					lastpoly = self.getEntFromID(ctouch['lastpolyid'])
+					print create_dict
+					#lastpoly.noise_renderer2.vert_mesh.load_from_python(
+					#	create_dict['vertices'],create_dict['triangles'])
+					self.gameworld.remove_entity(ctouch['lastpolyid'])
+					del ctouch['lastpolyid']
+				if True:
+					ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+					['noise_renderer2'])
 				ctouch['pos'] = pos
 
 
@@ -392,7 +397,7 @@ class TestGame(Widget):
 
 
 		if 'polygen' in ctouch:
-			cid = self.create_circle((0,0),mass=0,selectNow=False)
+			cid = self.create_circle((0,0),mass=100,selectNow=False)
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			dist = sqrt(xd ** 2 + yd ** 2)
@@ -407,6 +412,7 @@ class TestGame(Widget):
 				ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
 				['noise_renderer2'])
 				e = self.getEntFromID(cid)
+				cte = self.getEntFromID(ctouch['lastpolyid'])
 
 				#pts=[(0,0),(300,0),(0,300)]
 				#poly = cy.Poly(e.physics.body, pts, pos)
@@ -449,6 +455,11 @@ class TestGame(Widget):
 				print "done"
 				#print cross()
 				ctouch['pos'] = pos
+				'''print dir(cte.noise_renderer2)
+				print (cte.noise_renderer2.vert_mesh)
+				print dir(cte.noise_renderer2.vert_mesh)
+				print cte.noise_renderer2.vert_mesh.vert_data_count
+				print dir(cte.noise_renderer2.vert_mesh)'''
 
 		tshape = ctouch['touching']
 		if tshape and shape:
