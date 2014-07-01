@@ -1,12 +1,13 @@
 __author__ = 'chozabu'
 
 
-#import Polygon
+import Polygon
 #Polygon.
 from Polygon import *
 from Polygon.Shapes import Star, Circle, Rectangle, SierpinskiCarpet
 from random import random
 from Polygon.IO import *
+from Polygon.Utils import tileEqual, tileBSP, convexHull
 from numpy import array
 
 import cymunk
@@ -20,6 +21,19 @@ class PolyGen():
 		self.scale = scale
 		self.size = size
 		self.poly = poly
+
+	def gettiled(self):
+		tiles = tileEqual(self.poly,10,10)
+		#tiles = tileBSP(self.poly)
+		tc = 0
+		hulls = []
+		ha = hulls.append
+		for t in tiles:
+			tc+=1
+			ha(convexHull(t)[0])
+			#print t
+
+		return hulls
 
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)

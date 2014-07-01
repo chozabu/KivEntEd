@@ -400,7 +400,7 @@ class TestGame(Widget):
 
 
 		if 'polygen' in ctouch:
-			cid = self.create_circle((0,0),mass=100,selectNow=False)
+			cid = self.create_circle((0,0),mass=0,selectNow=False)
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
 			dist = sqrt(xd ** 2 + yd ** 2)
@@ -436,20 +436,12 @@ class TestGame(Widget):
 						v = verts[i]
 						pts.append((v[0],v[1]))
 					print 'pts=',pts
-					'''sum = 0
-					lastp = None
-					for p in pts:
-						if lastp:
-							sum+=(lastp[0]-p[0])*(lastp[1]-p[1])
-						lastp = p
-					p = pts[0]
-					sum+=(lastp[0]-p[0])*(lastp[1]-p[1])
-					print sum'''
 					a=pts[0]
 					b=pts[1]
 					c=pts[2]
 					cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
 					print "cross=",cro
+					print "clockwise=",cy.is_clockwise(pts)
 					if cro>0.00:
 						print "skipping"#should test better and reverse
 						#pts = [pts[0],pts[2],pts[1]]
@@ -460,7 +452,19 @@ class TestGame(Widget):
 						space.add(poly)
 				print "done"
 
-				#print len(triangles)
+				print len(triangles)
+				'''hulls = pg.gettiled()
+				for h in hulls:
+					print h
+					print "A"
+					clockwise = cy.is_clockwise(h)
+					print clockwise
+					if not clockwise:continue
+					#poly = cy.Poly(e.physics.body, h, auto_order_vertices=False)
+					#poly.friction=0.3
+					#space.add(poly)
+					print "B"'''
+				#print hulls
 				#print cross()
 				ctouch['pos'] = pos
 				'''print dir(cte.noise_renderer2)
