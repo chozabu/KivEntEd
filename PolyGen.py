@@ -12,7 +12,7 @@ from Polygon.Utils import tileEqual, tileBSP, convexHull
 from numpy import array
 import cymunk
 
-import triangle
+#import triangle
 
 class PolyGen():
 	def __init__(self, poly=None, octaves=3, persistance=.5, scale=.005, size='150'):
@@ -106,7 +106,7 @@ class PolyGen():
 			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
 			vert_count += 1
 		return new_triangles, new_vertices,  tri_count, vert_count
-	def pts_to_triangle(self, pts):
+	'''def pts_to_triangle(self, pts):
 		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
 		segments = []
 		for i in range(len(pts)-1):
@@ -133,7 +133,7 @@ class PolyGen():
 		for tvert in tri_verts:
 			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
 			vert_count += 1
-		return new_triangles, new_vertices,  tri_count, vert_count
+		return new_triangles, new_vertices,  tri_count, vert_count'''
 
 	'''def initentity(self):
 		#create_dict = self.draw_rect_polygon(
