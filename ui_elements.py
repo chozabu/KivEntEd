@@ -651,27 +651,28 @@ class MainTools(FloatLayout):
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
 			ent = self.selectedEntity
 			#print dir(ent.physics)
-			self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
-			#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
-			#self.selectedMenu.posLabel.text = tv
-			self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
-			self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
-			self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
-			print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
-			self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
-			self.selectedMenu.shapeInfo.clear_widgets()
-			if shape.__class__.__name__ == "Circle":
-				cs = CircleSettings()
-				cs.radiusLabel.text = "%0.2f" % shape.radius
-				cs.radiusLabel.bind(text=self.on_rad_change)
-				self.selectedMenu.shapeInfo.add_widget(cs)
-			if shape.__class__.__name__ == "BoxShape":
-				bs = BoxSettings()
-				bs.widthLabel.text = "%0.2f" % shape.width
-				bs.heightLabel.text = "%0.2f" % shape.height
-				bs.widthLabel.bind(text=self.on_width_change)
-				bs.heightLabel.bind(text=self.on_height_change)
-				self.selectedMenu.shapeInfo.add_widget(bs)
+			if hasattr(ent, 'physics'):
+				self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
+				#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
+				#self.selectedMenu.posLabel.text = tv
+				self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
+				self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
+				self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
+				print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
+				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
+				self.selectedMenu.shapeInfo.clear_widgets()
+				if shape.__class__.__name__ == "Circle":
+					cs = CircleSettings()
+					cs.radiusLabel.text = "%0.2f" % shape.radius
+					cs.radiusLabel.bind(text=self.on_rad_change)
+					self.selectedMenu.shapeInfo.add_widget(cs)
+				if shape.__class__.__name__ == "BoxShape":
+					bs = BoxSettings()
+					bs.widthLabel.text = "%0.2f" % shape.width
+					bs.heightLabel.text = "%0.2f" % shape.height
+					bs.widthLabel.bind(text=self.on_width_change)
+					bs.heightLabel.bind(text=self.on_height_change)
+					self.selectedMenu.shapeInfo.add_widget(bs)
 
 		if self.gameref.selectedShapeID != None:
 			self.gameref.delObj(self.gameref.selectedShapeID)
@@ -679,16 +680,18 @@ class MainTools(FloatLayout):
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
-			self.selectedMenu.texLabel.text = ent.physics_renderer.texture
+			if hasattr(ent, 'physics_renderer'):
+				self.selectedMenu.texLabel.text = ent.physics_renderer.texture
 			if hasattr(ent, 'color'):
 				self.selectedMenu.redLabel.text = str(ent.color.r)
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
-
-			self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
-			                                                 width=ent.physics_renderer.width*1.1+10, height=ent.physics_renderer.height*1.1+10,
-															texture='emptybox')
+			r  = None
+			if hasattr(ent,"physics_renderer"):
+				self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
+				                                                 width=ent.physics_renderer.width*1.1+10, height=ent.physics_renderer.height*1.1+10,
+																texture='emptybox')
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 		self.fireText = True

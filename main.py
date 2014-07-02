@@ -226,7 +226,93 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
+	def create_poly(self, pos, polygon, lastpolyid=None):
+		print "poly, oldpoly=", lastpolyid
+		if lastpolyid:
+			ent = self.getEntFromID(lastpolyid)
+			if hasattr(ent, "tempphysholderid"):
+				holderid =ent.tempphysholderid
+				#t =  self.getEntFromID(ent.tempphysholderid)
+				#print dir(t.physics.body)
+				#print t.tshapes
+				#cross()
+				self.delObj(holderid)
+			#self.delObj(lastpolyid)
+			#return
+		space = self.space
+		cid = self.create_circle((0,0),mass=0,selectNow=False)
+		e = self.getEntFromID(cid)
+		pg = polygon
+		pg.draw_circle_polygon(pos)
+		create_dict = pg.draw_from_Polygon()
+		#print create_dict
 
+		newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
+		['noise_renderer2'])
+		e.polyview = newpolyID
+		newpoly = self.getEntFromID(newpolyID)
+		newpoly.polyshape = pg
+		newpoly.tempphysholderid = cid
+
+
+		#pts=[(0,0),(300,0),(0,300)]
+		#poly = cy.Poly(e.physics.body, pts, pos)
+		#self.space.add(poly)
+		#space.add(poly)
+		#b = cy.Body()
+		#poly = cy.Circle(e.physics.body, 100, pos)
+		#space.add(b)
+		#space.add(poly)
+		triangles = create_dict['triangles']
+		verts = create_dict['vertices']
+		epb = e.physics.body
+		for t in triangles:
+			pts = []
+			for i in t:
+				v = verts[i]
+				pts.append((v[0],v[1]))
+			#print 'pts=',pts
+			a=pts[0]
+			b=pts[1]
+			c=pts[2]
+			cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
+			#print "cross=",cro
+			#print "clockwise=",cy.is_clockwise(pts)
+			if cro>0.00:
+				pass
+				#print "skipping"#should test better and reverse
+				#pts = [pts[0],pts[2],pts[1]]
+			else:
+				#print "adding", pts
+				poly = cy.Poly(epb, pts)
+				if not hasattr(e, 'tshapes'):
+					e.tshapes = [poly]
+				else:
+					e.tshapes.append(poly)
+				poly.friction=0.3
+				space.add(poly)
+		print "done"
+
+		print len(triangles)
+		'''hulls = pg.gettiled()
+		for h in hulls:
+			print h
+			print "A"
+			clockwise = cy.is_clockwise(h)
+			print clockwise
+			if not clockwise:continue
+			#poly = cy.Poly(e.physics.body, h, auto_order_vertices=False)
+			#poly.friction=0.3
+			#space.add(poly)
+			print "B"'''
+		#print hulls
+		#print cross()
+		'''print dir(cte.noise_renderer2)
+		print (cte.noise_renderer2.vert_mesh)
+		print dir(cte.noise_renderer2.vert_mesh)
+		print cte.noise_renderer2.vert_mesh.vert_data_count
+		print dir(cte.noise_renderer2.vert_mesh)'''
+		return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
@@ -310,8 +396,14 @@ class TestGame(Widget):
 			dist = sqrt(xd ** 2 + yd ** 2)
 			pg = ctouch['polygen']
 			if dist > 10:
+
 				pg.draw_circle_polygon(pos)
-				create_dict = pg.draw_from_Polygon()
+				lpid=None
+				if 'lastpolyid' in ctouch:
+					lpid = ctouch['lastpolyid']
+					del ctouch['lastpolyid']
+				ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
+				'''create_dict = pg.draw_from_Polygon()
 				if 'lastpolyid' in ctouch:
 					lastpoly = self.getEntFromID(ctouch['lastpolyid'])
 					print create_dict
@@ -324,7 +416,7 @@ class TestGame(Widget):
 					['noise_renderer2'])
 					newpoly = self.getEntFromID(newpolyID)
 					newpoly.polyshape = pg
-					ctouch['lastpolyid'] = newpolyID
+					ctouch['lastpolyid'] = newpolyID'''
 				ctouch['pos'] = pos
 
 
@@ -400,77 +492,12 @@ class TestGame(Widget):
 
 
 		if 'polygen' in ctouch:
-			cid = self.create_circle((0,0),mass=0,selectNow=False)
 			pg = ctouch['polygen']
-			#print pg.poly
-			#cross()
-			if True:
-				if 'lastpolyid' in ctouch:
-					self.gameworld.remove_entity(ctouch['lastpolyid'])
-					del ctouch['lastpolyid']
-				pg.draw_circle_polygon(pos)
-				create_dict = pg.draw_from_Polygon()
-				print create_dict
-
-				newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
-				['noise_renderer2'])
-				newpoly = self.getEntFromID(newpolyID)
-				newpoly.polyshape = pg
-
-				e = self.getEntFromID(cid)
-
-				#pts=[(0,0),(300,0),(0,300)]
-				#poly = cy.Poly(e.physics.body, pts, pos)
-				#self.space.add(poly)
-				#space.add(poly)
-				#b = cy.Body()
-				#poly = cy.Circle(e.physics.body, 100, pos)
-				#space.add(b)
-				#space.add(poly)
-				triangles = create_dict['triangles']
-				verts = create_dict['vertices']
-				for t in triangles:
-					pts = []
-					for i in t:
-						v = verts[i]
-						pts.append((v[0],v[1]))
-					print 'pts=',pts
-					a=pts[0]
-					b=pts[1]
-					c=pts[2]
-					cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
-					print "cross=",cro
-					print "clockwise=",cy.is_clockwise(pts)
-					if cro>0.00:
-						print "skipping"#should test better and reverse
-						#pts = [pts[0],pts[2],pts[1]]
-					else:
-						print "adding", pts
-						poly = cy.Poly(e.physics.body, pts)
-						poly.friction=0.3
-						space.add(poly)
-				print "done"
-
-				print len(triangles)
-				'''hulls = pg.gettiled()
-				for h in hulls:
-					print h
-					print "A"
-					clockwise = cy.is_clockwise(h)
-					print clockwise
-					if not clockwise:continue
-					#poly = cy.Poly(e.physics.body, h, auto_order_vertices=False)
-					#poly.friction=0.3
-					#space.add(poly)
-					print "B"'''
-				#print hulls
-				#print cross()
-				ctouch['pos'] = pos
-				'''print dir(cte.noise_renderer2)
-				print (cte.noise_renderer2.vert_mesh)
-				print dir(cte.noise_renderer2.vert_mesh)
-				print cte.noise_renderer2.vert_mesh.vert_data_count
-				print dir(cte.noise_renderer2.vert_mesh)'''
+			lpid=None
+			if 'lastpolyid' in ctouch:
+				lpid = ctouch['lastpolyid']
+				del ctouch['lastpolyid']
+			ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
 
 		tshape = ctouch['touching']
 		if tshape and shape:
@@ -600,10 +627,11 @@ class TestGame(Widget):
 						math.sqrt()'''
 			pg = PolyGen.PolyGen()
 			pg.draw_circle_polygon(pos)
+			ctouch['lastpolyid'] = self.create_poly(pos,pg)
 			ctouch['polygen'] = pg
-			create_dict = pg.draw_from_Polygon()
-			ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
-			['noise_renderer2'])
+			#create_dict = pg.draw_from_Polygon()
+			#ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
+			#['noise_renderer2'])
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
@@ -655,7 +683,22 @@ class TestGame(Widget):
 	def delObj(self, objid):
 		#todo check before removing these items
 		#print "removing:", objid
+
 		ent =  self.getEntFromID(objid)
+		if hasattr(ent, "polyview"):
+			print "polyview, objid=",ent.polyview, objid
+			if ent.polyview != objid:
+				#self.delObj(ent.polyview)
+				self.gameworld.remove_entity(ent.polyview)
+			else:
+				print "ERROR! ent refrencing its-self as poly"
+			delattr(ent, "polyview")
+		if hasattr(ent, "tshapes"):
+			for s in ent.tshapes:
+				print s
+				self.space.remove(s)
+			ent.tshapes = []
+			delattr(ent, "tshapes")
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
 			removeus = []
@@ -709,7 +752,7 @@ class TestGame(Widget):
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if not self.mainTools.paused:
-			if random()>0.0099: self.gameworld.update(dt)
+			if random()>0.00099: self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:
