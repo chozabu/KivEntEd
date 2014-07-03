@@ -226,46 +226,18 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
-	def create_poly(self, pos, polygon, lastpolyid=None):
+	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+	angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
 		print "poly, oldpoly=", lastpolyid
 		if lastpolyid:
-			ent = self.getEntFromID(lastpolyid)
-			if hasattr(ent, "tempphysholderid"):
-				holderid =ent.tempphysholderid
-				#t =  self.getEntFromID(ent.tempphysholderid)
-				#print dir(t.physics.body)
-				#print t.tshapes
-				#cross()
-				self.delObj(holderid)
-			#self.delObj(lastpolyid)
-			#return
-		space = self.space
-		cid = self.create_circle((0,0),mass=0,selectNow=False)
-		e = self.getEntFromID(cid)
+			self.delObj(lastpolyid)
 		pg = polygon
 		pg.draw_circle_polygon(pos)
 		create_dict = pg.draw_from_Polygon()
-		#print create_dict
 
-		newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
-		['noise_renderer2'])
-		e.polyview = newpolyID
-		newpoly = self.getEntFromID(newpolyID)
-		newpoly.polyshape = pg
-		newpoly.tempphysholderid = cid
-
-
-		#pts=[(0,0),(300,0),(0,300)]
-		#poly = cy.Poly(e.physics.body, pts, pos)
-		#self.space.add(poly)
-		#space.add(poly)
-		#b = cy.Body()
-		#poly = cy.Circle(e.physics.body, 100, pos)
-		#space.add(b)
-		#space.add(poly)
 		triangles = create_dict['triangles']
 		verts = create_dict['vertices']
-		epb = e.physics.body
+		col_shapes = []
 		for t in triangles:
 			pts = []
 			for i in t:
@@ -283,35 +255,30 @@ class TestGame(Widget):
 				#print "skipping"#should test better and reverse
 				#pts = [pts[0],pts[2],pts[1]]
 			else:
-				#print "adding", pts
-				poly = cy.Poly(epb, pts)
-				if not hasattr(e, 'tshapes'):
-					e.tshapes = [poly]
-				else:
-					e.tshapes.append(poly)
-				poly.friction=0.3
-				space.add(poly)
+				poly_dict = {
+					'vertices':pts, 'offset': (0, 0)}
+				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
+					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
+				col_shapes.append(col_shape)
 		print "done"
 
+
+		physics_component = {'main_shape': 'poly',
+							 'velocity': (x_vel, y_vel),
+							 'position': (0,0), 'angle': angle,
+							 'angular_velocity': angular_velocity,
+							 'vel_limit': 2048,
+							 'ang_vel_limit': radians(2000),
+							 'mass': mass, 'col_shapes': col_shapes}
+
+		create_component_dict = {'physics': physics_component,
+						 'position': pos, 'rotate': 0, 'noise_renderer2': create_dict}
+		component_order = ['position', 'rotate', 'physics', 'noise_renderer2']
+		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
+		newpoly = self.getEntFromID(newpolyID)
+		newpoly.polyshape = pg
+
 		print len(triangles)
-		'''hulls = pg.gettiled()
-		for h in hulls:
-			print h
-			print "A"
-			clockwise = cy.is_clockwise(h)
-			print clockwise
-			if not clockwise:continue
-			#poly = cy.Poly(e.physics.body, h, auto_order_vertices=False)
-			#poly.friction=0.3
-			#space.add(poly)
-			print "B"'''
-		#print hulls
-		#print cross()
-		'''print dir(cte.noise_renderer2)
-		print (cte.noise_renderer2.vert_mesh)
-		print dir(cte.noise_renderer2.vert_mesh)
-		print cte.noise_renderer2.vert_mesh.vert_data_count
-		print dir(cte.noise_renderer2.vert_mesh)'''
 		return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
@@ -685,20 +652,6 @@ class TestGame(Widget):
 		#print "removing:", objid
 
 		ent =  self.getEntFromID(objid)
-		if hasattr(ent, "polyview"):
-			print "polyview, objid=",ent.polyview, objid
-			if ent.polyview != objid:
-				#self.delObj(ent.polyview)
-				self.gameworld.remove_entity(ent.polyview)
-			else:
-				print "ERROR! ent refrencing its-self as poly"
-			delattr(ent, "polyview")
-		if hasattr(ent, "tshapes"):
-			for s in ent.tshapes:
-				print s
-				self.space.remove(s)
-			ent.tshapes = []
-			delattr(ent, "tshapes")
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
 			removeus = []
