@@ -115,7 +115,7 @@ class PolyGen():
 			tri_count += 1
 		vert_count = 0
 		for tvert in tri_verts:
-			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
+			nv_ap([tvert[0], tvert[1], 1, 1, 1, 1])
 			vert_count += 1
 		return new_triangles, new_vertices,  tri_count, vert_count
 	'''def pts_to_triangle(self, pts):

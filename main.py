@@ -274,8 +274,8 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 
 		create_component_dict = {'physics': physics_component,
-						 'position': pos, 'rotate': 0, 'noise_renderer2': create_dict}
-		component_order = ['position', 'rotate', 'physics', 'noise_renderer2']
+						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
+		component_order = ['position', 'rotate', 'physics', 'poly_renderer']
 		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
 		newpoly = self.getEntFromID(newpolyID)
 		newpoly.polyshape = pg
@@ -586,8 +586,8 @@ class TestGame(Widget):
 			ctouch['lastpolyid'] = self.create_poly(pos,pg)
 			ctouch['polygen'] = pg
 			#create_dict = pg.draw_from_Polygon()
-			#ctouch['lastpolyid'] = self.gameworld.init_entity({'noise_renderer2': create_dict},
-			#['noise_renderer2'])
+			#ctouch['lastpolyid'] = self.gameworld.init_entity({'poly_renderer': create_dict},
+			#['poly_renderer'])
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
