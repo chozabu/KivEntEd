@@ -35,6 +35,17 @@ class PolyGen():
 
 		return hulls
 
+	def sub_circle_polygon(self, pos, sides=12, radius=30):
+		p1 = Circle(radius, pos, sides)# - Circle(0.5)
+		#pstr = pio.encodeBinary(p1)
+		#print pstr
+		#p1 = pio.decodeBinary(pstr)
+		if self.poly == None:
+			print "poly never created!"
+			return
+		check = self.poly-p1
+		#if len(check)<2:
+		self.poly = check
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
 		#pstr = pio.encodeBinary(p1)
@@ -56,6 +67,7 @@ class PolyGen():
 
 	def draw_from_Polygon(self):
 		#print p1
+		if len(self.poly) == 0: return False
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)

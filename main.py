@@ -233,7 +233,9 @@ class TestGame(Widget):
 			self.delObj(lastpolyid)
 		pg = polygon
 		#pg.draw_circle_polygon(pos)
+		print "pglen", len(pg.poly)
 		create_dict = pg.draw_from_Polygon()
+		if create_dict == False:return
 
 		triangles = create_dict['triangles']
 		verts = create_dict['vertices']
@@ -357,6 +359,13 @@ class TestGame(Widget):
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
+
+		if currentTool == 'polysub':
+			polys = self.get_touching_polys(pos)
+			for p in polys:
+				p.polyshape.sub_circle_polygon(pos)
+				self.create_poly(pos,p.polyshape,p.entity_id)
+
 		if 'polygen' in ctouch:
 			xd = spos[0] - pos[0]
 			yd = spos[1] - pos[1]
@@ -370,20 +379,6 @@ class TestGame(Widget):
 					lpid = ctouch['lastpolyid']
 					del ctouch['lastpolyid']
 				ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
-				'''create_dict = pg.draw_from_Polygon()
-				if 'lastpolyid' in ctouch:
-					lastpoly = self.getEntFromID(ctouch['lastpolyid'])
-					print create_dict
-					#lastpoly.noise_renderer2.vert_mesh.load_from_python(
-					#	create_dict['vertices'],create_dict['triangles'])
-					self.gameworld.remove_entity(ctouch['lastpolyid'])
-					del ctouch['lastpolyid']
-				if True:
-					newpolyID = self.gameworld.init_entity({'noise_renderer2': create_dict},
-					['noise_renderer2'])
-					newpoly = self.getEntFromID(newpolyID)
-					newpoly.polyshape = pg
-					ctouch['lastpolyid'] = newpolyID'''
 				ctouch['pos'] = pos
 
 
@@ -455,8 +450,6 @@ class TestGame(Widget):
 				space.remove(ctouch['mousejoint'])
 
 		if ctouch['onmenu']: return
-
-
 
 		if 'polygen' in ctouch:
 			pg = ctouch['polygen']
@@ -578,20 +571,16 @@ class TestGame(Widget):
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
 		import PolyGen
+
+		if currentTool == 'polysub':
+			polys = self.get_touching_polys(pos)
+			for p in polys:
+				p.polyshape.sub_circle_polygon(pos)
+				self.create_poly(pos,p.polyshape,p.entity_id)
+
+
+
 		if currentTool == 'poly':
-			'''cs = cy.Circle(None, radius=30, offset=pos)
-			colshapes = space.shape_query(cs)
-			print colshapes
-			if len(colshapes)>0:
-				print colshapes
-				ents = {}
-				for shape in colshapes:
-					id = shape.body.data
-					ents[id]=True
-				for eid in ents:
-					e = self.getEntFromID(eid)
-					if hasattr(e, "polyshape"):
-						math.sqrt()'''
 			pg = PolyGen.PolyGen()
 			pg.draw_circle_polygon(pos)
 			ctouch['lastpolyid'] = self.create_poly(pos,pg)
@@ -629,6 +618,22 @@ class TestGame(Widget):
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
 			space.add(ctouch['mousejoint'])
+	def get_touching_polys(self, pos, radius=30):
+		space = self.space
+		cs = cy.Circle(cy.Body(), radius=30, offset=pos)
+		colshapes = space.shape_query(cs)
+		polys = []
+		if len(colshapes)>0:
+			print colshapes
+			ents = {}
+			for shape in colshapes:
+				id = shape.body.data
+				ents[id]=True
+			for eid in ents:
+				e = self.getEntFromID(eid)
+				if hasattr(e, "polyshape"):
+					polys.append(e)
+		return polys
 
 	def clearAll(self):
 		self.startID = -1
