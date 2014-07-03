@@ -232,7 +232,7 @@ class TestGame(Widget):
 		if lastpolyid:
 			self.delObj(lastpolyid)
 		pg = polygon
-		pg.draw_circle_polygon(pos)
+		#pg.draw_circle_polygon(pos)
 		create_dict = pg.draw_from_Polygon()
 
 		triangles = create_dict['triangles']
