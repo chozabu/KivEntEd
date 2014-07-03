@@ -657,6 +657,8 @@ class TestGame(Widget):
 		#print "removing:", objid
 
 		ent =  self.getEntFromID(objid)
+		if hasattr(ent, 'polyshape'):
+			delattr(ent, 'polyshape')
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
 			removeus = []
