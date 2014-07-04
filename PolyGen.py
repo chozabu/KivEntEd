@@ -37,9 +37,6 @@ class PolyGen():
 
 	def sub_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
-		#pstr = pio.encodeBinary(p1)
-		#print pstr
-		#p1 = pio.decodeBinary(pstr)
 		if self.poly == None:
 			print "poly never created!"
 			return

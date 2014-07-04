@@ -6,6 +6,7 @@ import os
 import cymunk as cy
 from math import *
 import os
+import PolyGen
 
 #import cProfile
 
@@ -77,11 +78,16 @@ class TestGame(Widget):
 
 
 	def init_game(self, dt):
-		try:
+		if platform == 'android':#apply kovaks hack to android only
+			try:
+				self._init_game(0)
+			except KeyError:
+				print 'failed: rescheduling init'
+				print e
+				Clock.schedule_once(self.init_game)
+		else:
 			self._init_game(0)
-		except KeyError:
-			print 'failed: rescheduling init'
-			Clock.schedule_once(self.init_game)
+
 
 
 	def _init_game(self, dt):
@@ -233,7 +239,8 @@ class TestGame(Widget):
 			self.delObj(lastpolyid)
 		pg = polygon
 		#pg.draw_circle_polygon(pos)
-		print "pglen", len(pg.poly)
+		#print pg
+		#print "pglen", len(pg.poly)
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 
@@ -277,6 +284,7 @@ class TestGame(Widget):
 						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
 		component_order = ['position', 'rotate', 'physics', 'poly_renderer']
 		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
+		self.entIDs.append(newpolyID)
 		newpoly = self.getEntFromID(newpolyID)
 		newpoly.polyshape = pg
 
@@ -570,7 +578,6 @@ class TestGame(Widget):
 		currentTool = self.mainTools.currentTool
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
-		import PolyGen
 
 		if currentTool == 'polysub':
 			polys = self.get_touching_polys(pos)
