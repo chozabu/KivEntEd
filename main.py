@@ -370,16 +370,18 @@ class TestGame(Widget):
 		ctouch['touchingnow'] = shape
 
 
+		xd = spos[0] - pos[0]
+		yd = spos[1] - pos[1]
+		dist = sqrt(xd ** 2 + yd ** 2)
 		if currentTool == 'polysub':
-			polys = self.get_touching_polys(pos)
-			for p in polys:
-				p.polyshape.sub_circle_polygon(pos)
-				self.create_poly(pos,p.polyshape,p.entity_id)
+			if dist > 10:
+				polys = self.get_touching_polys(pos)
+				for p in polys:
+					p.polyshape.sub_circle_polygon(pos)
+					self.create_poly(pos,p.polyshape,p.entity_id)
+				ctouch['pos'] = pos
 
 		if 'polygen' in ctouch:
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			dist = sqrt(xd ** 2 + yd ** 2)
 			pg = ctouch['polygen']
 			if dist > 10:
 
