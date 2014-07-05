@@ -245,6 +245,8 @@ class TestGame(Widget):
 		if create_dict == False:return
 
 		triangles = create_dict['triangles']
+		tricount = len(triangles)
+		submass = mass/tricount
 		verts = create_dict['vertices']
 		col_shapes = []
 		for t in triangles:
@@ -265,7 +267,7 @@ class TestGame(Widget):
 				#pts = [pts[0],pts[2],pts[1]]
 			else:
 				poly_dict = {
-					'vertices':pts, 'offset': (0, 0)}
+					'vertices':pts, 'offset': (0, 0), 'mass':submass}
 				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
 					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
 				col_shapes.append(col_shape)
@@ -280,9 +282,9 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 
-		create_component_dict = {'physics': physics_component,
+		create_component_dict = {'physics': physics_component, 'color':color,
 						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
-		component_order = ['position', 'rotate', 'physics', 'poly_renderer']
+		component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
 		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(newpolyID)
 		newpoly = self.getEntFromID(newpolyID)
