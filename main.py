@@ -529,23 +529,23 @@ class TestGame(Widget):
 		ent =  self.getEntFromID(objid)
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
-			removeus = []
-			for c in self.space.constraints:
-				if c.a == b or c.b == b:
-					removeus.append(c)
-			print "REMOVEUS, ",  removeus
+			removeus = self.getJointsOnBody(b)
 			for rmu in removeus:
 				print rmu in self.space.constraints
 			for c in removeus:
 				#print "removing", c
 				self.deleteJoint(c)
-				print "removed", c
 		print ent, self.mainTools.selectedEntity
 		if ent == self.mainTools.selectedEntity:
 			self.mainTools.setShape(None)
 		self.gameworld.remove_entity(objid)
 		if objid in self.entIDs: self.entIDs.remove(objid)
-
+	def getJointsOnBody(self, b):
+		joints = []
+		for c in self.space.constraints:
+			if c.a == b or c.b == b:
+				joints.append(c)
+		return joints
 	def getWorldPosFromTouch(self, touch):
 
 		viewport = self.gameworld.systems['gameview']
