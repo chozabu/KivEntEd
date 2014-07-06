@@ -146,7 +146,8 @@ class Serials():
 		name.text="LevelName"
 		'''
 
-		if not hasattr(e, "physics") or not hasattr(e, "physics_renderer"):
+		if (not hasattr(e, "physics") or not hasattr(e, "physics_renderer")) and not hasattr(e, 'polyshape'):
+			print "not doing shape"
 			return None
 
 		if e.entity_id == self.gameref.startID or e.entity_id == self.gameref.finishID:
@@ -172,6 +173,7 @@ class Serials():
 		#	ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
 		b = e.physics.body
 		shape_type = e.physics.shape_type
+
 		#<position y="31.9388731278" x="8.00786973338" background="true"/>
 		#<usetexture id="Dirt"/>
 		pd = ET.SubElement(ed,'position')
@@ -187,13 +189,16 @@ class Serials():
 		else:
 			self.laststatic = e.entity_id
 
-		td = ET.SubElement(ed,'usetexture')
-		td.set("id", e.physics_renderer.texture)
+		if hasattr(e, 'physics_renderer'):
+			td = ET.SubElement(ed,'usetexture')
+			td.set("id", e.physics_renderer.texture)
 		verts = []
 		if shape_type == "box":
 			verts = self.getboxverts(b.angle, e.physics_renderer.width, e.physics_renderer.height)
-		if shape_type == "circle":
+		elif shape_type == "circle":
 			verts = self.getcircleverts(e.physics_renderer.width/2.0)
+		elif shape_type == "poly":
+			verts = e.polyshape.poly[0]
 		for v in verts:
 			vd = ET.SubElement(ed,'vertex')
 			vd.set("x", str(v[0]*xmScale))
