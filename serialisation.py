@@ -6,8 +6,42 @@ import os
 import xml.etree.ElementTree as ET
 from math import cos, sin
 import math
+import Polygon.IO as pio
+import PolyGen
+import io
+
+import base64
 
 xmScale = 0.08
+xmTexDict = {
+	"Grass1":"Grass1",
+	"Dirt":"Dirt",
+	"snow":"snow",
+	"wood":"wood",
+	"windows1":"windows1",
+	"Wood3":"Wood3",
+
+	"face_ball":"default",
+    "firefox": "default",
+    "cliffs2": "DarkDirt",
+    "square": "default",
+    "grassyrock": "DarkDirt",
+    "sheep": "ball",
+    "ice": "ice2",
+    "start": "default",
+    "emptybox": "default",
+    "checksphere": "default",
+    "circle": "default",
+    "wrecker": "default",
+    "awheel": "default",
+    "orb": "default",
+    "plank": "Wood2",
+    "dirtclod": "default",
+    "concreteplates": "Asphalt1",
+    "arrow": "default",
+    "magicball": "default"
+
+}
 
 class Serials():
 	def __init__(self, gameref):
@@ -19,20 +53,31 @@ class Serials():
 		ct = self.gameref.scripty.collision_types
 		sd = {'collision_type': ct[shape.collision_type], 'elasticity': shape.elasticity, 'friction': shape.friction,
 			  'group': shape.group}
-		if hasattr(shape, "radius"):
+		shapetype = shape.__class__.__name__
+		if shapetype == "Circle":
 			sd['radius'] = shape.radius
-		else:
+		elif shapetype == "BoxShape":
 			sd['width'] = shape.width
 			sd['height'] = shape.height
+		elif shapetype == "Poly":
+			#print dir(shape)
+			#print shape.get_vertices()
+			#self.entToDict()
+			#print "export poly shape here?"#TODO poly export?
+			pass
 		return sd
 
 	def entToDict(self, e):
 		ed = {"orig_id": e.entity_id}
 		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
+		print dir(e)
 		if hasattr(e, "load_order"):
 			ed["load_order"] = e.load_order
 		if hasattr(e, "color"):
 			ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
+		if hasattr(e, "polyshape"):
+			polystr = base64.encodestring(pio.encodeBinary(e.polyshape.poly))
+			ed["polyviewbinary"] = polystr
 		if hasattr(e, "physics"):
 			b = e.physics.body
 			bd = {'velocity': (b.velocity.x, b.velocity.y),
@@ -130,7 +175,8 @@ class Serials():
 		name.text="LevelName"
 		'''
 
-		if not hasattr(e, "physics") or not hasattr(e, "physics_renderer"):
+		if (not hasattr(e, "physics") or not hasattr(e, "physics_renderer")) and not hasattr(e, 'polyshape'):
+			print "not doing shape"
 			return None
 
 		if e.entity_id == self.gameref.startID or e.entity_id == self.gameref.finishID:
@@ -156,6 +202,7 @@ class Serials():
 		#	ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
 		b = e.physics.body
 		shape_type = e.physics.shape_type
+
 		#<position y="31.9388731278" x="8.00786973338" background="true"/>
 		#<usetexture id="Dirt"/>
 		pd = ET.SubElement(ed,'position')
@@ -171,13 +218,18 @@ class Serials():
 		else:
 			self.laststatic = e.entity_id
 
-		td = ET.SubElement(ed,'usetexture')
-		td.set("id", e.physics_renderer.texture)
+		if hasattr(e, 'physics_renderer'):
+			texname = e.physics_renderer.texture
+			td = ET.SubElement(ed,'usetexture')
+			texname = xmTexDict.get(texname,texname)
+			td.set("id", texname)
 		verts = []
 		if shape_type == "box":
 			verts = self.getboxverts(b.angle, e.physics_renderer.width, e.physics_renderer.height)
-		if shape_type == "circle":
+		elif shape_type == "circle":
 			verts = self.getcircleverts(e.physics_renderer.width/2.0)
+		elif shape_type == "poly":
+			verts = e.polyshape.poly[0]
 		for v in verts:
 			vd = ET.SubElement(ed,'vertex')
 			vd.set("x", str(v[0]*xmScale))
@@ -306,14 +358,16 @@ class Serials():
 	def loadEntFromDict(self, e, idConvDict=None):
 		if "physics" in e:
 			stype = e['physics']['shape_type']
-			pr = e['physics_renderer']
+			print stype
 			p = e['physics']
 			body = p['body']
 			shape = p['shapes'][0]
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
-			texture = str(pr['texture'])
-			if texture == "Grass2": texture = "Grass1"
+			if 'physics_renderer' in e:
+				pr = e['physics_renderer']
+				texture = str(pr['texture'])
+				if texture == "Grass2": texture = "Grass1"
 			color = (1,1,1,1)
 			if 'color' in e:
 				cl = e['color']
@@ -338,6 +392,18 @@ class Serials():
 														   elasticity=shape['elasticity'], angle=body['angle'],
 														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 														   texture=texture, selectNow=False, collision_type=collision_type, color=color)
+			elif stype == "poly" and 'polyviewbinary' in e:
+				print dir(e)
+				print e.keys()
+				pg = base64.decodestring(e['polyviewbinary'])
+				pg = pio.decodeBinary(pg)
+				pg = PolyGen.PolyGen(pg)
+				entID = self.gameref.create_poly(bp,pg)
+				#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
+				#										   mass=mass, friction=shape['friction'],
+				#										   elasticity=shape['elasticity'], angle=body['angle'],
+				#										   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+				#										   texture=texture, selectNow=False, collision_type=collision_type, color=color)
 			if entID != None:
 				if idConvDict!=None: idConvDict[e['orig_id']] = entID
 				newent = self.gameref.getEntFromID(entID)
