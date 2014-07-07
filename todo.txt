@@ -1,4 +1,12 @@
---kivent polygon support
+kivent polygon support
+-textures
+-colours
+-multi-shape physics UI
+-dragging polys
+-physics polys
+-merging/splitting polys
+-updating poly points
+-generate convex hulls from concave
 
 -upload/download ents/atlas/scripts to net
 --save/load external entitys
@@ -36,8 +44,6 @@ Games:
 Kivent:
 -zoom camera!
 -multi-quad renderer + multi-shape body
+--use polygon to render?
 -texture importing and/or themes
--polygons
--poly-painting
--destructable/deformable polys
 -segments

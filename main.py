@@ -6,6 +6,7 @@ import os
 import cymunk as cy
 from math import *
 import os
+import PolyGen
 
 #import cProfile
 
@@ -39,6 +40,14 @@ class TracePrints(object):
 
 sys.stdout = TracePrints()'''
 
+def cross(a, b):
+    return a[0]*b[1]-a[1]*b[0]
+
+def cross3d(a, b):
+    c = [a[1]*0 - 0*b[1],
+         0*b[0] - a[0]*0,
+         a[0]*b[1] - a[1]*b[0]]
+    return c
 
 class TestGame(Widget):
 	def __init__(self, **kwargs):
@@ -48,7 +57,7 @@ class TestGame(Widget):
 		self.entIDs = []
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
-		self.mainTools.setTool("draw")
+		self.mainTools.setTool("poly")
 		self.startID = -1
 		self.finishID = -1
 		self.selectedShapeID = None
@@ -69,11 +78,16 @@ class TestGame(Widget):
 
 
 	def init_game(self, dt):
-		try:
+		if platform == 'android':#apply kovaks hack to android only
+			try:
+				self._init_game(0)
+			except KeyError:
+				print 'failed: rescheduling init'
+				print e
+				Clock.schedule_once(self.init_game)
+		else:
 			self._init_game(0)
-		except KeyError:
-			print 'failed: rescheduling init'
-			Clock.schedule_once(self.init_game)
+
 
 
 	def _init_game(self, dt):
@@ -184,7 +198,10 @@ class TestGame(Widget):
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
+		phys = self.gameworld.entities[entityID].physics
+		phys.shapes[0].sensor = sensor
+		#c = cy.Circle(phys.body, 100)
+		#self.space.add(c)
 		return entityID
 	def getEntFromID(self, entID):
 		return self.gameworld.entities[entID]
@@ -215,7 +232,66 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
+	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+	angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
+		print "poly, oldpoly=", lastpolyid
+		if lastpolyid:
+			self.delObj(lastpolyid)
+		pg = polygon
+		#pg.draw_circle_polygon(pos)
+		#print pg
+		#print "pglen", len(pg.poly)
+		create_dict = pg.draw_from_Polygon()
+		if create_dict == False:return
 
+		triangles = create_dict['triangles']
+		tricount = len(triangles)
+		submass = mass/tricount
+		verts = create_dict['vertices']
+		col_shapes = []
+		for t in triangles:
+			pts = []
+			for i in t:
+				v = verts[i]
+				pts.append((v[0],v[1]))
+			#print 'pts=',pts
+			a=pts[0]
+			b=pts[1]
+			c=pts[2]
+			cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
+			#print "cross=",cro
+			#print "clockwise=",cy.is_clockwise(pts)
+			if cro>0.00:
+				pass
+				#print "skipping"#should test better and reverse
+				#pts = [pts[0],pts[2],pts[1]]
+			else:
+				poly_dict = {
+					'vertices':pts, 'offset': (0, 0), 'mass':submass}
+				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
+					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
+				col_shapes.append(col_shape)
+		print "done"
+
+
+		physics_component = {'main_shape': 'poly',
+							 'velocity': (x_vel, y_vel),
+							 'position': (0,0), 'angle': angle,
+							 'angular_velocity': angular_velocity,
+							 'vel_limit': 2048,
+							 'ang_vel_limit': radians(2000),
+							 'mass': mass, 'col_shapes': col_shapes}
+
+		create_component_dict = {'physics': physics_component, 'color':color,
+						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
+		component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
+		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
+		self.entIDs.append(newpolyID)
+		newpoly = self.getEntFromID(newpolyID)
+		newpoly.polyshape = pg
+
+		print len(triangles)
+		return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
@@ -293,6 +369,31 @@ class TestGame(Widget):
 		shape = self.getShapeAt(pos[0], pos[1])
 		ctouch['touchingnow'] = shape
 
+
+		xd = spos[0] - pos[0]
+		yd = spos[1] - pos[1]
+		dist = sqrt(xd ** 2 + yd ** 2)
+		if currentTool == 'polysub':
+			if dist > 10:
+				polys = self.get_touching_polys(pos)
+				for p in polys:
+					p.polyshape.sub_circle_polygon(pos)
+					self.create_poly(pos,p.polyshape,p.entity_id)
+				ctouch['pos'] = pos
+
+		if 'polygen' in ctouch:
+			pg = ctouch['polygen']
+			if dist > 10:
+
+				pg.draw_circle_polygon(pos)
+				lpid=None
+				if 'lastpolyid' in ctouch:
+					lpid = ctouch['lastpolyid']
+					del ctouch['lastpolyid']
+				ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
+				ctouch['pos'] = pos
+
+
 		if currentTool == "camera":
 			super(TestGame, self).on_touch_move(touch)
 		if 'previewShape' in ctouch:
@@ -362,6 +463,13 @@ class TestGame(Widget):
 
 		if ctouch['onmenu']: return
 
+		if 'polygen' in ctouch:
+			pg = ctouch['polygen']
+			lpid=None
+			if 'lastpolyid' in ctouch:
+				lpid = ctouch['lastpolyid']
+				del ctouch['lastpolyid']
+			ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
 
 		tshape = ctouch['touching']
 		if tshape and shape:
@@ -475,6 +583,22 @@ class TestGame(Widget):
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
 
+		if currentTool == 'polysub':
+			polys = self.get_touching_polys(pos)
+			for p in polys:
+				p.polyshape.sub_circle_polygon(pos)
+				self.create_poly(pos,p.polyshape,p.entity_id)
+
+
+
+		if currentTool == 'poly':
+			pg = PolyGen.PolyGen()
+			pg.draw_circle_polygon(pos)
+			ctouch['lastpolyid'] = self.create_poly(pos,pg)
+			ctouch['polygen'] = pg
+			#create_dict = pg.draw_from_Polygon()
+			#ctouch['lastpolyid'] = self.gameworld.init_entity({'poly_renderer': create_dict},
+			#['poly_renderer'])
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
@@ -505,6 +629,22 @@ class TestGame(Widget):
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
 			space.add(ctouch['mousejoint'])
+	def get_touching_polys(self, pos, radius=30):
+		space = self.space
+		cs = cy.Circle(cy.Body(), radius=30, offset=pos)
+		colshapes = space.shape_query(cs)
+		polys = []
+		if len(colshapes)>0:
+			print colshapes
+			ents = {}
+			for shape in colshapes:
+				id = shape.body.data
+				ents[id]=True
+			for eid in ents:
+				e = self.getEntFromID(eid)
+				if hasattr(e, "polyshape"):
+					polys.append(e)
+		return polys
 
 	def clearAll(self):
 		self.startID = -1
@@ -526,7 +666,10 @@ class TestGame(Widget):
 	def delObj(self, objid):
 		#todo check before removing these items
 		#print "removing:", objid
+
 		ent =  self.getEntFromID(objid)
+		if hasattr(ent, 'polyshape'):
+			delattr(ent, 'polyshape')
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
 			removeus = self.getJointsOnBody(b)
@@ -580,7 +723,7 @@ class TestGame(Widget):
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if not self.mainTools.paused:
-			self.gameworld.update(dt)
+			if random()>0.00099: self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:
