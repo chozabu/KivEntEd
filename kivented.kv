@@ -524,11 +524,11 @@ TestGame:
             Button:
                 text: 'File'
                 on_press: root.changel2menu(root.fileMenu)
-            ToggleButton:
-                group: 'ToolGroup'
-                id: camButton
-                text: 'Camera'
-                on_press: root.setTool("camera")
+            Label:
+                text: 'Create'
+                size_hint_y: None
+                height: self.font_size+6
+                text_size: (self.width, self.height)
             Button:
                 text: 'Sprite'
                 on_press: root.changel2menu(root.createMenu)
@@ -540,12 +540,23 @@ TestGame:
                 on_press: root.changel2menu(root.entityMenu)
             Button:
                 id: joinButton
-                text: 'Join'
+                text: 'Joint'
                 on_press: root.changel2menu(root.joinMenu)
-            Button:
-                id: playButton
-                text: 'pause/play'
-                on_press: root.playPressed(self)
+            ToggleButton:
+                group: 'ToolGroup'
+                id: pasteButton
+                text: 'Paste'
+                on_press: root.setTool("paste")
+            Label:
+                text: 'Interact:'
+                size_hint_y: None
+                height: self.font_size+6
+                text_size: (self.width, self.height)
+            ToggleButton:
+                group: 'ToolGroup'
+                id: camButton
+                text: 'Camera'
+                on_press: root.setTool("camera")
             ToggleButton:
                 group: 'ToolGroup'
                 id: vortexButton
@@ -567,10 +578,9 @@ TestGame:
                 text: 'Delete'
                 on_press: root.setTool("del")
             ToggleButton:
-                group: 'ToolGroup'
-                id: pasteButton
-                text: 'Paste'
-                on_press: root.setTool("paste")
+                id: playButton
+                text: 'Pause'
+                on_press: root.playPressed(self)
             Button:
                 id: Button
                 text: 'scripts'

@@ -808,4 +808,4 @@ class MainTools(FloatLayout):
 
 	def playPressed(self, instance):
 		self.paused = not self.paused
-		self.ids['playButton'].text = "Pause/Play" if self.paused else "Play/Pause"
+		self.ids['playButton'].text = "Resume" if self.paused else "Pause"
