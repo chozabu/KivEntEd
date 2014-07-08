@@ -19,7 +19,6 @@ kivent polygon support
 
 improve UI
 -images
--reorganise (tools, level settings, more)
 -scroll tables, rather than box views?
 
 more scripting?
@@ -34,7 +33,7 @@ more scripting?
 
 -import wheelz levels?
 -improve wheelz export
---dict to transform texture names
+--export joints better
 
 
 Games:
@@ -43,7 +42,7 @@ Games:
 
 Kivent:
 -zoom camera!
--multi-quad renderer + multi-shape body
---use polygon to render?
+-more polygon support
 -texture importing and/or themes
--segments
+--material library probably best option
+-segment support?
