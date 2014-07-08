@@ -377,7 +377,7 @@ class TestGame(Widget):
 			if dist > 10:
 				polys = self.get_touching_polys(pos)
 				for p in polys:
-					p.polyshape.sub_circle_polygon(pos)
+					p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 					self.create_poly(pos,p.polyshape,p.entity_id)
 				ctouch['pos'] = pos
 
@@ -385,7 +385,7 @@ class TestGame(Widget):
 			pg = ctouch['polygen']
 			if dist > 10:
 
-				pg.draw_circle_polygon(pos)
+				pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				lpid=None
 				if 'lastpolyid' in ctouch:
 					lpid = ctouch['lastpolyid']
@@ -586,14 +586,14 @@ class TestGame(Widget):
 		if currentTool == 'polysub':
 			polys = self.get_touching_polys(pos)
 			for p in polys:
-				p.polyshape.sub_circle_polygon(pos)
+				p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				self.create_poly(pos,p.polyshape,p.entity_id)
 
 
 
 		if currentTool == 'poly':
 			pg = PolyGen.PolyGen()
-			pg.draw_circle_polygon(pos)
+			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			ctouch['lastpolyid'] = self.create_poly(pos,pg)
 			ctouch['polygen'] = pg
 			#create_dict = pg.draw_from_Polygon()

@@ -340,6 +340,7 @@ TestGame:
     leftMenu: leftMenu
     rightMenu: rightMenu
     createMenu: createMenu.__self__
+    polyMenu: polyMenu.__self__
     rootMenu: rootMenu
     joinMenu: joinMenu.__self__
     entityMenu: entityMenu.__self__
@@ -529,10 +530,13 @@ TestGame:
                 text: 'Camera'
                 on_press: root.setTool("camera")
             Button:
-                text: 'Create'
+                text: 'Sprite'
                 on_press: root.changel2menu(root.createMenu)
             Button:
-                text: 'Entity'
+                text: 'Polygon'
+                on_press: root.changel2menu(root.polyMenu)
+            Button:
+                text: 'Start/End'
                 on_press: root.changel2menu(root.entityMenu)
             Button:
                 id: joinButton
@@ -593,11 +597,12 @@ TestGame:
                 text: 'Blank'
                 on_press: root.setTool("blank")
         BoxLayout:
-            id: createMenu
+            id: polyMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
+            brushSizeSlider: brushSizeSlider
             ToggleButton:
                 group: 'ToolGroup'
                 id: polyButton
@@ -608,6 +613,23 @@ TestGame:
                 id: polysubButton
                 text: 'PolyErase'
                 on_press: root.setTool("polysub")
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Brush"
+                    #on_press: root.massPressed(self)
+                Slider:
+                    id: brushSizeSlider
+                    orientation: "vertical"
+                    min:1
+                    max:100
+                    value:25
+        BoxLayout:
+            id: createMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
             ToggleButton:
                 group: 'ToolGroup'
                 id: circleButton
