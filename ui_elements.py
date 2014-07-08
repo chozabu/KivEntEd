@@ -564,10 +564,14 @@ class MainTools(FloatLayout):
 
 	def frictionChanged(self, instance):
 		fval = float(instance.text)
-		shape = self.selectedItem
-		if shape:
-			shape.friction = fval
-			self.gameref.reindexEnt(self.selectedEntity)
+		if self.selectedEntity:
+			for shape in self.selectedEntity.physics.shapes:
+				shape.friction = fval
+				self.gameref.reindexEnt(self.selectedEntity)
+		elif self.selectedItem:
+			self.selectedItem.friction = fval
+
+		self.gameref.reindexEnt(self.selectedEntity)
 
 	def massChanged(self, instance):
 		fval = float(instance.text)
@@ -587,10 +591,14 @@ class MainTools(FloatLayout):
 
 	def elasChanged(self, instance):
 		fval = float(instance.text)
-		shape = self.selectedItem
-		if shape:
-			shape.elasticity = fval
-			self.gameref.reindexEnt(self.selectedEntity)
+		if self.selectedEntity:
+			for shape in self.selectedEntity.physics.shapes:
+				shape.elasticity = fval
+				self.gameref.reindexEnt(self.selectedEntity)
+		elif self.selectedItem:
+			self.selectedItem.elasticity = fval
+
+		self.gameref.reindexEnt(self.selectedEntity)
 
 	def on_rad_change(self, instance, value):
 		newrad = float(value)
@@ -768,10 +776,12 @@ class MainTools(FloatLayout):
 				  size_hint=(0.8, 0.8),
 				  on_dismiss=None).open()
 	def colTypeChanged(self, instance):
-		if self.selectedItem and self.gameref:
+		if self.selectedEntity and self.gameref:
 			newval = self.gameref.scripty.collision_types[instance.text]
+			for shape in self.selectedEntity.physics.shapes:
+				shape.collision_type = newval
+				#self.gameref.reindexEnt(self.selectedEntity)
 			print newval, instance.text
-			self.selectedItem.collision_type = newval
 			self.putDefaultsInDataDict()
 
 
