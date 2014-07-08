@@ -15,4 +15,4 @@ class TracePrints(object):
 		stackout = stack[-2]#[0:10]
 		self.stdout.write('File "'+stackout[0]+'", line '+str(stackout[1])+', in '+stackout[2]+'\n')
 
-sys.stdout =TracePrints()
+if sys.flags.debug:sys.stdout =TracePrints()
