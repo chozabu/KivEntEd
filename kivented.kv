@@ -353,6 +353,7 @@ TestGame:
     nameBox: nameBox
     selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
+    settingsMenu: settingsMenu.__self__
     examplesMenu: examplesMenu.__self__
     levelsMenu: levelsMenu.__self__
     
@@ -525,6 +526,9 @@ TestGame:
             Button:
                 text: 'File'
                 on_press: root.changel2menu(root.fileMenu)
+            Button:
+                text: 'Settings'
+                on_press: root.changel2menu(root.settingsMenu)
             Label:
                 text: 'Create'
                 size_hint_y: None
@@ -765,11 +769,21 @@ TestGame:
             Button:
                 text: 'Clear'
                 on_press: root.clearPressed(self)
+        BoxLayout:
+            id: settingsMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
             BoxLayout:
                 orientation: 'vertical'
                 Label:
                     text: "Gravity"
                     size_hint: (1, .2)
+                Button:
+                    text: 'reset'
+                    size_hint: (1, .2)
+                    on_press: gravySlider.value = 0; gravxSlider.value = 0
                 Slider:
                     id: gravySlider
                     orientation: "vertical"
@@ -779,7 +793,7 @@ TestGame:
                     on_value: root.setygrav(self.value)
                 Slider:
                     id: gravxSlider
-                    size_hint: (1, .2)
+                    size_hint: (2, .2)
                     orientation: "horizontal"
                     min:-1000
                     max:1000
