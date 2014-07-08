@@ -261,7 +261,6 @@ class TestGame(Widget):
 				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
 					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
 				col_shapes.append(col_shape)
-		print "done"
 
 
 		physics_component = {'main_shape': 'poly',
@@ -280,7 +279,7 @@ class TestGame(Widget):
 		newpoly = self.getEntFromID(newpolyID)
 		newpoly.polyshape = pg
 
-		print len(triangles)
+		print "poly has: " + str(len(triangles)) + " triangles"
 		return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
