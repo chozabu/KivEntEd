@@ -356,6 +356,7 @@ class MainTools(FloatLayout):
 							 "square": {"texture": "Dirt"},
 							 "box": {"texture": "face_box"},
 							 "draw": {"texture": "Grass1"},
+							 "poly": {"texture": "Grass1"},
 							 "plank": {"texture": "plank"},
 		}
 		self.callbacksBox = None

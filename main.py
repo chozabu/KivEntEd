@@ -170,7 +170,7 @@ class TestGame(Widget):
 	def create_decoration(self, pos=(0, 0), width=40, height=40, angle=0, texture="sheep", color=(1,1,1,1)):
 		create_component_dict = {
 			'renderer': {'texture': texture, 'size': (width, height)},
-			'position': pos, 'rotate': 0 ,'color':color}
+			'position': pos, 'rotate': angle ,'color':color}
 		component_order = ['color', 'position', 'rotate', 'renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		return entityID
