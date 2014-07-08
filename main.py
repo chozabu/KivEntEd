@@ -68,7 +68,7 @@ class TestGame(Widget):
 
 
 	def init_game(self, dt):
-		if platform == 'android':#apply kovaks hack to android only
+		if platform == 'android' or True:#apply kovaks hack to android only
 			try:
 				self._init_game(0)
 			except KeyError:
@@ -233,6 +233,8 @@ class TestGame(Widget):
 		#print "pglen", len(pg.poly)
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
+		#create_dict['do_texture'] = True
+		#create_dict['texture'] = 'assets/planetgradient3.png'
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
