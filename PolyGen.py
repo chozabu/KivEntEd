@@ -15,12 +15,13 @@ import cymunk
 #import triangle
 
 class PolyGen():
-	def __init__(self, poly=None, octaves=3, persistance=.5, scale=.005, size='150'):
+	def __init__(self, poly=None, octaves=3, persistance=.5, scale=.005, size='150', keepsimple = False):
 		self.octaves = octaves
 		self.persistance = persistance
 		self.scale = scale
 		self.size = size
 		self.poly = poly
+		self.keepsimple = keepsimple
 
 	def gettiled(self):
 		tiles = tileEqual(self.poly,10,10)
@@ -41,8 +42,8 @@ class PolyGen():
 			print "poly never created!"
 			return
 		check = self.poly-p1
-		#if len(check)<2:
-		self.poly = check
+		if (self.keepsimple and len(check)<2) or not self.keepsimple:
+			self.poly = check
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
 		#pstr = pio.encodeBinary(p1)
@@ -52,8 +53,8 @@ class PolyGen():
 			self.poly = p1
 			return
 		check = self.poly+p1
-		#if len(check)<2:
-		self.poly = check
+		if (self.keepsimple and len(check)<2) or not self.keepsimple:
+			self.poly = check
 		#print self.poly
 		#print len(self.poly)
 		#print len(self.poly[0])
