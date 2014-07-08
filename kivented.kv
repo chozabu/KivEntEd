@@ -618,6 +618,8 @@ TestGame:
             padding: 4
             height: root.height
             brushSizeSlider: brushSizeSlider
+            polyMergeButton: polyMergeButton
+            polySimpleButton: polySimpleButton
             ToggleButton:
                 group: 'ToolGroup'
                 id: polyButton
@@ -628,6 +630,16 @@ TestGame:
                 id: polysubButton
                 text: 'PolyErase'
                 on_press: root.setTool("polysub")
+            Label:
+                text: 'Settings:'
+            ToggleButton:
+                id: polyMergeButton
+                text: 'Merge Start'
+                height: self.font_size+6
+            ToggleButton:
+                id: polySimpleButton
+                text: 'One Outline'
+                height: self.font_size+6
             BoxLayout:
                 orientation: 'horizontal'
                 Label:
@@ -648,7 +660,7 @@ TestGame:
             ToggleButton:
                 group: 'ToolGroup'
                 id: circleButton
-                text: 'Circles'
+                text: 'Circle'
                 on_press: root.setTool("circle")
             ToggleButton:
                 group: 'ToolGroup'

@@ -375,7 +375,7 @@ class TestGame(Widget):
 		dist = sqrt(xd ** 2 + yd ** 2)
 		if currentTool == 'polysub':
 			if dist > 10:
-				polys = self.get_touching_polys(pos)
+				polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				for p in polys:
 					p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 					self.create_poly(pos,p.polyshape,p.entity_id)
@@ -584,7 +584,7 @@ class TestGame(Widget):
 		ctouch['active'] = True
 
 		if currentTool == 'polysub':
-			polys = self.get_touching_polys(pos)
+			polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			for p in polys:
 				p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				self.create_poly(pos,p.polyshape,p.entity_id)
@@ -592,9 +592,18 @@ class TestGame(Widget):
 
 
 		if currentTool == 'poly':
-			pg = PolyGen.PolyGen()
+			polys = []
+			lastpolyid = None
+			if self.mainTools.polyMenu.polyMergeButton.state != 'normal':
+				polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+			if len(polys)>0:
+				e = polys[0]
+				lastpolyid = e.entity_id
+				pg = e.polyshape
+			else:
+				pg = PolyGen.PolyGen(keepsimple=self.mainTools.polyMenu.polySimpleButton.state != 'normal')
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-			ctouch['lastpolyid'] = self.create_poly(pos,pg)
+			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid)
 			ctouch['polygen'] = pg
 			#create_dict = pg.draw_from_Polygon()
 			#ctouch['lastpolyid'] = self.gameworld.init_entity({'poly_renderer': create_dict},
