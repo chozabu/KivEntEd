@@ -358,7 +358,7 @@ class Serials():
 	def loadEntFromDict(self, e, idConvDict=None):
 		if "physics" in e:
 			stype = e['physics']['shape_type']
-			print stype
+			#print stype
 			p = e['physics']
 			body = p['body']
 			shape = p['shapes'][0]

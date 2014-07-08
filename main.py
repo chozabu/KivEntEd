@@ -27,18 +27,8 @@ from os.path import dirname, join, exists, sep, expanduser, isfile
 
 import ui_elements
 
-#http://stackoverflow.com/a/1620686/445831
-'''import sys
-import traceback
+import debugprint
 
-class TracePrints(object):
-  def __init__(self):
-    self.stdout = sys.stdout
-  def write(self, s):
-    self.stdout.write("Writing %r\n" % s)
-    traceback.print_stack(file=self.stdout)
-
-sys.stdout = TracePrints()'''
 
 def cross(a, b):
     return a[0]*b[1]-a[1]*b[0]
