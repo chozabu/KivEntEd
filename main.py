@@ -233,8 +233,8 @@ class TestGame(Widget):
 		#print "pglen", len(pg.poly)
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
-		#create_dict['do_texture'] = True
-		#create_dict['texture'] = 'assets/planetgradient3.png'
+		create_dict['do_texture'] = True
+		create_dict['texture'] = 'sprites/snow.png'
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
