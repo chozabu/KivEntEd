@@ -349,6 +349,7 @@ TestGame:
     gravySlider: gravySlider
     spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu
+    spritePreview: spritePreview
     nameBox: nameBox
     selectedMenuView: selectedMenuView.__self__
     fileMenu: fileMenu.__self__
@@ -674,6 +675,10 @@ TestGame:
             Spinner:
                 id: spriteSpinner
                 values: root.sprite_list
+                on_text: root.spritePreview.source = 'atlas://assets/myatlas/'+self.text
+            Image:
+                id: spritePreview
+                source: 'atlas://assets/myatlas/sheep'
             BoxLayout:
                 orientation: 'horizontal'
                 Button:

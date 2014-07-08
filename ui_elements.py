@@ -478,6 +478,7 @@ class MainTools(FloatLayout):
 			self.toolSettings[self.currentTool] = {}
 		lts = self.toolSettings[self.currentTool]
 		lts["texture"] = self.spriteSpinner.text
+		#self.spritePreview.source = 'atlas://assets/myatlas/'+ self.spriteSpinner.text
 		lts["mass"] = self.massSlider.value
 		self.currentTool = tool
 		if tool in self.toolSettings:
