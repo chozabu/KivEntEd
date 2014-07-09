@@ -75,8 +75,17 @@ class Serials():
 		if hasattr(e, "color"):
 			ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
 		if hasattr(e, "polyshape"):
-			polystr = base64.encodestring(pio.encodeBinary(e.polyshape.poly))
+			poly = e.polyshape.poly
+			polystr = base64.encodestring(pio.encodeBinary(poly))
 			ed["polyviewbinary"] = polystr
+
+			postr = []
+			index = 0
+			for line in poly:
+				postr.append({"ishole":poly.isHole(index), "line":line})
+				index+=1
+			print postr
+			ed["polyview"] = postr
 		if hasattr(e, "physics"):
 			b = e.physics.body
 			bd = {'velocity': (b.velocity.x, b.velocity.y),
