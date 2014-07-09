@@ -280,6 +280,9 @@ class TestGame(Widget):
 		self.entIDs.append(newpolyID)
 		newpoly = self.getEntFromID(newpolyID)
 		newpoly.polyshape = pg
+		print dir(newpoly.poly_renderer.texture)
+		print newpoly.poly_renderer.texture.wrap
+		newpoly.poly_renderer.texture.wrap = 'repeat'
 
 		print "poly has: " + str(len(triangles)) + " triangles"
 		return newpolyID
