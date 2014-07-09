@@ -113,7 +113,6 @@ class PolyGen():
 			tri_count += 1
 		vert_count = 0
 		for tvert in tri_verts:
-			print tvert[0]*0.001
 			nv_ap([tvert[0], tvert[1], 1, 1, 1, 1, tvert[0]*0.01, tvert[1]*0.01])
 			vert_count += 1
 		return new_triangles, new_vertices,  tri_count, vert_count

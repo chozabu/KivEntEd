@@ -27,7 +27,8 @@ from os.path import dirname, join, exists, sep, expanduser, isfile
 
 import ui_elements
 
-import debugprint
+import sys
+#import debugprint
 
 
 def cross(a, b):

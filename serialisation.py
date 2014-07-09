@@ -70,7 +70,6 @@ class Serials():
 	def entToDict(self, e):
 		ed = {"orig_id": e.entity_id}
 		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
-		print dir(e)
 		if hasattr(e, "load_order"):
 			ed["load_order"] = e.load_order
 		if hasattr(e, "color"):
