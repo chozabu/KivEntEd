@@ -546,21 +546,35 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if ent:
 			ent.color.r = fval
+			if self.selectedItem.__class__.__name__ == 'Poly':
+				c = ent.color
+				color = (c.r, c.g ,c.b ,c.a)
+				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def greenChanged(self, strval):
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.g = fval
+			if self.selectedItem.__class__.__name__ == 'Poly':
+				c = ent.color
+				color = (c.r, c.g ,c.b ,c.a)
+				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def blueChanged(self, strval):
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.b = fval
+			if self.selectedItem.__class__.__name__ == 'Poly':
+				c = ent.color
+				color = (c.r, c.g ,c.b ,c.a)
+				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def opacityChanged(self, strval):
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.a = fval
+			if self.selectedItem.__class__.__name__ == 'Poly':
+				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=ent.color)
 
 	def frictionChanged(self, instance):
 		fval = float(instance.text)

@@ -224,11 +224,12 @@ class TestGame(Widget):
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-	angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
+	angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,0.9)):
 		print "poly, oldpoly=", lastpolyid
 		if lastpolyid:
 			self.delObj(lastpolyid)
 		pg = polygon
+		pg.color = color
 		#pg.draw_circle_polygon(pos)
 		#print pg
 		#print "pglen", len(pg.poly)
@@ -281,8 +282,9 @@ class TestGame(Widget):
 		self.entIDs.append(newpolyID)
 		newpoly = self.getEntFromID(newpolyID)
 		newpoly.polyshape = pg
-		print dir(newpoly.poly_renderer.texture)
-		print newpoly.poly_renderer.texture.wrap
+
+		if selectNow: self.mainTools.setShape(self.gameworld.entities[newpolyID].physics.shapes[0])
+
 		newpoly.poly_renderer.texture.wrap = 'repeat'
 
 		print "poly has: " + str(len(triangles)) + " triangles"
