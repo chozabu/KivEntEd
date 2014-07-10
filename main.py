@@ -521,6 +521,15 @@ class TestGame(Widget):
 				pg = ent.polyshape
 				pg.poly.shift(bpos[0],bpos[1])
 				self.create_poly((0,0),pg,entID)
+		if currentTool == 'rotate' and tshape:
+			ispoly =  tshape.__class__.__name__ == 'Poly'
+			if ispoly:
+				bang =  tshape.body.angle
+				entID = tshape.body.data
+				ent = self.getEntFromID(entID)
+				pg = ent.polyshape
+				pg.poly.rotate(bang)
+				self.create_poly((0,0),pg,entID)
 
 
 		if (currentTool == "draw" or currentTool == "plank"):
