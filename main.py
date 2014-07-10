@@ -511,6 +511,18 @@ class TestGame(Widget):
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
+		#print currentTool, tshape
+		if currentTool == 'drag' and tshape:
+			ispoly =  tshape.__class__.__name__ == 'Poly'
+			if ispoly:
+				bpos =  tshape.body.position
+				entID = tshape.body.data
+				ent = self.getEntFromID(entID)
+				pg = ent.polyshape
+				pg.poly.shift(bpos[0],bpos[1])
+				self.create_poly((0,0),pg,entID)
+
+
 		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
