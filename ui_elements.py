@@ -574,7 +574,9 @@ class MainTools(FloatLayout):
 		if ent:
 			ent.color.a = fval
 			if self.selectedItem.__class__.__name__ == 'Poly':
-				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=ent.color)
+				c = ent.color
+				color = (c.r, c.g ,c.b ,c.a)
+				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 
 	def frictionChanged(self, instance):
 		fval = float(instance.text)

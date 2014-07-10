@@ -84,7 +84,6 @@ class Serials():
 			for line in poly:
 				postr.append({"ishole":poly.isHole(index), "line":line})
 				index+=1
-			print postr
 			ed["polyview"] = postr
 		if hasattr(e, "physics"):
 			b = e.physics.body
