@@ -15,26 +15,10 @@ import cymunk
 #import triangle
 
 class PolyGen():
-	def __init__(self, poly=None, octaves=3, persistance=.5, scale=.005, size='150', keepsimple = False):
-		self.octaves = octaves
-		self.persistance = persistance
-		self.scale = scale
-		self.size = size
+	def __init__(self, poly=None, color=(1,1,1,0.9), keepsimple = False):
+		self.color = color
 		self.poly = poly
 		self.keepsimple = keepsimple
-
-	def gettiled(self):
-		tiles = tileEqual(self.poly,10,10)
-		#tiles = tileBSP(self.poly)
-		tc = 0
-		hulls = []
-		ha = hulls.append
-		for t in tiles:
-			tc+=1
-			ha(convexHull(t)[0])
-			#print t
-
-		return hulls
 
 	def sub_circle_polygon(self, pos, sides=12, radius=30):
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
@@ -45,105 +29,49 @@ class PolyGen():
 		if (self.keepsimple and len(check)<2) or not self.keepsimple:
 			self.poly = check
 	def draw_circle_polygon(self, pos, sides=12, radius=30):
-		p1 = Circle(radius, pos, sides)# - Circle(0.5)
-		#pstr = pio.encodeBinary(p1)
-		#print pstr
-		#p1 = pio.decodeBinary(pstr)
+		p1 = Circle(radius, pos, sides)
 		if self.poly == None:
 			self.poly = p1
 			return
 		check = self.poly+p1
 		if (self.keepsimple and len(check)<2) or not self.keepsimple:
 			self.poly = check
-		#print self.poly
-		#print len(self.poly)
-		#print len(self.poly[0])
-		#p2 = Circle(radius/2, pos, sides)
-		#p2.shift(-radius*2,-radius)
-		#p=p1 + p2
-		#return self.draw_from_Polygon(p)
 
 	def draw_from_Polygon(self):
-		#print p1
 		if len(self.poly) == 0: return False
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
-		#print "vertices=", new_vertices
-		#print "triangles=", new_triangles
-
-		#new_triangles, new_vertices,  tri_count, vert_count = self.pts_to_triangle(pts)
-		#print "new_vertices=", new_vertices
-		#print "new_triangles=", new_triangles
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
 	def pts_to_tristrip(self, pts):
-		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
 		ts = self.poly.triStrip()
-		#print "\n\n"
-		#print "ts=",ts
-		#print len(ts)
+		color = self.color
 		tri_verts = []
-		tri_indices = []
-		lasti = None
-		llasti = None
+		new_triangles = []
+		tri_ap = new_triangles.append
 		vindex = 0
+		tri_count = 0
 		for strip in ts:
 			sindex = 0
 			striplen = len(strip)-2
 			for vert in strip:
 				#print sindex, striplen
 				if sindex < striplen:
-					tri_indices.append((vindex,vindex+1,vindex+2))
+					tri_ap((vindex,vindex+1,vindex+2))
+					tri_count += 1
 				tri_verts.append(vert)
-				llasti = lasti
-				lasti = vert
 				vindex+=1
 				sindex+=1
-			#break #uncomment to see only 1 tristrip
 
-		new_triangles = []
 		new_vertices = []
 		nv_ap = new_vertices.append
-		new_ap = new_triangles.append
-		tri_count = 0
-		for tri in tri_indices:
-			new_ap((tri[0], tri[1], tri[2]))
-			tri_count += 1
 		vert_count = 0
 		for tvert in tri_verts:
-			nv_ap([tvert[0], tvert[1], 1, 1, 1, 1, tvert[0]*0.01, tvert[1]*0.01])
+			nv_ap([tvert[0], tvert[1], color[0], color[1], color[2], color[3], tvert[0]*0.01, tvert[1]*0.01])
 			vert_count += 1
 		return new_triangles, new_vertices,  tri_count, vert_count
-	'''def pts_to_triangle(self, pts):
-		octaves, persistance, scale, size = self.octaves, self.persistance, self.scale, self.size
-		segments = []
-		for i in range(len(pts)-1):
-			segments.append([int(i),int(i+1)])
-		segments.append([int(i+1),int(0)])
-		print "made segments"
-		A = {'vertices':array(pts), 'segments':array(segments)}#,
-			#'segment_markers':array(segmark), 'vertex_markers':array(vertmark)}
-		command = 'p'#a' + size + 'YY'
-		B = triangle.triangulate(A, command)
-		print "triangulated"
-		#print B
-		tri_indices = B['triangles']
-		new_triangles = []
-		new_vertices = []
-		tri_verts = B['vertices']
-		nv_ap = new_vertices.append
-		new_ap = new_triangles.append
-		tri_count = 0
-		for tri in tri_indices:
-			new_ap((tri[0], tri[1], tri[2]))
-			tri_count += 1
-		vert_count = 0
-		for tvert in tri_verts:
-			nv_ap([tvert[0], tvert[1], octaves, persistance, scale])
-			vert_count += 1
-		return new_triangles, new_vertices,  tri_count, vert_count'''
 
 	'''def initentity(self):
 		#create_dict = self.draw_rect_polygon(
