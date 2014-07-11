@@ -102,6 +102,9 @@ class Serials():
 				shapes.append(self.shapeToDict(s))
 			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
 			ed["physics"] = pd
+		#if hasattr(e, "poly_renderer"):
+		#	prd = {"texture": e.poly_renderer.tex_name}
+		#	ed["poly_renderer"] = prd
 		if hasattr(e, "physics_renderer"):
 			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
 				   "texture": e.physics_renderer.texture}

@@ -224,7 +224,7 @@ class TestGame(Widget):
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-	angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,0.9)):
+	angular_velocity=.0, texture="snow", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,0.9)):
 		print "poly, oldpoly=", lastpolyid
 		if lastpolyid:
 			self.delObj(lastpolyid)
@@ -236,7 +236,7 @@ class TestGame(Widget):
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 		create_dict['do_texture'] = True
-		create_dict['texture'] = 'sprites/snow.png'
+		create_dict['texture'] = 'sprites/'+texture+'.png'
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
