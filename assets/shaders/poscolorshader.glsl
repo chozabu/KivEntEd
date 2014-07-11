@@ -48,6 +48,5 @@ uniform sampler2D texture0;
 
 void main (void){
     vec2 tc=vec2(fract(tex_coord0.s),fract(tex_coord0.t));
-    //tc.s=tc.t;
     gl_FragColor = frag_color * texture2D(texture0, tc);
 }
