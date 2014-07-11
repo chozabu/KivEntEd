@@ -14,7 +14,7 @@ import base64
 
 xmScale = 0.08
 xmTexDict = {
-	"Grass1":"Grass1",
+	"Grass1":"default",
 	"Dirt":"Dirt",
 	"snow":"snow",
 	"wood":"wood",
@@ -228,10 +228,14 @@ class Serials():
 		else:
 			self.laststatic = e.entity_id
 		pr = None
-		if hasattr(e, 'physics_renderer'): pr = e.physics_renderer
-		if hasattr(e, 'poly_renderer'): pr = e.poly_renderer
-		if pr:
+		texname = None
+		if hasattr(e, 'physics_renderer'):
+			pr = e.physics_renderer
 			texname = pr.texture
+		if hasattr(e, 'poly_renderer'):
+			pr = e.poly_renderer
+			texname = pr.texture.split('/')[-1][:-4]
+		if texname:
 			td = ET.SubElement(ed,'usetexture')
 			texname = xmTexDict.get(texname,texname)
 			td.set("id", texname)
