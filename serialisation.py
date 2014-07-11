@@ -227,9 +227,11 @@ class Serials():
 			#<physics mass="1.0"/>
 		else:
 			self.laststatic = e.entity_id
-
-		if hasattr(e, 'physics_renderer'):
-			texname = e.physics_renderer.texture
+		pr = None
+		if hasattr(e, 'physics_renderer'): pr = e.physics_renderer
+		if hasattr(e, 'poly_renderer'): pr = e.poly_renderer
+		if pr:
+			texname = pr.texture
 			td = ET.SubElement(ed,'usetexture')
 			texname = xmTexDict.get(texname,texname)
 			td.set("id", texname)
