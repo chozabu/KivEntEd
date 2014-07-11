@@ -285,7 +285,7 @@ class TestGame(Widget):
 
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[newpolyID].physics.shapes[0])
 
-		newpoly.poly_renderer.texture.wrap = 'repeat'
+		#newpoly.poly_renderer.texture.wrap = 'repeat'
 
 		print "poly has: " + str(len(triangles)) + " triangles"
 		return newpolyID
