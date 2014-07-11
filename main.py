@@ -663,7 +663,7 @@ class TestGame(Widget):
 			space.add(ctouch['mousejoint'])
 	def get_touching_polys(self, pos, radius=30):
 		space = self.space
-		cs = cy.Circle(cy.Body(), radius=30, offset=pos)
+		cs = cy.Circle(cy.Body(), radius=radius, offset=pos)
 		colshapes = space.shape_query(cs)
 		polys = []
 		if len(colshapes)>0:
