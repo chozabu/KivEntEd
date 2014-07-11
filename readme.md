@@ -16,4 +16,6 @@ polygon2 is required
 sudo pip install polygon  
 
 
-if you wish to compile for android probably should install libatlas3-base (on ubuntu) as the default has processor-specific instructions.
+if you wish to compile for android probably should install libatlas3-base (on ubuntu) as the default has processor-specific instructions.  
+
+Also - there should be a recent (probably working) build here: chozabu.net/KivEntEdLatest.apk
