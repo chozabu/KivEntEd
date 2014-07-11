@@ -542,8 +542,6 @@ class MainTools(FloatLayout):
 		if hasattr(ent, 'physics_renderer'):
 			ent.physics_renderer.texture = instance.text
 		else:
-			print dir(ent.poly_renderer)
-			print ent.poly_renderer.texture_name
 			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,texture=instance.text)
 
 	def redChanged(self, strval):
