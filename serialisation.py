@@ -102,9 +102,9 @@ class Serials():
 				shapes.append(self.shapeToDict(s))
 			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
 			ed["physics"] = pd
-		#if hasattr(e, "poly_renderer"):
-		#	prd = {"texture": e.poly_renderer.tex_name}
-		#	ed["poly_renderer"] = prd
+		if hasattr(e, "poly_renderer"):
+			prd = {"texture": e.poly_renderer.texture}
+			ed["poly_renderer"] = prd
 		if hasattr(e, "physics_renderer"):
 			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
 				   "texture": e.physics_renderer.texture}
@@ -374,10 +374,15 @@ class Serials():
 			shape = p['shapes'][0]
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
+			texture = "Grass1"
 			if 'physics_renderer' in e:
 				pr = e['physics_renderer']
 				texture = str(pr['texture'])
 				if texture == "Grass2": texture = "Grass1"
+			if 'poly_renderer' in e:
+				por = e['poly_renderer']
+				texture = str(por['texture'])
+				print texture
 			color = (1,1,1,1)
 			if 'color' in e:
 				cl = e['color']
@@ -408,7 +413,7 @@ class Serials():
 				pg = base64.decodestring(e['polyviewbinary'])
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
-				entID = self.gameref.create_poly(bp,pg)
+				entID = self.gameref.create_poly(bp,pg, texture=texture)
 				#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
 				#										   mass=mass, friction=shape['friction'],
 				#										   elasticity=shape['elasticity'], angle=body['angle'],

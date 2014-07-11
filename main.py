@@ -236,7 +236,8 @@ class TestGame(Widget):
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 		create_dict['do_texture'] = True
-		create_dict['texture'] = 'sprites/'+texture+'.png'
+		if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
+		create_dict['texture'] = texture
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
