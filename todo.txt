@@ -1,12 +1,17 @@
-kivent polygon support
--textures
--colours
+kivent dynamic polygon support
 -multi-shape physics UI
--dragging polys
--physics polys
+--control/view settings of individual shapes in body.
 -merging/splitting polys
 -updating poly points
--generate convex hulls from concave
+--individual point edit/add/delete
+-generate optimal convex hulls from concave
+--current triangle winding check not good.
+
+-multiple selection
+--select box, individual add/subtract
+--edit friction, mass, width, etc
+
+tag items on server
 
 -upload/download ents/atlas/scripts to net
 --save/load external entitys
@@ -27,9 +32,6 @@ more scripting?
 -tools as scripts?
 -script UI?
 
--multiple selection
---select box, individual add/subtract
---edit friction, mass, width, etc
 
 -import wheelz levels?
 -improve wheelz export
