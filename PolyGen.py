@@ -11,6 +11,7 @@ import Polygon.IO as pio
 from Polygon.Utils import tileEqual, tileBSP, convexHull
 from numpy import array
 import cymunk
+import math
 
 #import triangle
 
@@ -20,7 +21,8 @@ class PolyGen():
 		self.poly = poly
 		self.keepsimple = keepsimple
 
-	def sub_circle_polygon(self, pos, sides=12, radius=30):
+	def sub_circle_polygon(self, pos, sides=None, radius=30):
+		if sides is None:sides = int(8+math.sqrt(radius))
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
 		if self.poly == None:
 			print "poly never created!"
@@ -28,7 +30,8 @@ class PolyGen():
 		check = self.poly-p1
 		if (self.keepsimple and len(check)<2) or not self.keepsimple:
 			self.poly = check
-	def draw_circle_polygon(self, pos, sides=12, radius=30):
+	def draw_circle_polygon(self, pos, sides=None, radius=30):
+		if sides is None:sides = int(8+math.sqrt(radius))
 		p1 = Circle(radius, pos, sides)
 		if self.poly == None:
 			self.poly = p1

@@ -380,7 +380,7 @@ class TestGame(Widget):
 				for p in polys:
 					pg = p.polyshape
 					pg.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-					pg.sub_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*2, angle)
+					pg.sub_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
 					self.create_poly(pos,p.polyshape,p.entity_id)
 				ctouch['pos'] = pos
 
@@ -389,7 +389,7 @@ class TestGame(Widget):
 			if dist > 10:
 
 				pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-				pg.draw_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*2, angle)
+				pg.draw_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
 				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
 				lpid=None
 				if 'lastpolyid' in ctouch:
