@@ -36,6 +36,28 @@ class PolyGen():
 		check = self.poly+p1
 		if (self.keepsimple and len(check)<2) or not self.keepsimple:
 			self.poly = check
+	def draw_square_polygon(self, pos, width,height, angle=0):
+		p1 = Rectangle(width,height)
+		p1.shift(-width/2,-height/2)
+		p1.rotate(angle)
+		p1.shift(pos[0],pos[1])
+		if self.poly == None:
+			self.poly = p1
+			return
+		check = self.poly+p1
+		if (self.keepsimple and len(check)<2) or not self.keepsimple:
+			self.poly = check
+	def sub_square_polygon(self, pos, width,height, angle=0):
+		p1 = Rectangle(width,height)
+		p1.shift(-width/2,-height/2)
+		p1.rotate(angle)
+		p1.shift(pos[0],pos[1])
+		if self.poly == None:
+			self.poly = p1
+			return
+		check = self.poly-p1
+		if (self.keepsimple and len(check)<2) or not self.keepsimple:
+			self.poly = check
 
 	def draw_from_Polygon(self):
 		if len(self.poly) == 0: return False

@@ -371,11 +371,16 @@ class TestGame(Widget):
 		xd = spos[0] - pos[0]
 		yd = spos[1] - pos[1]
 		dist = sqrt(xd ** 2 + yd ** 2)
+		midx = (spos[0] + pos[0]) / 2.0
+		midy = (spos[1] + pos[1]) / 2.0
+		angle = atan2(yd, xd)
 		if currentTool == 'polysub':
 			if dist > 10:
 				polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				for p in polys:
-					p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+					pg = p.polyshape
+					pg.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+					pg.sub_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*2, angle)
 					self.create_poly(pos,p.polyshape,p.entity_id)
 				ctouch['pos'] = pos
 
@@ -384,6 +389,8 @@ class TestGame(Widget):
 			if dist > 10:
 
 				pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+				pg.draw_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*2, angle)
+				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
 				lpid=None
 				if 'lastpolyid' in ctouch:
 					lpid = ctouch['lastpolyid']
@@ -396,12 +403,9 @@ class TestGame(Widget):
 			super(TestGame, self).on_touch_move(touch)
 		if 'previewShape' in ctouch:
 			psid = ctouch['previewShape']
-			xd = spos[0] - pos[0]
-			yd = spos[1] - pos[1]
-			midx = (spos[0] + pos[0]) / 2.0
-			midy = (spos[1] + pos[1]) / 2.0
-			dist = sqrt(xd ** 2 + yd ** 2)
-			angle = atan2(yd, xd)
+			#xd = spos[0] - pos[0]
+			#yd = spos[1] - pos[1]
+			#dist = sqrt(xd ** 2 + yd ** 2)
 
 			if currentTool == "box":
 				self.setEntIDPosSizeRot(psid, midx,midy,xd,yd)
