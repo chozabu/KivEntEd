@@ -4,6 +4,8 @@ kivent dynamic polygon support
 -merging/splitting polys
 -updating poly points
 --individual point edit/add/delete
+--smoothe selection
+--simplify, remove points closer to each other than a threshold
 -generate optimal convex hulls from concave
 --current triangle winding check not good.
 
@@ -23,6 +25,7 @@ tag items on server
 --change joint params
 
 improve UI
+-modularise
 -images
 -scroll tables, rather than box views?
 
