@@ -715,6 +715,9 @@ class MainTools(FloatLayout):
 				self.rightMenu.add_widget(self.selectedMenuView)
 			if hasattr(ent, 'physics_renderer'):
 				self.selectedMenu.texLabel.text = ent.physics_renderer.texture
+			if hasattr(ent, 'poly_renderer'):
+				texname = ent.poly_renderer.texture.split('/')[-1][:-4]
+				self.selectedMenu.texLabel.text = texname
 			if hasattr(ent, 'color'):
 				self.selectedMenu.redLabel.text = str(ent.color.r)
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
