@@ -416,15 +416,16 @@ class Serials():
 														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 														   texture=texture, selectNow=False, collision_type=collision_type, color=color)
 			elif stype == "poly" and 'polyviewbinary' in e:
-				print dir(e)
-				print e.keys()
+				#print dir(e)
+				#print e.keys()
 				pg = base64.decodestring(e['polyviewbinary'])
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
-				entID = self.gameref.create_poly(bp,pg, texture=texture)
+				entID = self.gameref.create_poly(bp,pg, texture=texture, friction=shape['friction'],
+														   elasticity=shape['elasticity'], selectNow=False,
+														   collision_type=collision_type, color=color)
 				#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
-				#										   mass=mass, friction=shape['friction'],
-				#										   elasticity=shape['elasticity'], angle=body['angle'],
+				#										   mass=mass, angle=body['angle'],
 				#										   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
 				#										   texture=texture, selectNow=False, collision_type=collision_type, color=color)
 			if entID != None:

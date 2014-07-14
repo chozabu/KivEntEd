@@ -223,10 +223,11 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
-	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, sensor = False, collision_type = 0, color=None):
 		print "poly, oldpoly=", lastpolyid
 
+		print "f1=", friction
 		if lastpolyid:
 			oldpoly = self.getEntFromID(lastpolyid)
 			if friction == None: friction = oldpoly.physics.shapes[0].friction
@@ -241,6 +242,7 @@ class TestGame(Widget):
 		if elasticity == None: elasticity = .5
 		if color == None:color = (1,1,1,0.9)
 		if texture == None: texture = "snow"
+		print "f2=", friction
 
 		pg = polygon
 
