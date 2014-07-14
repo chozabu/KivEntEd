@@ -243,6 +243,11 @@ class TestGame(Widget):
 		if texture == None: texture = "snow"
 
 		pg = polygon
+
+		#TODO make individual points editable
+		#for p in pg.poly[0]:
+		#	self.create_decoration(pos=(p[0], p[1]), width=20, height=20,
+		#												texture='plank')
 		pg.color = color
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
