@@ -220,9 +220,11 @@ class Serials():
 		pd.set("y", str(e.position.y*xmScale))
 		pd.set("background", "false")
 
+		phd = ET.SubElement(ed,'physics')
+		phd.set("grip", str(e.physics.shapes[0].friction*20.0))
+		phd.set("friction", str(e.physics.shapes[0].friction))
 		if not e.physics.body.is_static:
 			pd.set("physics", "true")
-			phd = ET.SubElement(ed,'physics')
 			phd.set("mass", str(e.physics.body.mass))
 			#<physics mass="1.0"/>
 		else:
