@@ -541,6 +541,10 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if hasattr(ent, 'physics_renderer'):
 			ent.physics_renderer.texture = instance.text
+		elif hasattr(ent, 'poly_renderer'):
+			tex = 'sprites/'+instance.text+'.png'
+			ent.poly_renderer.texture = tex
+			self.gameref.gameworld.systems['poly_renderer'].redraw_entity(ent.entity_id)
 		else:
 			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,texture=instance.text)
 
