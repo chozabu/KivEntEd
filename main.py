@@ -30,6 +30,19 @@ import ui_elements
 import sys
 #import debugprint
 
+#Tartley - Jonathan Hartley, http://tartley.com
+def poly_area(verts):
+    """
+    Return area of a simple (ie. non-self-intersecting) polygon.
+    Will be negative for counterclockwise winding.
+    """
+    accum = 0.0
+    for i in range(len(verts)):
+        j = (i + 1) % len(verts)
+        accum += verts[j][0] * verts[i][1] - verts[i][0] * verts[j][1]
+    return accum / 2
+
+
 
 def cross(a, b):
     return a[0]*b[1]-a[1]*b[0]
@@ -260,29 +273,57 @@ class TestGame(Widget):
 		submass = mass/tricount
 		verts = create_dict['vertices']
 		col_shapes = []
+		'''crtest = 0
+		cptest = 0
+		bothtest = 0
+		failtest = 0'''
+		tindex = -1
+		remlist = []
 		for t in triangles:
+			tindex +=1
 			pts = []
 			for i in t:
 				v = verts[i]
 				pts.append((v[0],v[1]))
 			#print 'pts=',pts
-			a=pts[0]
-			b=pts[1]
-			c=pts[2]
-			cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
-			#print "cross=",cro
-			#print "clockwise=",cy.is_clockwise(pts)
-			if cro>0.00:
-				pass
-				#print "skipping"#should test better and reverse
-				#pts = [pts[0],pts[2],pts[1]]
+			iscw2 = poly_area(pts)
+			#a=pts[0]
+			#b=pts[1]
+			#c=pts[2]
+			#cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
+			iscw= cy.is_clockwise(pts)
+			'''if cro<0 and iscw:
+				bothtest+=1
+			elif cro < 0:
+				crtest+=1
+			elif iscw2<0:
+				cptest+=1
 			else:
+				failtest+=1'''
+			#print ""
+			#print cro<0 or iscw
+			#print "cross=",cro
+			#print "clockwise=", iscw
+			#print iscw2
+			if not iscw:
+				#pass
+				#print "skipping"#should test better and reverse
+				pts = [pts[0],pts[2],pts[1]]
+			if iscw2 > 1 or iscw2 < -1:
 				poly_dict = {
 					'vertices':pts, 'offset': (0, 0), 'mass':submass}
 				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
 					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
 				col_shapes.append(col_shape)
-
+			else:
+				remlist.append(tindex)
+		#print "bothtest, cptest, crtest, failtest"
+		#print bothtest, cptest, crtest, failtest
+		print remlist
+		remlist.reverse()
+		for r in remlist:
+			triangles.remove(triangles[r])
+		create_dict['tri_count'] = len(triangles)
 		if len(col_shapes) == 0:return None
 		physics_component = {'main_shape': 'poly',
 							 'velocity': (x_vel, y_vel),
