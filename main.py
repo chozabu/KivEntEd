@@ -226,6 +226,9 @@ class TestGame(Widget):
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture="snow", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,0.9)):
 		print "poly, oldpoly=", lastpolyid
+
+		if lastpolyid:
+			self.delObj(lastpolyid)
 		pg = polygon
 		pg.color = color
 		create_dict = pg.draw_from_Polygon()
@@ -262,7 +265,7 @@ class TestGame(Widget):
 					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
 				col_shapes.append(col_shape)
 
-
+		if len(col_shapes) == 0:return None
 		physics_component = {'main_shape': 'poly',
 							 'velocity': (x_vel, y_vel),
 							 'position': (0,0), 'angle': angle,
@@ -276,15 +279,12 @@ class TestGame(Widget):
 		component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
 		if lastpolyid and 0:
 			poly = self.getEntFromID(lastpolyid)
-			#print dir()
-
 
 			poly.poly_renderer.vert_mesh.load_from_python(verts, triangles)#, create_dict['vert_count'], create_dict['tri_count'])
 			self.gameworld.systems['poly_renderer'].redraw_entity(lastpolyid)
 			return lastpolyid
 		else:
-			if lastpolyid:
-				self.delObj(lastpolyid)
+			print "col_shapes=",col_shapes
 			newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
 			self.entIDs.append(newpolyID)
 			newpoly = self.getEntFromID(newpolyID)
