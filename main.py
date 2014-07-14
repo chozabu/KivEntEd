@@ -226,13 +226,8 @@ class TestGame(Widget):
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture="snow", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,0.9)):
 		print "poly, oldpoly=", lastpolyid
-		if lastpolyid:
-			self.delObj(lastpolyid)
 		pg = polygon
 		pg.color = color
-		#pg.draw_circle_polygon(pos)
-		#print pg
-		#print "pglen", len(pg.poly)
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 		create_dict['do_texture'] = True
@@ -279,17 +274,28 @@ class TestGame(Widget):
 		create_component_dict = {'physics': physics_component, 'color':color,
 						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
 		component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
-		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
-		self.entIDs.append(newpolyID)
-		newpoly = self.getEntFromID(newpolyID)
-		newpoly.polyshape = pg
+		if lastpolyid and 0:
+			poly = self.getEntFromID(lastpolyid)
+			#print dir()
 
-		if selectNow: self.mainTools.setShape(self.gameworld.entities[newpolyID].physics.shapes[0])
 
-		#newpoly.poly_renderer.texture.wrap = 'repeat'
+			poly.poly_renderer.vert_mesh.load_from_python(verts, triangles)#, create_dict['vert_count'], create_dict['tri_count'])
+			self.gameworld.systems['poly_renderer'].redraw_entity(lastpolyid)
+			return lastpolyid
+		else:
+			if lastpolyid:
+				self.delObj(lastpolyid)
+			newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
+			self.entIDs.append(newpolyID)
+			newpoly = self.getEntFromID(newpolyID)
+			newpoly.polyshape = pg
 
-		print "poly has: " + str(len(triangles)) + " triangles"
-		return newpolyID
+			if selectNow: self.mainTools.setShape(self.gameworld.entities[newpolyID].physics.shapes[0])
+
+			#newpoly.poly_renderer.texture.wrap = 'repeat'
+
+			print "poly has: " + str(len(triangles)) + " triangles"
+			return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
@@ -632,9 +638,6 @@ class TestGame(Widget):
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid)
 			ctouch['polygen'] = pg
-			#create_dict = pg.draw_from_Polygon()
-			#ctouch['lastpolyid'] = self.gameworld.init_entity({'poly_renderer': create_dict},
-			#['poly_renderer'])
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
