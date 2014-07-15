@@ -542,6 +542,7 @@ class MainTools(FloatLayout):
 		if hasattr(ent, 'poly_renderer'):
 			#ent.polyshape.remove_short_lines()
 			ent.polyshape.remove_some_pts(.8)
+
 			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
 
 	def textureChanged(self, instance):

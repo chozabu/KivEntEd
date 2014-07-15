@@ -66,20 +66,21 @@ class PolyGen():
 
 	def draw_from_Polygon(self):
 		if len(self.poly) == 0: return False
-		#self.remove_short_lines()
+		self.remove_short_lines()
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
-	def remove_short_lines(self, minlen = 2):
+	def remove_short_lines(self, minlen = 1):
 		minlen*=minlen
 		newp = Polygon()
 		c=-1
 		for cont in self.poly:
+			c+=1
 			#cont=self.poly[0]
-			remlist = []
+			keeplist = []
 			lastp = None
 			pindex = -1
 			for p in cont:
@@ -90,41 +91,27 @@ class PolyGen():
 					yd = p[0]-lastp[0]
 					td = xd*xd+yd*yd
 					if td < minlen:
-						remlist.append(p)
-				lastp = p
-			remlist.reverse()
-			print "remlist=",remlist
-			print len(self.poly[0])
-			#for r in remlist:
-			#	#r[0]+=30
-			#	print r
-			#	#self.poly[0][0]+=(5,5)#remove(r)
-			#self.poly[0] = self.poly[0][0:-5]
-			#nc = reducePoints(self.poly[0],20)
-			#del self.poly[0]
-			#self.poly.addContour(nc)
-			#print po.getTolerance()
-			#self.poly.simplify()
-			c+=1
-			cr = reducePoints(cont,len(cont)-len(remlist))
-			newp.addContour(cr,self.poly.isHole(c))
+						pass
+						#lastp = None
+					else:
+						keeplist.append(p)
+						lastp = p
+				else:
+					keeplist.append(p)
+					lastp = p
+			ishole = self.poly.isHole(c)
+			newp.addContour(keeplist,ishole)
 		self.poly = newp
-		print len(self.poly[0])
 	def remove_some_pts(self, prop=.9):
 		newp = Polygon()
 		c=-1
 		for cont in self.poly:
-			print "--start cont--"
 			c+=1
-			print cont
 			cr = reducePoints(cont,int(len(cont)*prop))
-			print c,cr
 			ishole = self.poly.isHole(c)
-			print ishole
 			if len(cr)>2:
 				newp.addContour(cr, ishole)
 		self.poly = newp
-		print len(self.poly[0])
 	def pts_to_tristrip(self, pts):
 		ts = self.poly.triStrip()
 		color = self.color
