@@ -270,6 +270,7 @@ class TestGame(Widget):
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
+		if tricount < 1: return
 		submass = mass/tricount
 		verts = create_dict['vertices']
 		col_shapes = []
@@ -319,7 +320,7 @@ class TestGame(Widget):
 				remlist.append(tindex)
 		#print "bothtest, cptest, crtest, failtest"
 		#print bothtest, cptest, crtest, failtest
-		print remlist
+		#print remlist #TODO really, this should be empty!
 		remlist.reverse()
 		for r in remlist:
 			triangles.remove(triangles[r])

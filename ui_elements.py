@@ -537,6 +537,13 @@ class MainTools(FloatLayout):
 			shape.body.angle = fval
 			self.gameref.reindexEnt(self.selectedEntity)
 
+	def simplifyPolyPressed(self, instance):
+		ent = self.selectedEntity
+		if hasattr(ent, 'poly_renderer'):
+			#ent.polyshape.remove_short_lines()
+			ent.polyshape.remove_some_pts(.8)
+			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
+
 	def textureChanged(self, instance):
 		ent = self.selectedEntity
 		if hasattr(ent, 'physics_renderer'):
@@ -699,13 +706,17 @@ class MainTools(FloatLayout):
 					cs.radiusLabel.text = "%0.2f" % shape.radius
 					cs.radiusLabel.bind(text=self.on_rad_change)
 					self.selectedMenu.shapeInfo.add_widget(cs)
-				if shape.__class__.__name__ == "BoxShape":
+				elif shape.__class__.__name__ == "BoxShape":#simplifyPolyPressed
 					bs = BoxSettings()
 					bs.widthLabel.text = "%0.2f" % shape.width
 					bs.heightLabel.text = "%0.2f" % shape.height
 					bs.widthLabel.bind(text=self.on_width_change)
 					bs.heightLabel.bind(text=self.on_height_change)
 					self.selectedMenu.shapeInfo.add_widget(bs)
+				elif shape.__class__.__name__ == "Poly":
+					print "\n\n hi"
+					ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
+					self.selectedMenu.shapeInfo.add_widget(ps)
 
 		if self.gameref.selectedShapeID != None:
 			self.gameref.delObj(self.gameref.selectedShapeID)

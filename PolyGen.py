@@ -1,14 +1,14 @@
 __author__ = 'chozabu'
 
 
-import Polygon
+import Polygon as po
 #Polygon.
 from Polygon import *
 from Polygon.Shapes import Star, Circle, Rectangle, SierpinskiCarpet
 from random import random
 from Polygon.IO import *
 import Polygon.IO as pio
-from Polygon.Utils import tileEqual, tileBSP, convexHull
+from Polygon.Utils import tileEqual, tileBSP, convexHull, reducePoints
 from numpy import array
 import cymunk
 import math
@@ -20,6 +20,7 @@ class PolyGen():
 		self.color = color
 		self.poly = poly
 		self.keepsimple = keepsimple
+		po.setTolerance(0.1)
 
 	def sub_circle_polygon(self, pos, sides=None, radius=30):
 		if sides is None:sides = int(8+math.sqrt(radius))
@@ -33,6 +34,7 @@ class PolyGen():
 	def draw_circle_polygon(self, pos, sides=None, radius=30):
 		if sides is None:sides = int(8+math.sqrt(radius))
 		p1 = Circle(radius, pos, sides)
+
 		if self.poly == None:
 			self.poly = p1
 			return
@@ -64,12 +66,65 @@ class PolyGen():
 
 	def draw_from_Polygon(self):
 		if len(self.poly) == 0: return False
+		#self.remove_short_lines()
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
+	def remove_short_lines(self, minlen = 2):
+		minlen*=minlen
+		newp = Polygon()
+		c=-1
+		for cont in self.poly:
+			#cont=self.poly[0]
+			remlist = []
+			lastp = None
+			pindex = -1
+			for p in cont:
+				pindex+=1
+				if lastp:
+					#check here
+					xd = p[0]-lastp[0]
+					yd = p[0]-lastp[0]
+					td = xd*xd+yd*yd
+					if td < minlen:
+						remlist.append(p)
+				lastp = p
+			remlist.reverse()
+			print "remlist=",remlist
+			print len(self.poly[0])
+			#for r in remlist:
+			#	#r[0]+=30
+			#	print r
+			#	#self.poly[0][0]+=(5,5)#remove(r)
+			#self.poly[0] = self.poly[0][0:-5]
+			#nc = reducePoints(self.poly[0],20)
+			#del self.poly[0]
+			#self.poly.addContour(nc)
+			#print po.getTolerance()
+			#self.poly.simplify()
+			c+=1
+			cr = reducePoints(cont,len(cont)-len(remlist))
+			newp.addContour(cr,self.poly.isHole(c))
+		self.poly = newp
+		print len(self.poly[0])
+	def remove_some_pts(self, prop=.9):
+		newp = Polygon()
+		c=-1
+		for cont in self.poly:
+			print "--start cont--"
+			c+=1
+			print cont
+			cr = reducePoints(cont,int(len(cont)*prop))
+			print c,cr
+			ishole = self.poly.isHole(c)
+			print ishole
+			if len(cr)>2:
+				newp.addContour(cr, ishole)
+		self.poly = newp
+		print len(self.poly[0])
 	def pts_to_tristrip(self, pts):
 		ts = self.poly.triStrip()
 		color = self.color
