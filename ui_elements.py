@@ -512,6 +512,7 @@ class MainTools(FloatLayout):
 		space.gravity = value, space.gravity.y
 
 	def xvelChanged(self, instance):
+		self.inputPreview.text = instance.text
 		try:
 			fval = float(instance.text)
 		except ValueError:
@@ -520,6 +521,7 @@ class MainTools(FloatLayout):
 		if shape:
 			shape.body.velocity = (fval, shape.body.velocity.y)
 	def yvelChanged(self, instance):
+		self.inputPreview.text = instance.text
 		try:
 			fval = float(instance.text)
 		except ValueError:
@@ -528,6 +530,7 @@ class MainTools(FloatLayout):
 		if shape:
 			shape.body.velocity = (shape.body.velocity.x, fval)
 	def xposChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		shape = self.selectedItem
 		if shape:
@@ -535,6 +538,7 @@ class MainTools(FloatLayout):
 			self.gameref.reindexEnt(self.selectedEntity)
 
 	def yposChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		shape = self.selectedItem
 		if shape:
@@ -542,6 +546,7 @@ class MainTools(FloatLayout):
 			self.gameref.reindexEnt(self.selectedEntity)
 
 	def angleChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		shape = self.selectedItem
 		if shape:
@@ -568,6 +573,7 @@ class MainTools(FloatLayout):
 			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,texture=instance.text)
 
 	def redChanged(self, strval):
+		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
@@ -577,6 +583,7 @@ class MainTools(FloatLayout):
 				color = (c.r, c.g ,c.b ,c.a)
 				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def greenChanged(self, strval):
+		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
@@ -586,6 +593,7 @@ class MainTools(FloatLayout):
 				color = (c.r, c.g ,c.b ,c.a)
 				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def blueChanged(self, strval):
+		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
@@ -595,6 +603,7 @@ class MainTools(FloatLayout):
 				color = (c.r, c.g ,c.b ,c.a)
 				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def opacityChanged(self, strval):
+		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
@@ -605,6 +614,7 @@ class MainTools(FloatLayout):
 				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 
 	def frictionChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		if self.selectedEntity:
 			for shape in self.selectedEntity.physics.shapes:
@@ -612,10 +622,10 @@ class MainTools(FloatLayout):
 				self.gameref.reindexEnt(self.selectedEntity)
 		elif self.selectedItem:
 			self.selectedItem.friction = fval
-
 		self.gameref.reindexEnt(self.selectedEntity)
 
 	def massChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		if fval <= 0:
 			fval = 0.1
@@ -632,6 +642,7 @@ class MainTools(FloatLayout):
 																 self.selectedItem.radius,0)  #seems ineffective?
 
 	def elasChanged(self, instance):
+		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		if self.selectedEntity:
 			for shape in self.selectedEntity.physics.shapes:
@@ -643,6 +654,7 @@ class MainTools(FloatLayout):
 		self.gameref.reindexEnt(self.selectedEntity)
 
 	def on_rad_change(self, instance, value):
+		self.inputPreview.text = instance.text
 		newrad = float(value)
 		print "rad change", newrad
 		if self.selectedItem and self.selectedEntity:
@@ -654,6 +666,7 @@ class MainTools(FloatLayout):
 																 newrad,0)  #seems ineffective?
 
 	def on_width_change(self, instance, value):
+		self.inputPreview.text = instance.text
 		space = self.gameref.space
 		newrad = float(value)
 		#if self.selectedItem and self.selectedEntity:
@@ -678,6 +691,7 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics_renderer.width = newrad
 
 	def on_height_change(self, instance, value):
+		self.inputPreview.text = instance.text
 		space = self.gameref.space
 		newrad = float(value)
 		shape = self.selectedItem
@@ -698,6 +712,7 @@ class MainTools(FloatLayout):
 		self.selectedItem = shape
 		self.selectedMenu.selectedLabel.text = "None"
 		self.selectedEntity = None
+		self.inputPreview.text = ""
 		ent=None
 		if shape:
 			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]

@@ -358,6 +358,19 @@ TestGame:
     settingsMenu: settingsMenu.__self__
     examplesMenu: examplesMenu.__self__
     levelsMenu: levelsMenu.__self__
+    inputPreview: inputPreview
+
+    FloatLayout:
+        id: topMenu
+        size_hint: (.6, .2)
+        orientation: 'horizontal'
+        pos_hint: {'x':.2, 'y':.8}
+        Label:
+            id: inputPreview
+            pos_hint: {'x':.2, 'y':.4}
+            size_hint: (.6, .2)
+            text: ""
+
     
     BoxLayout:
         id: rightMenu
