@@ -2,6 +2,7 @@ import cymunk as cy
 
 import os
 import glob
+import re
 
 import json
 
@@ -17,6 +18,16 @@ from kivy.properties import ListProperty
 serverURL = 'http://www.kiventedserve.chozabu.net'
 #if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
+class FloatInput(TextInput):
+
+    pat = re.compile('[^0-9]')
+    def insert_text(self, substring, from_undo=False):
+        pat = self.pat
+        if '.' in self.text:
+            s = re.sub(pat, '', substring)
+        else:
+            s = '.'.join([re.sub(pat, '', s) for s in substring.split('.', 1)])
+        return super(FloatInput, self).insert_text(s, from_undo=from_undo)
 
 class PlainButton(Button):
 	def on_touch_down(self, touch):

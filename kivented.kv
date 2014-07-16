@@ -80,6 +80,8 @@ TestGame:
     MainScreen:
         id: main_screen
 
+<FloatInput@TextInput>
+    multiline: False
 <tbox@TextInput>
     multiline: False
 <CircleSettings@BoxLayout>
@@ -89,7 +91,7 @@ TestGame:
     BoxLayout:
         Label:
             text: "radius:"
-        TextInput:
+        FloatInput:
             id: radiusLabel
             multiline: False
             text: "radius"
@@ -104,14 +106,14 @@ TestGame:
     BoxLayout:
         Label:
             text: "width:"
-        TextInput:
+        FloatInput:
             id: widthLabel
             multiline: False
             text: "width"
     BoxLayout:
         Label:
             text: "height:"
-        TextInput:
+        FloatInput:
             id: heightLabel
             multiline: False
             text: "height"
@@ -396,33 +398,33 @@ TestGame:
                     #height:100
                     Label:
                         text: "x:"
-                    tbox:
+                    FloatInput:
                         id: xposLabel
                         text: "position"
                         on_text: if root.fireText: root.xposChanged(self)
                 BoxLayout:
                     Label:
                         text: "y:"
-                    tbox:
+                    FloatInput:
                         id: yposLabel
                         text: "position"
                         on_text: if root.fireText: root.yposChanged(self)
                 BoxLayout:
                     Label:
                         text: "xvel:"
-                    tbox:
+                    FloatInput:
                         id: xvelLabel
                         on_text: if root.fireText: root.xvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "yvel:"
-                    tbox:
+                    FloatInput:
                         id: yvelLabel
                         on_text: if root.fireText: root.yvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "angle:"
-                    tbox:
+                    FloatInput:
                         id: angleLabel
                         text: "angle"
                         on_text: if root.fireText: root.angleChanged(self)
@@ -438,7 +440,7 @@ TestGame:
                         orientation: 'vertical'
                         Label:
                             text: 'R'
-                        tbox:
+                        FloatInput:
                             id: redLabel
                             text: '1'
                             on_text: if root.fireText: root.redChanged(self.text)
@@ -446,7 +448,7 @@ TestGame:
                         orientation: 'vertical'
                         Label:
                             text: 'G'
-                        tbox:
+                        FloatInput:
                             id: greenLabel
                             text: '1'
                             on_text: if root.fireText: root.greenChanged(self.text)
@@ -454,7 +456,7 @@ TestGame:
                         orientation: 'vertical'
                         Label:
                             text: 'B'
-                        tbox:
+                        FloatInput:
                             id: blueLabel
                             text: '1'
                             on_text: if root.fireText: root.blueChanged(self.text)
@@ -462,28 +464,28 @@ TestGame:
                         orientation: 'vertical'
                         Label:
                             text: 'O'
-                        tbox:
+                        FloatInput:
                             id: opacityLabel
                             text: '1'
                             on_text: if root.fireText: root.opacityChanged(self.text)
                 BoxLayout:
                     Label:
                         text: "Mass:"
-                    tbox:
+                    FloatInput:
                         id: massLabel
                         text: "Mass"
                         on_text: if root.fireText: root.massChanged(self)
                 BoxLayout:
                     Label:
                         text: "Friction:"
-                    tbox:
+                    FloatInput:
                         id: frictionLabel
                         text: "Friction"
                         on_text: if root.fireText: root.frictionChanged(self)
                 BoxLayout:
                     Label:
                         text: "Elasticity:"
-                    tbox:
+                    FloatInput:
                         id: elasLabel
                         text: "Elasticity"
                         on_text: if root.fireText: root.elasChanged(self)
