@@ -664,6 +664,7 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics_renderer.height = newrad * 2
 			self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
 																 newrad,0)  #seems ineffective?
+			self.gameref.reindexEnt(self.selectedEntity)
 
 	def on_width_change(self, instance, value):
 		self.inputPreview.text = instance.text
