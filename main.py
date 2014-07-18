@@ -821,8 +821,16 @@ class TestGame(Widget):
 			angle = atan2(yd, xd)
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
+		if self.mainTools.killMomem:
+			for aid in self.entIDs:
+				entity = self.gameworld.entities[aid]
+				if entity.physics.body.is_static == 0:
+					v = entity.physics.body.velocity
+					entity.physics.body.velocity = (v[0]*0.1,v[1]*0.1)
+					entity.physics.body.angular_velocity *=0.1
+
 		if not self.mainTools.paused:
-			if random()>0.00099: self.gameworld.update(dt)
+			self.gameworld.update(dt)
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:

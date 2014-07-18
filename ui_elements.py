@@ -361,6 +361,7 @@ class MainTools(FloatLayout):
 		super(MainTools, self).__init__(**kwargs)
 		self.staticOn = False
 		self.paused = False
+		self.killMomem = False
 		self.selectedItem = None
 		self.selectedEntity = None
 		self.toolSettings = {"circle": {"texture": "sheep"},
@@ -885,4 +886,7 @@ class MainTools(FloatLayout):
 
 	def playPressed(self, instance):
 		self.paused = not self.paused
-		self.ids['playButton'].text = "Resume" if self.paused else "Pause"
+		instance.text = "Resume" if self.paused else "Pause"
+	def momemPressed(self, instance):
+		self.killMomem = not self.killMomem
+		#instance.text = "Resume" if self.paused else "Pause"
