@@ -80,16 +80,21 @@ TestGame:
     MainScreen:
         id: main_screen
 
-<FloatInput@TextInput>
+<FloatInput@FlatTextInput>
     multiline: False
-<tbox@TextInput>
+<textbox@FlatTextInput>
     multiline: False
+<toggleButt@FlatToggleButton>
+    multiline: False
+<butt@FlatTextInput>
+    multiline: False
+<flabel@FlatLabel>
 <CircleSettings@BoxLayout>
     radiusLabel:radiusLabel
     size_hint_y:None
     height:30
     BoxLayout:
-        Label:
+        FlatLabel:
             text: "radius:"
         FloatInput:
             id: radiusLabel
@@ -104,14 +109,14 @@ TestGame:
     #height:60
     #rows_minimum:60
     BoxLayout:
-        Label:
+        FlatLabel:
             text: "width:"
         FloatInput:
             id: widthLabel
             multiline: False
             text: "width"
     BoxLayout:
-        Label:
+        FlatLabel:
             text: "height:"
         FloatInput:
             id: heightLabel
@@ -122,17 +127,17 @@ TestGame:
     height: 30
     keyLabel: keyLabel
     valueLabel: valueLabel
-    #Button:
+    #FlatIconButton:
     #    text:"+"
     #    size_hint_x: None
     #    width: self.height
     #    on_press: root.newType(self)
-    Label:#make into a label
+    FlatLabel:#make into a label
         id: keyLabel
         text: ""
         #values: app.root.mainTools.data_key_types
         #on_text: root.typeChanged(self)
-    Label:
+    FlatLabel:
         text:"="
         size_hint_x: None
         width: self.height
@@ -146,7 +151,7 @@ TestGame:
     dataItems: dataItems
     BoxLayout:
         id: dataItems
-    Button:
+    FlatIconButton:
         size_hint_y: None
         height: 30
         text: "Add Item"
@@ -163,24 +168,24 @@ TestGame:
     screenShot: screenShot
     AsyncImage:
         id:screenShot
-    Label:
+    FlatLabel:
         id: nameLabel
         text: "Name"
-    #Label:
+    #FlatLabel:
     #    text: "Rating"
-    Label:
+    FlatLabel:
         id: authorLabel
         text: "Author"
-    Label:
+    FlatLabel:
         id: createdLabel
         text: "Created"
-    Label:
+    FlatLabel:
         id: modifiedLabel
         text: "Modified"
-    Button:
+    FlatIconButton:
         id: downloadButton
         text: "Download"
-    Label:
+    FlatLabel:
         id: downloadsLabel
         text: "Downloads"
 
@@ -193,7 +198,7 @@ TestGame:
     BoxLayout:
         size_hint_y: 0.1
         orientation: 'horizontal'
-        Label:
+        FlatLabel:
             text: "sort by:"
         Spinner:
             id: sortSpinner
@@ -201,30 +206,30 @@ TestGame:
             values: ['name', 'author', 'rating', 'dateAdded', 'downloads', 'dateModified']
             #on_text: root.typeChanged(self)
 
-        ToggleButton:
+        FlatToggleButton:
             id: reverseButton
             text:"reverse"
-        Button:
+        FlatIconButton:
             text:"GO"
             on_press: root.goPressed(self)
     BoxLayout:
         size_hint_y: 0.1
         orientation: 'horizontal'
-        Label:
-        Button:
+        FlatLabel:
+        FlatIconButton:
             text:"Name"
             on_press: root.setSort('name')
-        Button:
+        FlatIconButton:
             on_press: root.setSort('author')
             text: "Author"
-        Button:
+        FlatIconButton:
             on_press: root.setSort('dateAdded')
             text: "Created"
-        Button:
+        FlatIconButton:
             on_press: root.setSort('dateModified')
             text: "Modified"
-        Label:
-        Button:
+        FlatLabel:
+        FlatIconButton:
             on_press: root.setSort('downloads')
             text: "Downloads"
     BoxLayout:
@@ -233,10 +238,10 @@ TestGame:
     BoxLayout:
         size_hint_y: 0.1
         orientation: 'horizontal'
-        Button:
+        FlatIconButton:
             text: "previous"
             on_press: root.prevPage()
-        Button:
+        FlatIconButton:
             text: "next"
             on_press: root.nextPage()
 
@@ -250,7 +255,7 @@ TestGame:
     descLabel: descLabel
 
     BoxLayout:
-        Button:
+        FlatIconButton:
             text:""
             size_hint_x: 0
             width: 0
@@ -260,12 +265,12 @@ TestGame:
         tbox:
             id: password
             text: "nopassword"
-        Button:
+        FlatIconButton:
             text:"Check/Create"
             #size_hint_x: None
             #width: self.height
             on_press: root.userPressed(self)
-    Label:
+    FlatLabel:
         id: nameLabel
         text:"LevelName"
     Image:
@@ -274,7 +279,7 @@ TestGame:
     tbox:
         id: descLabel
         text:"Description"
-    Button:
+    FlatIconButton:
         text:"UpLoad!"
         on_press: root.uploadPressed(self)
 
@@ -294,12 +299,12 @@ TestGame:
             text: "default"
             values: app.root.mainTools.col_types
             on_text: root.typeChanged(self)
-        Button:
+        FlatIconButton:
             text:"+"
             size_hint_x: None
             width: self.height
             on_press: root.newType(self)
-    Label:
+    FlatLabel:
         text: "and"
         #begin=None, pre_solve=None, post_solve=None, separate=None
     Spinner:
@@ -308,28 +313,28 @@ TestGame:
         values: app.root.mainTools.col_types
         on_text: root.typeChanged(self)
     BoxLayout:
-        Label:
+        FlatLabel:
             text:"Start Touching (begin)"
         Spinner:
             id: beginSpinner
             values: app.root.mainTools.col_funcs
             on_text: root.calleeChanged(self, "begin")
     BoxLayout:
-        Label:
+        FlatLabel:
             text:"Are Touching (pre_solve)"
         Spinner:
             id: pre_solveSpinner
             values: app.root.mainTools.col_funcs
             on_text: root.calleeChanged(self, "pre_solve")
     BoxLayout:
-        Label:
+        FlatLabel:
             text:"Are Touching (post_solve)"
         Spinner:
             id: post_solveSpinner
             values: app.root.mainTools.col_funcs
             on_text: root.calleeChanged(self, "post_solve")
     BoxLayout:
-        Label:
+        FlatLabel:
             text:"Stop Touching (separate)"
         Spinner:
             id: separateSpinner
@@ -365,13 +370,13 @@ TestGame:
         size_hint: (.6, .2)
         orientation: 'horizontal'
         pos_hint: {'x':.2, 'y':.8}
-        Label:
+        FlatLabel:
             id: inputPreview
             pos_hint: {'x':.2, 'y':.4}
             size_hint: (.6, .2)
             text: ""
 
-    
+
     BoxLayout:
         id: rightMenu
         size_hint: (.15, 1)
@@ -404,38 +409,38 @@ TestGame:
                 texLabel: texLabel
                 colTypeSpinner: colTypeSpinner
                 delButton: delButton
-                Label:
+                FlatLabel:
                     id: selectedLabel
                     text: "selected item"
                 BoxLayout:
                     #height:100
-                    Label:
+                    FlatLabel:
                         text: "x:"
                     FloatInput:
                         id: xposLabel
                         text: "position"
                         on_text: if root.fireText: root.xposChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "y:"
                     FloatInput:
                         id: yposLabel
                         text: "position"
                         on_text: if root.fireText: root.yposChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "xvel:"
                     FloatInput:
                         id: xvelLabel
                         on_text: if root.fireText: root.xvelChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "yvel:"
                     FloatInput:
                         id: yvelLabel
                         on_text: if root.fireText: root.yvelChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "angle:"
                     FloatInput:
                         id: angleLabel
@@ -451,7 +456,7 @@ TestGame:
                     height: 60
                     BoxLayout:
                         orientation: 'vertical'
-                        Label:
+                        FlatLabel:
                             text: 'R'
                         FloatInput:
                             id: redLabel
@@ -459,7 +464,7 @@ TestGame:
                             on_text: if root.fireText: root.redChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
-                        Label:
+                        FlatLabel:
                             text: 'G'
                         FloatInput:
                             id: greenLabel
@@ -467,7 +472,7 @@ TestGame:
                             on_text: if root.fireText: root.greenChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
-                        Label:
+                        FlatLabel:
                             text: 'B'
                         FloatInput:
                             id: blueLabel
@@ -475,34 +480,34 @@ TestGame:
                             on_text: if root.fireText: root.blueChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
-                        Label:
+                        FlatLabel:
                             text: 'O'
                         FloatInput:
                             id: opacityLabel
                             text: '1'
                             on_text: if root.fireText: root.opacityChanged(self.text)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "Mass:"
                     FloatInput:
                         id: massLabel
                         text: "Mass"
                         on_text: if root.fireText: root.massChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "Friction:"
                     FloatInput:
                         id: frictionLabel
                         text: "Friction"
                         on_text: if root.fireText: root.frictionChanged(self)
                 BoxLayout:
-                    Label:
+                    FlatLabel:
                         text: "Elasticity:"
                     FloatInput:
                         id: elasLabel
                         text: "Elasticity"
                         on_text: if root.fireText: root.elasChanged(self)
-                #ToggleButton:
+                #FlatToggleButton:
                 #    id: sensorButton
                 #    text:"Sensor"
                 #    on_press: root.sensorPressed(self)
@@ -516,18 +521,18 @@ TestGame:
                     text: "default"
                     on_text: if root.fireText: root.colTypeChanged(self)
                     values: root.col_types
-                Button:
+                FlatIconButton:
                     id: delButton
                     text: 'delete'
                     on_press: root.delSelPressed(self)
-                Button:
+                FlatIconButton:
                     id: copyButton
                     text: 'copy'
                     on_press: root.entcpy = root.gameref.serials.entToDict(root.selectedEntity)
-                Button:
+                FlatIconButton:
                     text: 'Variables'
                     on_press: root.varsPressed(self)
-        
+
     BoxLayout:
         id: leftMenu
         size_hint: (.15, 1)
@@ -538,75 +543,74 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            FlatIconButton:
                 text: 'File'
                 on_press: root.changel2menu(root.fileMenu)
-            Button:
+            FlatIconButton:
                 text: 'Settings'
                 on_press: root.changel2menu(root.settingsMenu)
-            Label:
+            FlatLabel:
                 text: 'Create'
                 size_hint_y: None
                 height: self.font_size+6
                 text_size: (self.width, self.height)
-            Button:
+            FlatIconButton:
                 text: 'Sprite'
                 on_press: root.changel2menu(root.createMenu)
-            Button:
+            FlatIconButton:
                 text: 'Polygon'
                 on_press: root.changel2menu(root.polyMenu)
-            Button:
+            FlatIconButton:
                 text: 'Start/End'
                 on_press: root.changel2menu(root.entityMenu)
-            Button:
+            FlatIconButton:
                 id: joinButton
                 text: 'Joint'
                 on_press: root.changel2menu(root.joinMenu)
-            ToggleButton:
+            toggleButt:
                 group: 'ToolGroup'
                 id: pasteButton
                 text: 'Paste'
                 on_press: root.setTool("paste")
-            Label:
+            FlatLabel:
                 text: 'Interact:'
                 size_hint_y: None
                 height: self.font_size+6
                 text_size: (self.width, self.height)
-            ToggleButton:
+            toggleButt:
                 group: 'ToolGroup'
                 id: camButton
                 text: 'Camera'
                 on_press: root.setTool("camera")
-            ToggleButton:
+            toggleButt:
                 group: 'ToolGroup'
                 id: vortexButton
                 text: 'Vortex'
                 on_press: root.setTool("vortex")
-            ToggleButton:
+            toggleButt:
                 group: 'ToolGroup'
                 id: dragButton
                 text: 'Drag'
                 on_press: root.setTool("drag")
-            ToggleButton:
+            toggleButt:
                 group: 'ToolGroup'
                 id: rotateButton
                 text: 'Rotate'
                 on_press: root.setTool("rotate")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: deleteButton
                 text: 'Delete'
                 on_press: root.setTool("del")
-            ToggleButton:
+            FlatToggleButton:
                 id: playButton
                 text: 'Pause'
                 on_press: root.playPressed(self)
-            ToggleButton:
+            FlatToggleButton:
                 id: momemButton
-                text: 'NoMomentum'
+                text: 'Freeze'
                 on_press: root.momemPressed(self)
-            Button:
-                id: Button
+            FlatIconButton:
                 text: 'scripts'
                 on_press: root.scriptsPressed(self)
         BoxLayout:
@@ -615,17 +619,17 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: startButton
                 text: 'Start'
                 on_press: root.setTool("start")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: endButton
                 text: 'End'
                 on_press: root.setTool("end")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: blankButton
                 text: 'Blank'
@@ -639,30 +643,30 @@ TestGame:
             brushSizeSlider: brushSizeSlider
             polyMergeButton: polyMergeButton
             polySimpleButton: polySimpleButton
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: polyButton
                 text: 'PolyPaint'
                 on_press: root.setTool("poly")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: polysubButton
                 text: 'PolyErase'
                 on_press: root.setTool("polysub")
-            Label:
+            FlatLabel:
                 text: 'Settings:'
-            ToggleButton:
+            FlatToggleButton:
                 id: polyMergeButton
                 text: 'Merge Start'
                 state: 'down'
-                height: self.font_size+6
-            ToggleButton:
+                #height: self.font_size+6
+            toggleButt:
                 id: polySimpleButton
                 text: 'One Outline'
-                height: self.font_size+6
+                #height: self.font_size+6
             BoxLayout:
                 orientation: 'horizontal'
-                Label:
+                FlatLabel:
                     text: "Brush"
                     #on_press: root.massPressed(self)
                 Slider:
@@ -682,30 +686,30 @@ TestGame:
                 id: circleButton
                 text: 'Circle'
                 on_press: root.setTool("circle")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: squareButton
                 text: 'Square'
                 on_press: root.setTool("square")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: boxButton
                 text: 'Box'
                 on_press: root.setTool("box")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: linesButton
                 text: 'Lines'
                 on_press: root.setTool("draw")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 id: plankButton
                 text: 'Plank'
                 on_press: root.setTool("plank")
-            Label:
+            FlatLabel:
                 size_hint: (1,0.2)
                 text: "Settings"
-            Label:
+            FlatLabel:
                 size_hint: (1,0.2)
                 text: "  Image:"
             Spinner:
@@ -717,7 +721,7 @@ TestGame:
                 source: 'atlas://assets/myatlas/sheep'
             BoxLayout:
                 orientation: 'horizontal'
-                Button:
+                FlatIconButton:
                     text: "Mass"
                     on_press: root.massPressed(self)
                 Slider:
@@ -726,30 +730,30 @@ TestGame:
                     min:0
                     max:100
                     value:10
-        
+
         BoxLayout:
             id: joinMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 text: 'Pin to World'
                 on_press: root.setTool("pin")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 text: 'Point 2 Point'
                 on_press: root.setTool("p2p")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 text: 'P2P Spring'
                 on_press: root.setTool("p2ps")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 text: 'Center 2 Point'
                 on_press: root.setTool("c2p")
-            ToggleButton:
+            FlatToggleButton:
                 group: 'ToolGroup'
                 text: 'Center 2 Center'
                 on_press: root.setTool("c2c")
@@ -772,13 +776,13 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
+            FlatIconButton:
                 text: 'Save'
                 on_press: root.savePressed(self)
-            Button:
+            FlatIconButton:
                 text: 'Load'
                 on_press: root.loadPressed(self)
-            Button:
+            FlatIconButton:
                 text: 'Export Wheelz'
                 on_press: root.wheelzPressed(self)
             tbox:
@@ -786,19 +790,19 @@ TestGame:
                 height:40
                 id: nameBox
                 text: 'defaultlevel'
-            Button:
+            FlatIconButton:
                 text: 'Examples'
                 on_press: root.changel3menu(root.examplesMenu)
-            Button:
+            FlatIconButton:
                 text: 'Custom'
                 on_press: root.customlvlPressed()
-            Button:
+            FlatIconButton:
                 text: 'Download'
                 on_press: root.downloadsPressed(self)
-            Button:
+            FlatIconButton:
                 text: 'Upload'
                 on_press: root.uploadPressed(self)
-            Button:
+            FlatIconButton:
                 text: 'Clear'
                 on_press: root.clearPressed(self)
         BoxLayout:
@@ -809,10 +813,10 @@ TestGame:
             height: root.height
             BoxLayout:
                 orientation: 'vertical'
-                Label:
+                FlatLabel:
                     text: "Gravity"
                     size_hint: (1, .2)
-                Button:
+                FlatIconButton:
                     text: 'reset'
                     size_hint: (1, .2)
                     on_press: gravySlider.value = 0; gravxSlider.value = 0
@@ -832,7 +836,7 @@ TestGame:
                     value:0
                     on_value: root.setxgrav(self.value)
         
-<PlainButton@Button>:
+<PlainButton@FlatIconButton>:
     
                 
 <MainScreen@GameScreen>:

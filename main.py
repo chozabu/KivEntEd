@@ -21,6 +21,8 @@ import kivent
 from kivy.graphics import *
 from kivy.atlas import Atlas
 
+from FlatKivy import ui_elements as fkui
+
 
 from kivy.utils import platform
 from os.path import dirname, join, exists, sep, expanduser, isfile
@@ -864,9 +866,26 @@ class TestGame(Widget):
 		self.gameworld.state = 'main'
 
 
+from kivy.properties import (ObjectProperty, ListProperty)
+from FlatKivy.utils import get_icon_char, get_rgba_color, get_style
+
+def style_default(style_name):
+    return {}
+
+def color_default(color_tuple):
+    return (1., 1., 1., 1.)
+
+def icon_default(icon_name):
+    return ''
 
 class KivEntEd(App):
+	get_color = ObjectProperty(color_default)
+	get_icon = ObjectProperty(icon_default)
+	get_style = ObjectProperty(style_default)
 	def build(self):
+		self.get_color = get_rgba_color
+		self.get_icon = get_icon_char
+		self.get_style = get_style
 		Window.clearcolor = (0, 0, 0, 1.)
 		dataDir = self.get_application_storage_dir()
 		print "dd="+dataDir
