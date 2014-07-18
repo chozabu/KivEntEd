@@ -183,6 +183,7 @@ TestGame:
         id: modifiedLabel
         text: "Modified"
     FlatIconButton:
+		#icon: 'fa-cloud-download'
         id: downloadButton
         text: "Download"
     FlatLabel:
@@ -239,9 +240,11 @@ TestGame:
         size_hint_y: 0.1
         orientation: 'horizontal'
         FlatIconButton:
+            icon: 'fa-toggle-left'
             text: "previous"
             on_press: root.prevPage()
         FlatIconButton:
+            icon: 'fa-toggle-right'
             text: "next"
             on_press: root.nextPage()
 
@@ -280,6 +283,7 @@ TestGame:
         id: descLabel
         text:"Description"
     FlatIconButton:
+		icon: 'fa-cloud-upload'
         text:"UpLoad!"
         on_press: root.uploadPressed(self)
 
@@ -545,6 +549,7 @@ TestGame:
             height: root.height
             FlatIconButton:
                 text: 'File'
+                icon: 'fa-file'
                 on_press: root.changel2menu(root.fileMenu)
             FlatIconButton:
                 text: 'Settings'
@@ -800,7 +805,11 @@ TestGame:
                 text: 'Download'
                 on_press: root.downloadsPressed(self)
             FlatIconButton:
+		        style: 'Display 2'
+		        font_size: 4
                 text: 'Upload'
+		        icon: 'fa-cloud-upload'
+		        icon_size: 3
                 on_press: root.uploadPressed(self)
             FlatIconButton:
                 text: 'Clear'
