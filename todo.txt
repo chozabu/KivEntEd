@@ -5,9 +5,8 @@ kivent dynamic polygon support
 -updating poly points
 --individual point edit/add/delete
 --smoothe selection
---simplify, remove points closer to each other than a threshold
 -generate optimal convex hulls from concave
---current triangle winding check not good.
+--current triangle winding check could be better
 
 -multiple selection
 --select box, individual add/subtract
