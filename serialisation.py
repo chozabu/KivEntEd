@@ -60,10 +60,7 @@ class Serials():
 			sd['width'] = shape.width
 			sd['height'] = shape.height
 		elif shapetype == "Poly":
-			#print dir(shape)
-			#print shape.get_vertices()
-			#self.entToDict()
-			#print "export poly shape here?"#TODO poly export?
+			sd['verts'] = shape.get_local_vertices()
 			pass
 		return sd
 
