@@ -445,13 +445,13 @@ class Serials():
 			for j in jointslist:
 				if j['a'] in idConvDict:
 					b1id = idConvDict[j['a']]
-					print j['a'], b1id
+					#print j['a'], b1id
 					b1 = self.gameworld.entities[b1id].physics.body
 				else:
 					b1 = cy.Body()
 				if j['b'] in idConvDict:
 					b2id = idConvDict[j['b']]
-					print j['b'], b2id
+					#print j['b'], b2id
 					b2 = self.gameworld.entities[b2id].physics.body
 				else:
 					b2 = cy.Body()
