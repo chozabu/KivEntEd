@@ -795,9 +795,12 @@ class MainTools(FloatLayout):
 			self.setEnt(None)
 
 	def delSelPressed(self, instance):
-		if self.selectedItem and self.gameref:
-			self.gameref.delObj(self.selectedItem.body.data)
-			self.setShape(None)
+		if self.selectedEntity and self.gameref:
+			self.gameref.delObj(self.selectedEntity.entity_id)
+			self.setEnt(None)
+		#if self.selectedItem and self.gameref:
+		#	self.gameref.delObj(self.selectedItem.body.data)
+		#	self.setShape(None)
 	def sensorPressed(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = not self.selectedItem.sensor
