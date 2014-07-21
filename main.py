@@ -513,14 +513,17 @@ class TestGame(Widget):
 			angle = atan2(yd, xd)
 			if 'origAngle' not in ctouch: ctouch['origAngle'] = shape.body.angle-angle
 			shape.body.angle = (angle+ctouch['origAngle'])
-		if (currentTool == 'drag' or currentTool == 'paste') and shape and (shape.body.is_static or self.mainTools.paused):
-			shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
-			self.reindexEntID(shape.body.data)
-			if self.mainTools.paused:
-				(self.gameworld.systems['physics'].update(0.00000001))
-				(self.gameworld.systems['physics_renderer'].update(0.00000001))
-				(self.gameworld.systems['renderer'].update(0.00000001))
-				#space.reindex_shape(shape)
+		if (currentTool == 'drag' or currentTool == 'paste'):
+			if shape and (shape.body.is_static or self.mainTools.paused):
+				shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
+				self.reindexEntID(shape.body.data)
+				if self.mainTools.paused:
+					(self.gameworld.systems['physics'].update(0.00000001))
+					(self.gameworld.systems['physics_renderer'].update(0.00000001))
+					(self.gameworld.systems['renderer'].update(0.00000001))
+					#space.reindex_shape(shape)
+			#else:
+			#	ent = self.mainTools.selectedEntity#TODO alter position component here
 
 
 	def on_touch_up(self, touch):
@@ -601,16 +604,15 @@ class TestGame(Widget):
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
+		ent = self.mainTools.selectedEntity
 		#print currentTool, tshape
-		if currentTool == 'drag' and tshape:
-			ispoly =  tshape.__class__.__name__ == 'Poly'
-			if ispoly:
-				bpos =  tshape.body.position
-				entID = tshape.body.data
-				ent = self.getEntFromID(entID)
-				pg = ent.polyshape
-				pg.poly.shift(bpos[0],bpos[1])
-				self.create_poly((0,0),pg,entID)
+		if currentTool == 'drag':
+			if ent:
+				if hasattr(ent, 'polyshape'):
+					pg = ent.polyshape
+					pg.poly.shift(-xd,-yd)
+					self.create_poly((0,0),pg,ent.entity_id)
+
 		if currentTool == 'rotate' and tshape:
 			ispoly =  tshape.__class__.__name__ == 'Poly'
 			if ispoly:
