@@ -111,7 +111,14 @@ class PolyGen():
 			ishole = self.poly.isHole(c)
 			if len(cr)>2:
 				newp.addContour(cr, ishole)
-		self.poly = newp
+		parea = self.poly.area()
+		nparea = newp.area()
+		#areadiff = math.fabs(nparea-parea)
+		arearatio = parea/nparea
+		arearatio = math.fabs(arearatio-1)
+		#print areadiff, arearatio
+		if arearatio < 0.1:
+			self.poly = newp
 	def pts_to_tristrip(self, pts):
 		ts = self.poly.triStrip()
 		color = self.color
