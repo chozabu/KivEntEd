@@ -172,10 +172,6 @@ class downloads(BoxLayout):
 		self.cursor = 0
 		self.pagesize = 8
 
-	def bug_posted(req, result):
-	    print('Our bug is posted !')
-	    print(result)
-
 	def setSort(self, stype):
 		if stype == self.sortSpinner.text:
 			print self.reverseButton.state
