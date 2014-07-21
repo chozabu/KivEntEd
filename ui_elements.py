@@ -791,6 +791,8 @@ class MainTools(FloatLayout):
 			ent = self.gameref.gameworld.entities[shape.body.data]
 			if ent:
 				self.setEnt(ent,shape)
+		else:
+			self.setEnt(None)
 
 	def delSelPressed(self, instance):
 		if self.selectedItem and self.gameref:
