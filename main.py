@@ -733,7 +733,13 @@ class TestGame(Widget):
 			#self.mainTools.setShape(shape)
 			space.reindex_shape(shape)
 			ctouch['touching'] = shape
-		self.mainTools.setShape(shape)
+		if shape:
+			self.mainTools.setShape(shape)
+		else:
+			ents = self.getNonPhysAtPoint(pos)
+			ent = None
+			if len(ents):ent=ents[0]
+			self.mainTools.setEnt(ent)
 
 
 		if shape and not shape.body.is_static and (
@@ -742,6 +748,14 @@ class TestGame(Widget):
 			body.position = pos
 			ctouch['mousejoint'] = cy.PivotJoint(shape.body, body, position)
 			space.add(ctouch['mousejoint'])
+	def getNonPhysAtPoint(self, pos):
+		ents = []
+		for aid in self.entIDs:
+			entity = self.gameworld.entities[aid]
+			if not hasattr(entity, 'physics') and hasattr(entity, 'polyshape'):
+				isin = entity.polyshape.poly.isInside(pos[0],pos[1])
+				if isin:ents.append(entity)
+		return ents
 	def get_touching_polys(self, pos, radius=30):
 		space = self.space
 		cs = cy.Circle(cy.Body(), radius=radius, offset=pos)
