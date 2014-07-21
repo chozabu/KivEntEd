@@ -374,6 +374,12 @@ class Serials():
 			scripty.add_col_type(ct)
 		scripty.loadHandlersFromDict(cdata)
 	def loadEntFromDict(self, e, idConvDict=None):
+		elasticity = None
+		friction = None
+		bp = (0,0)
+		collision_type = 0
+		xinfo = {}
+		stype = None
 		if "physics" in e:
 			stype = e['physics']['shape_type']
 			#print stype
@@ -382,58 +388,74 @@ class Serials():
 			shape = p['shapes'][0]
 			bp = (body['position'][0], body['position'][1])
 			mass = body['mass']
-			texture = "Grass1"
-			if 'physics_renderer' in e:
-				pr = e['physics_renderer']
-				texture = str(pr['texture'])
-				if texture == "Grass2": texture = "Grass1"
-			if 'poly_renderer' in e:
-				por = e['poly_renderer']
-				texture = str(por['texture'])
-				print texture
-			color = (1,1,1,1)
-			if 'color' in e:
-				cl = e['color']
-				color = (cl[0],cl[1],cl[2],cl[3])
-			collision_type = 0
+			if str(mass) == 'inf': mass = 0
+			friction=shape['friction']
+			elasticity=shape['elasticity']
+			angle = body['angle']
+			if stype == 'circle':
+				radius = shape['radius']
+			elif stype == 'box':
+				width = shape['width']
+				height = shape['height']
+
+			xinfo['x_vel']=body['velocity'][0]
+			xinfo['y_vel']=body['velocity'][1]
+			xinfo['angular_velocity']=body['angular_velocity']
 			if 'collision_type' in shape:
 				coltypestr = shape['collision_type']
 				ct = self.gameref.scripty.collision_types
 				if coltypestr in ct:
 					collision_type = ct[coltypestr]
-			if str(mass) == 'inf': mass = 0
-			entID = None
-			if stype == "circle":
-				entID = self.gameref.create_circle(bp, radius=shape['radius'], mass=mass,
-															  friction=shape['friction'],
-															  elasticity=shape['elasticity'], angle=body['angle'],
-															  x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-															  texture=texture, selectNow=False, collision_type=collision_type, color=color)
-			elif stype == "box":
-				entID = self.gameref.create_box(bp, width=shape['width'], height=shape['height'],
-														   mass=mass, friction=shape['friction'],
-														   elasticity=shape['elasticity'], angle=body['angle'],
-														   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-														   texture=texture, selectNow=False, collision_type=collision_type, color=color)
-			elif stype == "poly" and 'polyviewbinary' in e:
-				#print dir(e)
-				#print e.keys()
-				pg = base64.decodestring(e['polyviewbinary'])
-				pg = pio.decodeBinary(pg)
-				pg = PolyGen.PolyGen(pg)
-				entID = self.gameref.create_poly(bp,pg, texture=texture, friction=shape['friction'],
-														   elasticity=shape['elasticity'], selectNow=False,
-														   collision_type=collision_type, color=color)
-				#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
-				#										   mass=mass, angle=body['angle'],
-				#										   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-				#										   texture=texture, selectNow=False, collision_type=collision_type, color=color)
-			if entID != None:
-				if idConvDict!=None: idConvDict[e['orig_id']] = entID
-				newent = self.gameref.getEntFromID(entID)
-				if 'datadict' in e:
-					newent.datadict = e['datadict']
-			return entID
+
+		texture = "Grass1"
+		if 'physics_renderer' in e:
+			pr = e['physics_renderer']
+			texture = str(pr['texture'])
+			if texture == "Grass2": texture = "Grass1"
+		if 'poly_renderer' in e:
+			por = e['poly_renderer']
+			texture = str(por['texture'])
+			print texture
+		color = (1,1,1,1)
+		if 'color' in e:
+			cl = e['color']
+			color = (cl[0],cl[1],cl[2],cl[3])
+		print e
+		entID = None
+		if stype == "circle":
+			entID = self.gameref.create_circle(bp, radius=radius, mass=mass,
+														  friction=friction,
+														  elasticity=elasticity, angle=angle,
+														  texture=texture, selectNow=False, collision_type=collision_type, color=color,
+														  **xinfo)
+		elif stype == "box":
+			entID = self.gameref.create_box(bp, width=width, height=height,
+													   mass=mass, friction=friction,
+													   elasticity=elasticity, angle=angle,
+													   texture=texture, selectNow=False, collision_type=collision_type, color=color,
+													   **xinfo)
+		elif 'polyviewbinary' in e:# stype == "poly" and
+			#print dir(e)
+			#print e.keys()
+			pg = base64.decodestring(e['polyviewbinary'])
+			pg = pio.decodeBinary(pg)
+			pg = PolyGen.PolyGen(pg)
+			entID = self.gameref.create_poly(bp,pg, texture=texture, friction=friction,
+													   elasticity=elasticity, selectNow=False,
+													   collision_type=collision_type, color=color,
+													   do_physics="physics" in e)
+			#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
+			#										   mass=mass, angle=body['angle'],
+			#										   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
+			#										   texture=texture, selectNow=False, collision_type=collision_type, color=color)
+		else:
+			print "NOT LOADING UNRECOGNISED SHAPE:",e
+		if entID != None:
+			if idConvDict!=None: idConvDict[e['orig_id']] = entID
+			newent = self.gameref.getEntFromID(entID)
+			if 'datadict' in e:
+				newent.datadict = e['datadict']
+		return entID
 	def loadFromDict(self, data):
 		print "LOADING"
 		space = self.space
