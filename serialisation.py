@@ -60,8 +60,12 @@ class Serials():
 			sd['width'] = shape.width
 			sd['height'] = shape.height
 		elif shapetype == "Poly":
-			sd['verts'] = shape.get_local_vertices()
-			pass
+			try:
+				verts = shape.get_local_vertices()
+				vertups = [(v.x, v.y) for v in verts]
+				sd['verts'] = vertups
+			except:
+				print "verts not exported"
 		return sd
 
 	def entToDict(self, e):
