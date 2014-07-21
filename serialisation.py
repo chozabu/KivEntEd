@@ -210,25 +210,30 @@ class Serials():
 		#info.set('id','levelid')
 		#if hasattr(e, "color"):
 		#	ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
-		b = e.physics.body
-		shape_type = e.physics.shape_type
+		shape_type = 'poly'
 
 		#<position y="31.9388731278" x="8.00786973338" background="true"/>
 		#<usetexture id="Dirt"/>
 		pd = ET.SubElement(ed,'position')
 		pd.set("x", str(e.position.x*xmScale))
 		pd.set("y", str(e.position.y*xmScale))
-		pd.set("background", "false")
+		#pd.set("background", "false")
 
-		phd = ET.SubElement(ed,'physics')
-		phd.set("grip", str(e.physics.shapes[0].friction*20.0))
-		phd.set("friction", str(e.physics.shapes[0].friction))
-		if not e.physics.body.is_static:
-			pd.set("physics", "true")
-			phd.set("mass", str(e.physics.body.mass))
-			#<physics mass="1.0"/>
+		if hasattr(e, "physics"):
+			pd.set("background", "false")
+			phd = ET.SubElement(ed,'physics')
+			phd.set("grip", str(e.physics.shapes[0].friction*20.0))
+			phd.set("friction", str(e.physics.shapes[0].friction))
+			b = e.physics.body
+			shape_type = e.physics.shape_type
+			if not e.physics.body.is_static:
+				pd.set("physics", "true")
+				phd.set("mass", str(e.physics.body.mass))
+				#<physics mass="1.0"/>
+			else:
+				self.laststatic = e.entity_id
 		else:
-			self.laststatic = e.entity_id
+			pd.set("background", "true")
 		pr = None
 		texname = None
 		if hasattr(e, 'physics_renderer'):
