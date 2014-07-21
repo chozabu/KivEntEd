@@ -12,7 +12,6 @@ import io
 
 import base64
 
-xmScale = 0.08
 xmTexDict = {
 	"Grass1":"default",
 	"Dirt":"Dirt",
@@ -172,7 +171,7 @@ class Serials():
 		         (-(x)*sina + (y)*cosa)) for x, y in pts]
 
 
-	def entToXML(self, e, root):
+	def entToXML(self, e, root, xmScale):
 		'''
 	<block id="path4821">
 		<position y="31.9388731278" x="8.00786973338" background="true"/>
@@ -256,11 +255,11 @@ class Serials():
 
 		#e.physics_renderer.texture
 
-	def exportEntsToXML(self, root):
+	def exportEntsToXML(self, root, xmScale):
 		entsdict = []
 		for eid in self.gameref.entIDs:
 			e = self.gameworld.entities[eid]
-			self.entToXML(e, root)
+			self.entToXML(e, root, xmScale)
 
 	'''
 	<entity id="rect14476jl_joint1" typeid="Joint">
@@ -268,7 +267,7 @@ class Serials():
 		<position y="9.691309" x="-69.88762075"/>
 		<joint connection-end="rect14476jl_block1" type="pivot" connection-start="rect14476jl_block0"/>
 	</entity>'''
-	def exportJointsToXML(self, root):
+	def exportJointsToXML(self, root, xmScale):
 		space = self.space
 		for j in space.constraints:
 			jtype = j.__class__.__name__
@@ -308,7 +307,7 @@ class Serials():
 				jd['damping'] = j.damping
 			jds.append(jd)'''
 
-	def exportXML(self, fileName="defaultlevel.lvl"):
+	def exportXML(self, fileName="defaultlevel.lvl", xmScale = 0.05):
 		root = ET.Element('level')
 		info = ET.SubElement(root,'info')
 		info.set('id','levelid')
@@ -319,8 +318,8 @@ class Serials():
 
 		limits = ET.SubElement(root,'info')
 		limits.set('id','levelid')
-		self.exportEntsToXML(root)
-		self.exportJointsToXML(root)
+		self.exportEntsToXML(root, xmScale)
+		self.exportJointsToXML(root, xmScale)
 
 		#info = ET.SubElement(root,'info')
 		#info.set('id','levelid')

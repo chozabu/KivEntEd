@@ -237,13 +237,19 @@ class TestGame(Widget):
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
-	angular_velocity=.0, texture=None, selectNow=True, sensor = False, collision_type = 0, color=None):
+	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		#print "poly, oldpoly=", lastpolyid
 
+		print do_physics
 		if lastpolyid:
 			oldpoly = self.getEntFromID(lastpolyid)
-			if friction == None: friction = oldpoly.physics.shapes[0].friction
-			if elasticity == None: elasticity = oldpoly.physics.shapes[0].elasticity
+			if do_physics == None:
+				print oldpoly.load_order
+				do_physics = 'physics' in oldpoly.load_order
+				print do_physics
+			if do_physics:
+				if friction == None: friction = oldpoly.physics.shapes[0].friction
+				if elasticity == None: elasticity = oldpoly.physics.shapes[0].elasticity
 			if color == None:
 				c = oldpoly.color
 				color = (c.r, c.g ,c.b ,c.a)
@@ -254,7 +260,9 @@ class TestGame(Widget):
 		if elasticity == None: elasticity = .5
 		if color == None:color = (1,1,1,0.9)
 		if texture == None: texture = "snow"
+		if do_physics == None: do_physics = True
 
+		print do_physics
 		pg = polygon
 
 		#TODO make individual points editable
@@ -334,9 +342,12 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 
-		create_component_dict = {'physics': physics_component, 'color':color,
+		create_component_dict = {'color':color,
 						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
-		component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
+		component_order = ['color', 'position', 'rotate', 'poly_renderer']
+		if do_physics:
+			create_component_dict['physics'] = physics_component
+			component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
 		if lastpolyid and 0:
 			poly = self.getEntFromID(lastpolyid)
 
@@ -349,8 +360,10 @@ class TestGame(Widget):
 			self.entIDs.append(newpolyID)
 			newpoly = self.getEntFromID(newpolyID)
 			newpoly.polyshape = pg
-
-			if selectNow: self.mainTools.setShape(self.gameworld.entities[newpolyID].physics.shapes[0])
+			#if not do_physics:
+			#	newpoly.load_order.remove('physics')
+			#newpoly.load_order = ['color', 'position', 'rotate', 'poly_renderer']
+			if selectNow: self.mainTools.setEnt(self.gameworld.entities[newpolyID])
 
 			#newpoly.poly_renderer.texture.wrap = 'repeat'
 
@@ -696,7 +709,8 @@ class TestGame(Widget):
 			else:
 				pg = PolyGen.PolyGen(keepsimple=self.mainTools.polyMenu.polySimpleButton.state != 'normal')
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid)
+			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
+			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid, do_physics=do_physics)
 			ctouch['polygen'] = pg
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
@@ -846,7 +860,7 @@ class TestGame(Widget):
 	def pull2point(self, pos):
 		for aid in self.entIDs:
 			entity = self.gameworld.entities[aid]
-			if entity.physics.body.is_static == 0:
+			if hasattr(entity, 'physics') and entity.physics.body.is_static == 0:
 				apos = entity.position
 				dvecx = (pos[0] - apos.x) * entity.physics.body.mass * 0.02
 				dvecy = (pos[1] - apos.y) * entity.physics.body.mass * 0.02

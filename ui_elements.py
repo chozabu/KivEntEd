@@ -705,18 +705,21 @@ class MainTools(FloatLayout):
 			self.selectedItem = newshape
 			self.selectedEntity.physics_renderer.height = newrad
 
-	def setShape(self, shape):
+	def setEnt(self, ent, fshape=None):
 		self.fireText = False
-		self.selectedItem = shape
+		self.selectedItem = None
 		self.selectedMenu.selectedLabel.text = "None"
-		self.selectedEntity = None
+		self.selectedEntity = ent
 		self.inputPreview.text = ""
-		ent=None
-		if shape:
-			self.selectedEntity = self.gameref.gameworld.entities[shape.body.data]
-			ent = self.selectedEntity
+		if ent:
+			self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
+			#ent = self.selectedEntity
 			#print dir(ent.physics)
 			if hasattr(ent, 'physics'):
+				if fshape:
+					shape=fshape
+				else:
+					shape = self.selectedEntity.physics.shapes[0]
 				self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
 				#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 				#self.selectedMenu.posLabel.text = tv
@@ -767,6 +770,11 @@ class MainTools(FloatLayout):
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 		self.fireText = True
+	def setShape(self, shape):
+		if shape:
+			ent = self.gameref.gameworld.entities[shape.body.data]
+			if ent:
+				self.setEnt(ent,shape)
 
 	def delSelPressed(self, instance):
 		if self.selectedItem and self.gameref:

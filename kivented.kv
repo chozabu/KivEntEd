@@ -640,6 +640,7 @@ TestGame:
             brushSizeSlider: brushSizeSlider
             polyMergeButton: polyMergeButton
             polySimpleButton: polySimpleButton
+            polyPhysButton: polyPhysButton
             ToggleButton:
                 group: 'ToolGroup'
                 id: polyButton
@@ -655,6 +656,11 @@ TestGame:
             ToggleButton:
                 id: polyMergeButton
                 text: 'Merge Start'
+                state: 'down'
+                height: self.font_size+6
+            ToggleButton:
+                id: polyPhysButton
+                text: 'NoPhysics'
                 state: 'down'
                 height: self.font_size+6
             ToggleButton:
