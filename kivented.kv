@@ -197,13 +197,14 @@ TestGame:
             text: "sort by:"
         Spinner:
             id: sortSpinner
-            text: "name"
+            text: "dateAdded"
             values: ['name', 'author', 'rating', 'dateAdded', 'downloads', 'dateModified']
             #on_text: root.typeChanged(self)
 
         ToggleButton:
             id: reverseButton
             text:"reverse"
+            state: "down"
         Button:
             text:"GO"
             on_press: root.goPressed(self)
