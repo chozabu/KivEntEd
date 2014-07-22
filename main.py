@@ -759,6 +759,15 @@ class TestGame(Widget):
 				if isin:ents.append(entity)
 		return ents
 	def get_touching_polys(self, pos, radius=30):
+		cs = PolyGen.Circle(radius, pos, 16)
+		polys = []
+		for eid in self.entIDs:
+			e = self.getEntFromID(eid)
+			if hasattr(e, "polyshape"):
+				if cs.overlaps(e.polyshape.poly):
+					polys.append(e)
+		return polys
+	def get_touching_polys_cp(self, pos, radius=30):
 		space = self.space
 		cs = cy.Circle(cy.Body(), radius=radius, offset=pos)
 		colshapes = space.shape_query(cs)
