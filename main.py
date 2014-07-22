@@ -677,8 +677,22 @@ class TestGame(Widget):
 							texture=self.mainTools.spriteSpinner.text)
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
+	def zoomcam(self, sf):
+		viewport = self.gameworld.systems['gameview']
+		camera_scale = viewport.camera_scale*sf
+		camera_scale = max(0.2, min(20, camera_scale))
+		print camera_scale
+		viewport.camera_scale=camera_scale
 	def on_touch_down(self, touch):
 		print "TOUCHDOWN\n"
+		#print dir(touch)
+		if touch.button == 'scrollup':
+			self.zoomcam(1.02)
+			return
+		if touch.button == 'scrolldown':
+			self.zoomcam(0.98)
+			return
+
 		pos = self.getWorldPosFromTouch(touch)
 		position = cy.Vec2d(pos[0], pos[1])
 		space = self.space
