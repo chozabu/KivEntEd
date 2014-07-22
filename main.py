@@ -262,7 +262,6 @@ class TestGame(Widget):
 		if texture == None: texture = "snow"
 		if do_physics == None: do_physics = True
 
-		print do_physics
 		pg = polygon
 
 		#TODO make individual points editable
@@ -686,12 +685,13 @@ class TestGame(Widget):
 	def on_touch_down(self, touch):
 		print "TOUCHDOWN\n"
 		#print dir(touch)
-		if touch.button == 'scrollup':
-			self.zoomcam(1.02)
-			return
-		if touch.button == 'scrolldown':
-			self.zoomcam(0.98)
-			return
+		if hasattr(touch, 'button'):
+			if touch.button == 'scrollup':
+				self.zoomcam(1.02)
+				return
+			if touch.button == 'scrolldown':
+				self.zoomcam(0.98)
+				return
 
 		pos = self.getWorldPosFromTouch(touch)
 		position = cy.Vec2d(pos[0], pos[1])

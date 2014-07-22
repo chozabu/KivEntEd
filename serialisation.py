@@ -425,7 +425,6 @@ class Serials():
 		if 'color' in e:
 			cl = e['color']
 			color = (cl[0],cl[1],cl[2],cl[3])
-		print e
 		entID = None
 		if stype == "circle":
 			entID = self.gameref.create_circle(bp, radius=radius, mass=mass,
