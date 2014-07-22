@@ -72,7 +72,7 @@ class TestGame(Widget):
 		self.jointEnts = {}
 		self.selectedListIndex = 0
 		self.lastlist = None
-		self.touches = {0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
+		self.touches = {}#0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
 			self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -479,7 +479,23 @@ class TestGame(Widget):
 
 
 		if currentTool == "camera":
-			super(TestGame, self).on_touch_move(touch)
+			#print len(self.touches)
+			ccount=0
+			for t in self.touches:
+				to = self.touches[t]
+				if to['tool'] == 'camera':
+					ccount+=1
+			if ccount < 2:
+				super(TestGame, self).on_touch_move(touch)
+			else:
+				viewport = self.gameworld.systems['gameview']
+				sf = 1.0+yd*0.00003
+				camera_scale = viewport.camera_scale*sf+yd*0.0001
+				camera_scale = max(0.2, min(20, camera_scale))
+				print camera_scale
+				viewport.camera_scale=camera_scale
+
+
 		if 'previewShape' in ctouch:
 			psid = ctouch['previewShape']
 			#xd = spos[0] - pos[0]
@@ -533,6 +549,7 @@ class TestGame(Widget):
 			print "touchdown not found, mousewheel?"
 			return
 		ctouch = self.touches[touch.id]
+		del self.touches[touch.id]
 		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
 		currentTool = ctouch['tool']
@@ -658,8 +675,8 @@ class TestGame(Widget):
 			if dist < 4: dist = 8
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
 							texture=self.mainTools.spriteSpinner.text)
-		self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
-
+		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
+		#del self.touches[touch.id]
 	def on_touch_down(self, touch):
 		print "TOUCHDOWN\n"
 		pos = self.getWorldPosFromTouch(touch)
