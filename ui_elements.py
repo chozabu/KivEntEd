@@ -737,6 +737,7 @@ class MainTools(FloatLayout):
 					shape=fshape
 				else:
 					shape = self.selectedEntity.physics.shapes[0]
+				self.selectedItem = shape
 				self.selectedMenu.selectedLabel.text = ent.physics.shape_type+" "+str(shape.body.data)
 				#tv = "x=%f\ny=%f" % (shape.body.position.x, shape.body.position.y)
 				#self.selectedMenu.posLabel.text = tv
