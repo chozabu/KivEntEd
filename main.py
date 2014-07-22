@@ -838,7 +838,7 @@ class TestGame(Widget):
 	def getWorldPosFromTouch(self, touch):
 
 		viewport = self.gameworld.systems['gameview']
-		return touch.x - viewport.camera_pos[0], touch.y - viewport.camera_pos[1]
+		return touch.x*viewport.camera_scale - viewport.camera_pos[0], touch.y*viewport.camera_scale - viewport.camera_pos[1]
 
 	def update(self, dt):
 		for o in self.todelete:
