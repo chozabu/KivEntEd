@@ -727,6 +727,7 @@ class MainTools(FloatLayout):
 		self.selectedMenu.selectedLabel.text = "None"
 		self.selectedEntity = ent
 		self.inputPreview.text = ""
+		self.selectedMenu.shapeInfo.clear_widgets()
 		if ent:
 			self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
 			#ent = self.selectedEntity
@@ -744,23 +745,20 @@ class MainTools(FloatLayout):
 				self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
 				print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
 				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
-				self.selectedMenu.shapeInfo.clear_widgets()
+
 				if shape.__class__.__name__ == "Circle":
 					cs = CircleSettings()
 					cs.radiusLabel.text = "%0.2f" % shape.radius
 					cs.radiusLabel.bind(text=self.on_rad_change)
 					self.selectedMenu.shapeInfo.add_widget(cs)
-				elif shape.__class__.__name__ == "BoxShape":#simplifyPolyPressed
+				elif shape.__class__.__name__ == "BoxShape":
 					bs = BoxSettings()
 					bs.widthLabel.text = "%0.2f" % shape.width
 					bs.heightLabel.text = "%0.2f" % shape.height
 					bs.widthLabel.bind(text=self.on_width_change)
 					bs.heightLabel.bind(text=self.on_height_change)
 					self.selectedMenu.shapeInfo.add_widget(bs)
-				elif shape.__class__.__name__ == "Poly":
-					print "\n\n hi"
-					ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
-					self.selectedMenu.shapeInfo.add_widget(ps)
+				#elif shape.__class__.__name__ == "Poly":
 
 		if self.gameref.selectedShapeID != None:
 			self.gameref.delObj(self.gameref.selectedShapeID)
@@ -773,6 +771,8 @@ class MainTools(FloatLayout):
 			if hasattr(ent, 'poly_renderer'):
 				texname = ent.poly_renderer.texture.split('/')[-1][:-4]
 				self.selectedMenu.texLabel.text = texname
+				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
+				self.selectedMenu.shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
 				self.selectedMenu.redLabel.text = str(ent.color.r)
 				self.selectedMenu.greenLabel.text = str(ent.color.g)

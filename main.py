@@ -871,7 +871,7 @@ class TestGame(Widget):
 		if self.mainTools.killMomem:
 			for aid in self.entIDs:
 				entity = self.gameworld.entities[aid]
-				if entity.physics.body.is_static == 0:
+				if hasattr(entity, 'physics') and entity.physics.body.is_static == 0:
 					v = entity.physics.body.velocity
 					entity.physics.body.velocity = (v[0]*0.1,v[1]*0.1)
 					entity.physics.body.angular_velocity *=0.1
