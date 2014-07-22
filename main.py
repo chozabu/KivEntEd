@@ -729,12 +729,20 @@ class TestGame(Widget):
 
 		if currentTool == "paste" and self.mainTools.entcpy:
 			pastedEID = self.serials.loadEntFromDict(self.mainTools.entcpy)
-			phys = self.gameworld.entities[pastedEID].physics
-			phys.body.position = pos
-			shape = phys.shapes[0]
-			#self.mainTools.setShape(shape)
-			space.reindex_shape(shape)
-			ctouch['touching'] = shape
+			ent = self.gameworld.entities[pastedEID]
+			if hasattr(ent, 'polyshape'):
+				po = ent.polyshape.poly
+				poc = po.center()
+				shifter = (pos[0] - poc[0], pos[1] - poc[1])
+				po.shift(shifter[0], shifter[1])
+				self.create_poly((0,0),ent.polyshape,ent.entity_id)
+			elif hasattr(ent, 'physics'):
+				phys = ent.physics
+				phys.body.position = pos
+				shape = phys.shapes[0]
+				#self.mainTools.setShape(shape)
+				space.reindex_shape(shape)
+				ctouch['touching'] = shape
 		if shape:
 			self.mainTools.setShape(shape)
 		else:
