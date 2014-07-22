@@ -247,7 +247,7 @@ class TestGame(Widget):
 				print oldpoly.load_order
 				do_physics = 'physics' in oldpoly.load_order
 				print do_physics
-			if do_physics:
+			if hasattr(oldpoly, 'physics'):
 				if friction == None: friction = oldpoly.physics.shapes[0].friction
 				if elasticity == None: elasticity = oldpoly.physics.shapes[0].elasticity
 			if color == None:
