@@ -317,7 +317,7 @@ class TestGame(Widget):
 				#pass
 				#print "skipping"#should test better and reverse
 				pts = [pts[0],pts[2],pts[1]]
-			if iscw2 > 1 or iscw2 < -1:
+			if (iscw2 > 2 or iscw2 < -2):
 				poly_dict = {
 					'vertices':pts, 'offset': (0, 0), 'mass':submass}
 				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
@@ -676,21 +676,25 @@ class TestGame(Widget):
 							texture=self.mainTools.spriteSpinner.text)
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
-	def zoomcam(self, sf):
+	def zoomcam(self, sf, pos = (0,0)):
+		pwp = self.getWorldPosFromTuple(pos)
 		viewport = self.gameworld.systems['gameview']
 		camera_scale = viewport.camera_scale*sf
 		camera_scale = max(0.2, min(20, camera_scale))
-		print camera_scale
 		viewport.camera_scale=camera_scale
+		pap = self.getWorldPosFromTuple(pos)
+		diff = (pap[0]-pwp[0], pap[1]-pwp[1])
+		viewport.camera_pos[0]+=diff[0]
+		viewport.camera_pos[1]+=diff[1]
 	def on_touch_down(self, touch):
 		print "TOUCHDOWN\n"
 		#print dir(touch)
 		if hasattr(touch, 'button'):
 			if touch.button == 'scrollup':
-				self.zoomcam(1.02)
+				self.zoomcam(1.02, (touch.x,touch.y))
 				return
 			if touch.button == 'scrolldown':
-				self.zoomcam(0.98)
+				self.zoomcam(0.98, (touch.x,touch.y))
 				return
 
 		pos = self.getWorldPosFromTouch(touch)
@@ -867,9 +871,12 @@ class TestGame(Widget):
 				joints.append(c)
 		return joints
 	def getWorldPosFromTouch(self, touch):
+		return self.getWorldPosFromTuple((touch.x,touch.y))
+
+	def getWorldPosFromTuple(self, tup):
 
 		viewport = self.gameworld.systems['gameview']
-		return touch.x*viewport.camera_scale - viewport.camera_pos[0], touch.y*viewport.camera_scale - viewport.camera_pos[1]
+		return tup[0]*viewport.camera_scale - viewport.camera_pos[0], tup[1]*viewport.camera_scale - viewport.camera_pos[1]
 
 	def update(self, dt):
 		for o in self.todelete:
