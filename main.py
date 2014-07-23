@@ -480,19 +480,25 @@ class TestGame(Widget):
 		if currentTool == "camera":
 			#print len(self.touches)
 			ccount=0
+			viewport = self.gameworld.systems['gameview']
 			for t in self.touches:
 				to = self.touches[t]
 				if to['tool'] == 'camera':
 					ccount+=1
 			if ccount < 2:
-				super(TestGame, self).on_touch_move(touch)
+				#super(TestGame, self).on_touch_move(touch)
+				viewport.camera_pos[0]-=xd
+				viewport.camera_pos[1]-=yd
 			else:
-				viewport = self.gameworld.systems['gameview']
-				sf = 1.0+yd*0.00003
-				camera_scale = viewport.camera_scale*sf+yd*0.0001
-				camera_scale = max(0.2, min(20, camera_scale))
-				print camera_scale
-				viewport.camera_scale=camera_scale
+				screen_mid = (viewport.size[0]*0.5,viewport.size[1]*0.5)
+				#screen_mid = ctouch['screenpos']
+				sf = 1.0-touch.dy*0.001#+yd*0.00003
+				print touch.dy
+				#camera_scale = viewport.camera_scale*sf+yd*0.0001
+				#camera_scale = max(0.2, min(20, camera_scale))
+				self.zoomcam(sf, screen_mid)
+				#print camera_scale
+				#viewport.camera_scale=camera_scale
 
 
 		if 'previewShape' in ctouch:
