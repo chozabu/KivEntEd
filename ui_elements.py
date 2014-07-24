@@ -814,9 +814,11 @@ class MainTools(FloatLayout):
 		if self.selectedItem:
 			self.callbacksBox.setTypeA(self.gameref.scripty.collision_types[self.selectedItem.collision_type])
 		self.cbpopup.open()
+		self.gameref.touches = {}
 	def downloadsPressed(self, instance):
 		self.dlpopup.open()
 		self.downloadsBox.listLevels()
+		self.gameref.touches = {}
 	def uploadPressed(self, instance):
 		filename = self.nameBox.text+".png"
 		self.gameref.export_to_png(filename=filename)
@@ -837,6 +839,7 @@ class MainTools(FloatLayout):
 
 		self.ulpopup.open()
 		self.uploadBox.initUI()
+		self.gameref.touches = {}
 
 	def makeEntDataDict(self, ent):
 		#create entity datadict if missing
