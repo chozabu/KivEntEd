@@ -9,8 +9,8 @@ Set mass to 0 for static objects.
 ![ScreenShot](http://chozabu.net/kiventss.png)
 
 Building:  
-first you must install KivEnt - at the time of writing you must use Kovaks gl_polygen branch.  
-here https://github.com/Kovak/KivEnt/tree/gl_polygen
+first you must install KivEnt - at the time of writing you must use my gl_polygen branch.  
+here https://github.com/Kovak/chozabu/tree/gl_polygen
 
 polygon2 is required  
 sudo pip install polygon  
