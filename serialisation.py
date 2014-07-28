@@ -17,6 +17,7 @@ class Serials():
 
 		#wrap methods from seperated classes for now
 		self.loadJSON = self.jsonserials.loadJSON
+		self.loadExtJSON = self.jsonserials.loadExtJSON
 		self.exportJSON = self.jsonserials.exportJSON
 		self.entToDict = self.jsonserials.entToDict
 		self.loadEntFromDict = self.jsonserials.loadEntFromDict
