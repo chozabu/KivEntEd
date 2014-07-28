@@ -108,6 +108,19 @@ class levelItem(BoxLayout):
 		self.downloadButton.bind(on_press=self.callback)
 		self.downloadButton.info = self.info
 		self.screenShot.source = serverURL+"/downloadSS?fullname="+self.info['filename']+".png"
+class saveas(BoxLayout):
+	def __init__(self, mtref):
+		self.mtref = mtref
+		super(saveas,self).__init__()
+	def initUI(self, dt=0):
+		self.nameLabel.text = self.mtref.nameBox.text
+	def savePressed(self, instance):
+		self.mtref.nameBox.text = self.nameLabel.text
+		self.mtref.savePressed()
+		self.mtref.sapopup.dismiss()
+		Popup(title="Saved",
+				content=Label(text="saved "+self.nameLabel.text),
+				size_hint=(0.6, 0.3), size=(400, 400)).open()
 class uploads(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -419,6 +432,11 @@ class MainTools(FloatLayout):
 				content=self.uploadBox,
 				size_hint=(0.8, 0.8), size=(400, 400))
 
+		self.saveasBox = saveas(self)
+		self.sapopup = Popup(title="Save As",
+				content=self.saveasBox,
+				size_hint=(0.8, 0.4), size=(400, 400))
+
 		exampleLevels = [ os.path.basename(f)[:-5] for f in glob.glob(os.path.dirname(__file__)+"/examples/*.json")]
 		for levelname in exampleLevels:
 			newb = Button(text=levelname, font_size=14)
@@ -471,7 +489,7 @@ class MainTools(FloatLayout):
 		self.gameref.serials.loadJSON(self.nameBox.text+".json")
 		#self.gameref.loadFromDict(self.testsave)
 
-	def savePressed(self, instance):
+	def savePressed(self, instance=None):
 		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
 
 	def wheelzPressed(self, instance):
@@ -819,7 +837,7 @@ class MainTools(FloatLayout):
 		self.dlpopup.open()
 		self.downloadsBox.listLevels()
 		self.gameref.touches = {}
-	def uploadPressed(self, instance):
+	def saveThumb(self):
 		filename = self.nameBox.text+".png"
 		self.gameref.export_to_png(filename=filename)
 		baseWidth = 150
@@ -837,6 +855,13 @@ class MainTools(FloatLayout):
 		# Save it back to disk.
 		img.save(filename)
 
+	def saveAsPressed(self, instance):
+		#self.saveThumb()
+		self.sapopup.open()
+		self.saveasBox.initUI()
+		self.gameref.touches = {}
+	def uploadPressed(self, instance):
+		self.saveThumb()
 		self.ulpopup.open()
 		self.uploadBox.initUI()
 		self.gameref.touches = {}

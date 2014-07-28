@@ -237,6 +237,25 @@ TestGame:
             text: "next"
             on_press: root.nextPage()
 
+<saveas@BoxLayout>
+    orientation: 'vertical'
+
+    nameLabel: nameLabel
+    #screenShot: screenShot
+
+
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: "Name"
+        tbox:
+            id: nameLabel
+            text:""
+    #Image:
+    #    id:screenShot
+    Button:
+        text:"Save"
+        on_press: root.savePressed(self)
 <uploads@BoxLayout>
     orientation: 'vertical'
     userName: userName
@@ -775,35 +794,38 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            Button:
-                text: 'Save'
-                on_press: root.savePressed(self)
-            Button:
-                text: 'Load'
-                on_press: root.loadPressed(self)
-            Button:
-                text: 'Export Wheelz'
-                on_press: root.wheelzPressed(self)
-            tbox:
+            Label:
                 size_hint_y: None
                 height:40
                 id: nameBox
                 text: 'defaultlevel'
             Button:
+                text: 'Clear'
+                on_press: root.clearPressed(self)
+            Button:
+                text: 'Load'
+                on_press: root.customlvlPressed()
+            Button:
+                text: 'Quick Load'
+                on_press: root.loadPressed(self)
+            Button:
                 text: 'Examples'
                 on_press: root.changel3menu(root.examplesMenu)
             Button:
-                text: 'Custom'
-                on_press: root.customlvlPressed()
+                text: 'Quick Save'
+                on_press: root.savePressed(self)
+            Button:
+                text: 'Save As...'
+                on_press: root.saveAsPressed(self)
+            Button:
+                text: 'Export Wheelz'
+                on_press: root.wheelzPressed(self)
             Button:
                 text: 'Download'
                 on_press: root.downloadsPressed(self)
             Button:
                 text: 'Upload'
                 on_press: root.uploadPressed(self)
-            Button:
-                text: 'Clear'
-                on_press: root.clearPressed(self)
         BoxLayout:
             id: settingsMenu
             orientation: 'vertical'
