@@ -209,6 +209,36 @@ class TestGame(Widget):
 		return entityID
 	def getEntFromID(self, entID):
 		return self.gameworld.entities[entID]
+	def create_segment(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
+				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
+		a= cy.Vec2d(-width/2,0)
+		b= cy.Vec2d(width/2,0)
+		box_dict = {
+			'a': a,
+			'b': b,
+			'radius': height,
+			'mass': mass}
+		col_shape = {'shape_type': 'segment', 'elasticity': elasticity,
+					 'collision_type': collision_type, 'shape_info': box_dict, 'friction': friction}
+		col_shapes = [col_shape]
+		physics_component = {'main_shape': 'box',
+							 'velocity': (x_vel, y_vel),
+							 'position': pos, 'angle': angle,
+							 'angular_velocity': angular_velocity,
+							 'vel_limit': 2048,
+							 'ang_vel_limit': radians(2000),
+							 'mass': mass, 'col_shapes': col_shapes}
+		create_component_dict = {'physics': physics_component,
+								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
+								 'position': pos, 'rotate': 0}
+		component_order = ['color', 'position', 'rotate',
+						   'physics', 'physics_renderer']
+		entityID = self.gameworld.init_entity(create_component_dict, component_order)
+		self.entIDs.append(entityID)
+		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
+		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
+		return entityID
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
 		box_dict = {
