@@ -46,6 +46,7 @@ class Serials():
 			poly = e.polyshape.poly
 			polystr = base64.encodestring(pio.encodeBinary(poly))
 			ed["polyviewbinary"] = polystr
+			ed["polyviewtristrip"] = poly.triStrip()
 
 			postr = []
 			index = 0
