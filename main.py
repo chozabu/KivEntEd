@@ -85,9 +85,9 @@ class TestGame(Widget):
 		if platform == 'android' or True:#apply kovaks hack to android only
 			try:
 				self._init_game(0)
-			except KeyError:
+			except KeyError as err:
 				print 'failed: rescheduling init'
-				print e
+				print err
 				Clock.schedule_once(self.init_game)
 		else:
 			self._init_game(0)
@@ -98,7 +98,8 @@ class TestGame(Widget):
 		self.setup_map()
 		self.setup_states()
 		self.set_state()
-
+		Clock.schedule_once(self.__init_game)
+	def __init_game(self, dt):
 		self.space = self.gameworld.systems['physics'].space
 		#self.space.add_collision_handler(1, 0, begin = self.pull2_first)
 		self.serials = serialisation.Serials(self)
@@ -110,10 +111,13 @@ class TestGame(Widget):
 			print "settings.jso found, loading last level"
 			if os.path.isfile(fileNamePath):
 				with open(fileNamePath) as fo:
-					settingsDict = json.load(fo)
-					self.serials.loadJSON(settingsDict['lastSave'])
-					self.mainTools.nameBox.text = settingsDict['lastSave'][0:-5]
-					noload = False
+					try:
+						settingsDict = json.load(fo)
+						self.serials.loadJSON(settingsDict['lastSave'])
+						self.mainTools.nameBox.text = settingsDict['lastSave'][0:-5]
+						noload = False
+					except:
+						print "could not load settings.jso level"
 
 		if noload:
 			self.draw_some_stuff()
