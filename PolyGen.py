@@ -16,11 +16,12 @@ import math
 #import triangle
 
 class PolyGen():
-	def __init__(self, poly=None, color=(1,1,1,0.9), keepsimple = False):
+	def __init__(self, poly=None, color=(1,1,1,0.9), keepsimple = False, minlinelen=2):
 		self.color = color
 		self.poly = poly
 		self.keepsimple = keepsimple
 		po.setTolerance(0.1)
+		self.minlinelen = minlinelen
 
 	def sub_circle_polygon(self, pos, sides=None, radius=30):
 		if sides is None:sides = int(8+math.sqrt(radius))
@@ -66,7 +67,7 @@ class PolyGen():
 
 	def draw_from_Polygon(self):
 		if len(self.poly) == 0: return False
-		self.remove_short_lines()
+		self.remove_short_lines(self.minlinelen)
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)

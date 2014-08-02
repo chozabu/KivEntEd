@@ -784,7 +784,9 @@ class TestGame(Widget):
 				lastpolyid = e.entity_id
 				pg = e.polyshape
 			else:
-				pg = PolyGen.PolyGen(keepsimple=self.mainTools.polyMenu.polySimpleButton.state != 'normal')
+				polyMenu = self.mainTools.polyMenu
+				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
+				                     minlinelen=polyMenu.minlenslider.value)
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
 			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid, do_physics=do_physics)

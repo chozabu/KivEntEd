@@ -656,6 +656,7 @@ TestGame:
             polyMergeButton: polyMergeButton
             polySimpleButton: polySimpleButton
             polyPhysButton: polyPhysButton
+            minlenslider: minlenslider
             ToggleButton:
                 group: 'ToolGroup'
                 id: polyButton
@@ -693,6 +694,18 @@ TestGame:
                     min:5
                     max:500
                     value:25
+            Label:
+                size_hint_y: None
+                height: self.font_size+5
+                text: 'MinLen:'
+            Slider:
+                size_hint_y: None
+                height: 30
+                id: minlenslider
+                orientation: "horizontal"
+                min:1
+                max:80
+                value:5
         BoxLayout:
             id: createMenu
             orientation: 'vertical'
