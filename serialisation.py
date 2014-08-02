@@ -16,6 +16,8 @@ class Serials():
 		self.wheelzserials = wheelzserials.Serials(gameref)
 
 		#wrap methods from seperated classes for now
+		self.exportDict = self.jsonserials.exportDict
+		self.loadFromDict = self.jsonserials.loadFromDict
 		self.loadJSON = self.jsonserials.loadJSON
 		self.loadExtJSON = self.jsonserials.loadExtJSON
 		self.exportJSON = self.jsonserials.exportJSON
