@@ -83,7 +83,7 @@ class ObjScripts():
 		if funcstr in self.gameref.mainTools.col_funcs: return
 		self.gameref.mainTools.col_funcs.append(funcstr)
 	def add_col_type(self,namestr):
-		if namestr in self.collision_types: return
+		if namestr in self.collision_types: return self.collision_types[namestr]
 		self.collision_types[namestr] = self.cctype
 		self.gameref.mainTools.col_types.append(namestr)
 		self.cctype+=1
