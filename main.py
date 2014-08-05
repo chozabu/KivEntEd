@@ -895,6 +895,8 @@ class TestGame(Widget):
 			delattr(ent, 'polyshape')
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
+			if b.data == self.startID:self.startID=None
+			if b.data == self.finishID:self.finishID=None
 			removeus = self.getJointsOnBody(b)
 			for rmu in removeus:
 				print rmu in self.space.constraints
