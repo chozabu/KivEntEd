@@ -1029,7 +1029,7 @@ class KivEntEd(App):
 
 	def get_application_config(self):
 		return self.get_application_storage_dir("%(appname)s.ini")
-	def on_start(self):
+	'''def on_start(self):
 		self.profile = cProfile.Profile()
 		self.profile.enable()
 
