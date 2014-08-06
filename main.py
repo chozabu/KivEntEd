@@ -32,26 +32,26 @@ import sys
 
 #Tartley - Jonathan Hartley, http://tartley.com
 def poly_area(verts):
-    """
-    Return area of a simple (ie. non-self-intersecting) polygon.
-    Will be negative for counterclockwise winding.
-    """
-    accum = 0.0
-    for i in range(len(verts)):
-        j = (i + 1) % len(verts)
-        accum += verts[j][0] * verts[i][1] - verts[i][0] * verts[j][1]
-    return accum / 2
+	"""
+	Return area of a simple (ie. non-self-intersecting) polygon.
+	Will be negative for counterclockwise winding.
+	"""
+	accum = 0.0
+	for i in range(len(verts)):
+		j = (i + 1) % len(verts)
+		accum += verts[j][0] * verts[i][1] - verts[i][0] * verts[j][1]
+	return accum / 2
 
 
 
 def cross(a, b):
-    return a[0]*b[1]-a[1]*b[0]
+	return a[0]*b[1]-a[1]*b[0]
 
 def cross3d(a, b):
-    c = [a[1]*0 - 0*b[1],
-         0*b[0] - a[0]*0,
-         a[0]*b[1] - a[1]*b[0]]
-    return c
+	c = [a[1]*0 - 0*b[1],
+		 0*b[0] - a[0]*0,
+		 a[0]*b[1] - a[1]*b[0]]
+	return c
 
 class TestGame(Widget):
 	def __init__(self, **kwargs):
@@ -1029,13 +1029,13 @@ class KivEntEd(App):
 
 	def get_application_config(self):
 		return self.get_application_storage_dir("%(appname)s.ini")
-'''    def on_start(self):
-        self.profile = cProfile.Profile()
-        self.profile.enable()
+	def on_start(self):
+		self.profile = cProfile.Profile()
+		self.profile.enable()
 
-    def on_stop(self):
-        self.profile.disable()
-        self.profile.dump_stats('myapp.profile')'''
+	def on_stop(self):
+		self.profile.disable()
+		self.profile.dump_stats('myapp.profile')'''
 
 if __name__ == '__main__':
 	KivEntEd().run()
