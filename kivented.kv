@@ -694,6 +694,7 @@ TestGame:
                     min:5
                     max:500
                     value:25
+                    on_value: root.brush_size_changed(self.value)
             Label:
                 size_hint_y: None
                 height: self.font_size+5

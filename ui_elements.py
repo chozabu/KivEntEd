@@ -4,6 +4,8 @@ import os
 import glob
 import re
 
+import math
+
 import json
 
 from kivy.clock import Clock
@@ -583,6 +585,12 @@ class MainTools(FloatLayout):
 		if shape:
 			shape.body.angle = fval
 			self.gameref.reindexEnt(self.selectedEntity)
+	def brush_size_changed(self, value):
+		sides = int(8+math.sqrt(value))
+		sidelen =value*math.pi*2/sides
+		self.polyMenu.minlenslider.value = sidelen-1
+		print sidelen
+
 
 	def simplifyPolyPressed(self, instance):
 		ent = self.selectedEntity
