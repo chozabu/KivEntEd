@@ -370,6 +370,7 @@ class MainTools(FloatLayout):
 	data_key_types = ListProperty()
 	def __init__(self, **kwargs):
 		super(MainTools, self).__init__(**kwargs)
+		self.grav_backup = cy.Vec2d(0,0)
 		self.staticOn = False
 		self.paused = False
 		self.killMomem = False
@@ -950,5 +951,6 @@ class MainTools(FloatLayout):
 		self.paused = not self.paused
 		instance.text = "Resume" if self.paused else "Pause"
 	def momemPressed(self, instance):
+		self.grav_backup, self.gameref.space.gravity = self.gameref.space.gravity, self.grav_backup
 		self.killMomem = not self.killMomem
 		#instance.text = "Resume" if self.paused else "Pause"
