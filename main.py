@@ -169,12 +169,14 @@ class TestGame(Widget):
 			space.gravity = space.gravity.x - 10, space.gravity.y
 		if keycode[1] == 'right':
 			space.gravity = space.gravity.x + 10, space.gravity.y
+		self.mainTools.inputPreview.text = str(self.space.gravity)
 		return True
 
 	def setGrav(self, g):
 		self.space.gravity = (g[0], g[1])
 		self.mainTools.gravxSlider.value = g[0]
 		self.mainTools.gravySlider.value = g[1]
+		self.mainTools.inputPreview.text = str(self.space.gravity)
 	def create_decoration(self, pos=(0, 0), width=40, height=40, angle=0, texture="sheep", color=(1,1,1,1)):
 		create_component_dict = {
 			'renderer': {'texture': texture, 'size': (width, height)},
