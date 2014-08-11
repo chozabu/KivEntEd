@@ -276,13 +276,13 @@ class TestGame(Widget):
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		#print "poly, oldpoly=", lastpolyid
 
-		print do_physics
+		#print do_physics
 		if lastpolyid:
 			oldpoly = self.getEntFromID(lastpolyid)
 			if do_physics == None:
-				print oldpoly.load_order
+				#print oldpoly.load_order
 				do_physics = 'physics' in oldpoly.load_order
-				print do_physics
+				#print do_physics
 			if hasattr(oldpoly, 'physics'):
 				if friction == None: friction = oldpoly.physics.shapes[0].friction
 				if elasticity == None: elasticity = oldpoly.physics.shapes[0].elasticity
@@ -402,7 +402,7 @@ class TestGame(Widget):
 
 			#newpoly.poly_renderer.texture.wrap = 'repeat'
 
-			print "poly has: " + str(len(triangles)) + " triangles"
+			#print "poly has: " + str(len(triangles)) + " triangles"
 			return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
@@ -427,15 +427,15 @@ class TestGame(Widget):
 		ent.rotate.r = r
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
-			print "removing ",j, " from space"
-			print "constraints before joint removal: ", self.space.constraints
-			print j.a, j.b
+			#print "removing ",j, " from space"
+			#print "constraints before joint removal: ", self.space.constraints
+			#print j.a, j.b
 			self.space.remove(j)
-			print "constraints after joint removal: ", self.space.constraints
+			#print "constraints after joint removal: ", self.space.constraints
 			#if j in self.space.constraints:
 			#	self.space.constraints.remove(j)
 		if j in  self.jointEnts:
-			print "removing ent and from dict"
+			#print "removing ent and from dict"
 			jent = self.jointEnts[j]
 			eid = jent.entity_id
 			self.gameworld.remove_entity(eid)
@@ -529,7 +529,7 @@ class TestGame(Widget):
 				screen_mid = (viewport.size[0]*0.5,viewport.size[1]*0.5)
 				#screen_mid = ctouch['screenpos']
 				sf = 1.0-touch.dy*0.001#+yd*0.00003
-				print touch.dy
+				#print touch.dy
 				#camera_scale = viewport.camera_scale*sf+yd*0.0001
 				#camera_scale = max(0.2, min(20, camera_scale))
 				self.zoomcam(sf, screen_mid)
@@ -860,7 +860,7 @@ class TestGame(Widget):
 		colshapes = space.shape_query(cs)
 		polys = []
 		if len(colshapes)>0:
-			print colshapes
+			#print colshapes
 			ents = {}
 			for shape in colshapes:
 				id = shape.body.data
@@ -879,9 +879,9 @@ class TestGame(Widget):
 		space = self.space
 		print "clearing objects"
 		for eid in list(self.entIDs):
-			print "beforedel"
+			#print "beforedel"
 			self.delObj(eid)
-			print "afterdel"
+			#print "afterdel"
 		#space.remove(list(space.constraints))
 		print "clearing joints"
 		for c in list(space.constraints):
@@ -900,12 +900,12 @@ class TestGame(Widget):
 			if b.data == self.startID:self.startID=None
 			if b.data == self.finishID:self.finishID=None
 			removeus = self.getJointsOnBody(b)
-			for rmu in removeus:
-				print rmu in self.space.constraints
+			#for rmu in removeus:
+			#	print rmu in self.space.constraints
 			for c in removeus:
 				#print "removing", c
 				self.deleteJoint(c)
-		print ent, self.mainTools.selectedEntity
+		#print ent, self.mainTools.selectedEntity
 		if ent == self.mainTools.selectedEntity:
 			self.mainTools.setShape(None)
 		self.gameworld.remove_entity(objid)
