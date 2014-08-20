@@ -589,7 +589,7 @@ class MainTools(FloatLayout):
 	def brush_size_changed(self, value):
 		sides = int(8+math.sqrt(value))
 		sidelen =value*math.pi*2/sides
-		self.polyMenu.minlenslider.value = sidelen-1
+		self.polyMenu.minlenslider.value = (sidelen-1)*0.3
 		print sidelen
 
 
