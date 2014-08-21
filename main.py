@@ -210,6 +210,11 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		phys = self.gameworld.entities[entityID].physics
 		phys.shapes[0].sensor = sensor
+		'''layers = 2**randint(1,7)
+		layers+=randint(0,1)
+		print self.gameworld.entities[entityID].physics.shapes[0].layers
+		self.gameworld.entities[entityID].physics.shapes[0].layers = layers+1#4294967295-layers-2
+		print layers, self.gameworld.entities[entityID].physics.shapes[0].layers'''
 		#c = cy.Circle(phys.body, 100)
 		#self.space.add(c)
 		return entityID
