@@ -947,10 +947,10 @@ class MainTools(FloatLayout):
 		self.massSlider.value = 0 if self.massSlider.value > 0 else 10
 
 
-	def playPressed(self, instance):
+	def playPressed(self, instance=None):
 		self.paused = not self.paused
-		instance.text = "Resume" if self.paused else "Pause"
-	def momemPressed(self, instance):
+		if instance: instance.text = "Resume" if self.paused else "Pause"
+	def momemPressed(self, instance=None):
 		self.grav_backup, self.gameref.space.gravity = self.gameref.space.gravity, self.grav_backup
 		self.killMomem = not self.killMomem
 		#instance.text = "Resume" if self.paused else "Pause"

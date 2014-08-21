@@ -136,7 +136,8 @@ class Serials():
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": gt,
-								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
+								  "startID":self.gameref.startID, "finishID": self.gameref.finishID,
+								  "killMomem":self.gameref.mainTools.killMomem, "paused": self.gameref.mainTools.paused}}
 		return worlddict
 
 	def exportJSON(self, fileName="defaultlevel.json"):
@@ -294,4 +295,10 @@ class Serials():
 				fid = settings['finishID']
 				if fid != -1:
 					self.gameref.finishID = idConvDict[fid]
-
+			if "killMomem" in settings:
+				km = settings['killMomem']
+				if not self.gameref.mainTools.killMomem and km:
+					self.gameref.mainTools.momemPressed()
+			if "paused" in settings:
+				pm = settings['paused']
+				if not self.gameref.mainTools.paused: self.gameref.mainTools.paused = pm
