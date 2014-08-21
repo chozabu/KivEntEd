@@ -186,7 +186,8 @@ class TestGame(Widget):
 		return entityID
 
 	def create_circle(self, pos, radius=6., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
+					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0,
+					  color=(1,1,1,1), do_physics = True):
 		shape_dict = {'inner_radius': 0, 'outer_radius': radius,
 					  'mass': mass, 'offset': (0, 0)}
 		col_shape = {'shape_type': 'circle', 'elasticity': elasticity,
@@ -199,17 +200,27 @@ class TestGame(Widget):
 							 'vel_limit': 2048,
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
-		create_component_dict = {'physics': physics_component,
-								 'physics_renderer': {'texture': texture, 'size': (radius * 2, radius * 2)}, 'color':color,
+		create_component_dict = {#'physics': physics_component,
+								 'color':color,
 								 'position': pos, 'rotate': 0}
-		component_order = ['color', 'position', 'rotate',
+		#component_order = ['color', 'position', 'rotate',
+		#				   'physics_renderer']
+		render_component = {'texture': texture, 'size': (radius * 2, radius * 2)}
+		if do_physics:
+			create_component_dict['physics'] = physics_component
+			create_component_dict['physics_renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
+		else:
+			create_component_dict['renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
+						   'renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		phys = self.gameworld.entities[entityID].physics
-		phys.shapes[0].sensor = sensor
+		if selectNow and do_physics: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		if do_physics:phys = self.gameworld.entities[entityID].physics
+		if do_physics:phys.shapes[0].sensor = sensor
 		'''layers = 2**randint(1,7)
 		layers+=randint(0,1)
 		print self.gameworld.entities[entityID].physics.shapes[0].layers
@@ -687,10 +698,11 @@ class TestGame(Widget):
 				self.create_poly((0,0),pg,entID)
 
 
+		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
 			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-							texture=self.mainTools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
 
 		if currentTool == "start":
 			if self.startID < 0:
@@ -709,18 +721,19 @@ class TestGame(Widget):
 
 		if currentTool == "circle":
 			if dist < 4: dist = 8
-			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text, angle=angle)
+			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
+			                   angle=angle, do_physics=do_physics)
 		if currentTool == "box":
 			width = fabs(xd)
 			height = fabs(yd)
 			if width< 4: width=8
 			if height< 4: height=8
 			self.create_box((midx, midy), mass=mass, width=width, height=height, angle=0,
-							texture=self.mainTools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
 		if currentTool == "square":
 			if dist < 4: dist = 8
 			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
-							texture=self.mainTools.spriteSpinner.text)
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
 	def zoomcam(self, sf, pos = (0,0)):
