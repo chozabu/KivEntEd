@@ -118,6 +118,8 @@ class TestGame(Widget):
 						noload = False
 					except:
 						print "could not load settings.jso level"
+						import traceback
+						traceback.print_exc()
 
 		if noload:
 			self.draw_some_stuff()
