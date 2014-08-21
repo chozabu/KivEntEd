@@ -78,6 +78,10 @@ class Serials():
 			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
 				   "texture": e.physics_renderer.texture}
 			ed["physics_renderer"] = prd
+		if hasattr(e, "renderer"):
+			prd = {"width": e.renderer.width, "height": e.renderer.height,
+				   "texture": e.renderer.texture}
+			ed["renderer"] = prd
 		if hasattr(e, "position"):
 			pd = {"x": e.position.x, "y": e.position.y}
 			ed["position"] = pd
@@ -174,7 +178,9 @@ class Serials():
 		collision_type = 0
 		xinfo = {}
 		stype = None
+		do_physics = False
 		if "physics" in e:
+			do_physics = True
 			stype = e['physics']['shape_type']
 			#print stype
 			p = e['physics']
@@ -210,12 +216,24 @@ class Serials():
 			por = e['poly_renderer']
 			texture = str(por['texture'])
 			print texture
+		if 'renderer' in e:
+			por = e['renderer']
+			texture = str(por['texture'])
+			width =por['width']
+			height =por['height']
+			stype = 'decoration'
+			print texture
+			if 'rotate' in e:angle = e['rotate']['r']
+			if 'position' in e:bp = (e['position']['x'], e['position']['y'])
 		color = (1,1,1,1)
 		if 'color' in e:
 			cl = e['color']
 			color = (cl[0],cl[1],cl[2],cl[3])
 		entID = None
-		if stype == "circle":
+		if stype == "decoration":
+			entID = self.gameref.create_circle(bp, radius=width, angle=angle, do_physics=False,
+													   texture=texture, selectNow=False, color=color)
+		elif stype == "circle":
 			entID = self.gameref.create_circle(bp, radius=radius, mass=mass,
 														  friction=friction,
 														  elasticity=elasticity, angle=angle,
