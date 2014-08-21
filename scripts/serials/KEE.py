@@ -125,9 +125,17 @@ class Serials():
 		collision_typeslist = self.gameref.mainTools.col_types
 		collision_typesdict = self.gameref.scripty.collision_handlers
 
+		gr = None
+		gb = self.gameref.mainTools.grav_backup
+		if self.gameref.mainTools.killMomem and not (gb.x == 0 and gb.y == 0):
+			gr = gb
+		else:
+			gr = self.gameref.space.gravity
+		gt = (gr.x,gr.y)
+
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
-					 "settings": {"gravity": (space.gravity.x, space.gravity.y),
+					 "settings": {"gravity": gt,
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID}}
 		return worlddict
 
