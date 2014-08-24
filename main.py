@@ -264,7 +264,8 @@ class TestGame(Widget):
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
-				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
+				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0,
+				   color=(1,1,1,1), do_physics = True):
 		box_dict = {
 			'width': width,
 			'height': height,
@@ -282,8 +283,19 @@ class TestGame(Widget):
 		create_component_dict = {'physics': physics_component,
 								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
 								 'position': pos, 'rotate': 0}
-		component_order = ['color', 'position', 'rotate',
+		#component_order = ['color', 'position', 'rotate',
+		#				   'physics', 'physics_renderer']
+
+		render_component = {'texture': texture, 'size': (width, height)}
+		if do_physics:
+			create_component_dict['physics'] = physics_component
+			create_component_dict['physics_renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
+		else:
+			create_component_dict['renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
+						   'renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
