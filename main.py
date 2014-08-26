@@ -850,7 +850,8 @@ class TestGame(Widget):
 			if ent:
 				if hasattr(ent, 'splineshape'):
 					ss = ent.splineshape
-					ss.add_or_select(pos, 40)
+					viewport = self.gameworld.systems['gameview']
+					ss.add_or_select(pos, 40*viewport.camera_scale)
 					ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
 
@@ -868,7 +869,8 @@ class TestGame(Widget):
 					print "entid=", ent.entity_id
 					ss = ent.splineshape
 					if len(ss.ControlPoints)>3:
-						ss.remove_point(pos, 40)
+						viewport = self.gameworld.systems['gameview']
+						ss.remove_point(pos, 40*viewport.camera_scale)
 						ss.DrawCurve()
 						ent.polyshape.from_spline(ss.subpoints)
 						spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
