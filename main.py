@@ -503,6 +503,8 @@ class TestGame(Widget):
 		self.mainTools.on_touch_move(touch)
 		space = self.space
 		ctouch = self.touches[touch.id]
+
+		if ctouch['onmenu']: return
 		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
 		currentTool = ctouch['tool']
