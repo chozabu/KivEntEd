@@ -23,6 +23,12 @@ class PolyGen():
 		po.setTolerance(0.1)
 		self.minlinelen = minlinelen
 
+	def from_spline(self, points):
+		newp = Polygon()
+		print points
+		newp.addContour(points)
+		self.poly = newp
+
 	def sub_circle_polygon(self, pos, sides=None, radius=30):
 		if sides is None:sides = int(8+math.sqrt(radius))
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)

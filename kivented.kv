@@ -359,6 +359,7 @@ TestGame:
     rightMenu: rightMenu
     createMenu: createMenu.__self__
     polyMenu: polyMenu.__self__
+    splineMenu: splineMenu.__self__
     rootMenu: rootMenu
     joinMenu: joinMenu.__self__
     entityMenu: entityMenu.__self__
@@ -572,6 +573,9 @@ TestGame:
                 text: 'Polygon'
                 on_press: root.changel2menu(root.polyMenu)
             Button:
+                text: 'Spline'
+                on_press: root.changel2menu(root.splineMenu)
+            Button:
                 text: 'Start/End'
                 on_press: root.changel2menu(root.entityMenu)
             Button:
@@ -707,6 +711,51 @@ TestGame:
                 min:1
                 max:80
                 value:5
+        BoxLayout:
+            id: splineMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+            brushSizeSlider: brushSizeSlider
+            polyMergeButton: polyMergeButton
+            polySimpleButton: polySimpleButton
+            polyPhysButton: polyPhysButton
+            minlenslider: minlenslider
+            ToggleButton:
+                group: 'ToolGroup'
+                id: splineButton
+                text: 'New Spline'
+                on_press: root.setTool("spline")
+            ToggleButton:
+                group: 'ToolGroup'
+                id: splineButton
+                text: 'Edit Spline'
+                on_press: root.setTool("splineed")
+            ToggleButton:
+                group: 'ToolGroup'
+                id: removePointButton
+                text: 'Remove Point'
+                on_press: root.setTool("splinesub")
+            Label:
+                text: 'Settings:'
+            ToggleButton:
+                id: splinePhysButton
+                text: 'NoPhysics'
+                #state: 'down'
+                height: self.font_size+6
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Smoothness"
+                    #on_press: root.massPressed(self)
+                Slider:
+                    id: smoothnessSlider
+                    orientation: "vertical"
+                    min:1
+                    max:10
+                    value:4
+                    #on_value: root.brush_size_changed(self.value)
         BoxLayout:
             id: createMenu
             orientation: 'vertical'

@@ -414,7 +414,8 @@ class MainTools(FloatLayout):
 
 
 	def init_tools(self, dt):
-		self.l2menus = [self.settingsMenu, self.joinMenu, self.createMenu, self.entityMenu, self.fileMenu, self.polyMenu]
+		self.l2menus = [self.settingsMenu, self.joinMenu, self.createMenu, self.entityMenu,
+		                self.fileMenu, self.polyMenu, self.splineMenu]
 		self.l3menus = [self.examplesMenu,self.levelsMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"

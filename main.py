@@ -7,6 +7,7 @@ import cymunk as cy
 from math import *
 import os
 import PolyGen
+import Spline
 
 #import cProfile
 
@@ -542,6 +543,26 @@ class TestGame(Widget):
 				ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
 				ctouch['pos'] = pos
 
+		if currentTool == 'splineed':
+			ent = self.mainTools.selectedEntity
+			if ent:
+				if hasattr(ent, 'splineshape'):
+					print "entid=", ent.entity_id
+					ss = ent.splineshape
+					#ss.add_or_select(pos, 40)
+
+					ss.ControlPoints[ss.selected_point] = pos
+					ss.DrawCurve()
+					ent.polyshape.from_spline(ss.subpoints)
+					#print ss.ControlPoints
+
+
+					spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+					#print "spline_ent_id=",spline_ent_id
+					spline_ent = self.getEntFromID(spline_ent_id)
+					spline_ent.splineshape = ss
+					shape = spline_ent.physics.shapes[0]
+					#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == "camera":
 			#print len(self.touches)
@@ -799,6 +820,45 @@ class TestGame(Widget):
 		currentTool = self.mainTools.currentTool
 		print "Tool is: " + currentTool
 		ctouch['active'] = True
+
+
+		if currentTool == 'spline':
+			newspline = Spline.Spline()
+			newspline.add_or_select((pos[0]-150, pos[1]), 2)
+			newspline.add_or_select((pos[0], pos[1]+170), 2)
+			newspline.add_or_select((pos[0]+150, pos[1]), 2)
+			newspline.DrawCurve()
+
+			pg = PolyGen.PolyGen()
+			pg.from_spline(newspline.subpoints)
+			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
+			spline_ent_id =  self.create_poly(pos,pg,selectNow=True)#, do_physics=do_physics)
+			spline_ent = self.getEntFromID(spline_ent_id)
+			spline_ent.splineshape = newspline
+			#self.mainTools.setEnt(spline_ent_id)
+			shape = spline_ent.physics.shapes[0]
+			#ctouch['polygen'] = pg
+			self.mainTools.currentTool = 'splineed'#TODO set tool
+
+
+		if currentTool == 'splineed':
+			ent = self.mainTools.selectedEntity
+			if ent:
+				if hasattr(ent, 'splineshape'):
+					print "entid=", ent.entity_id
+					ss = ent.splineshape
+					ss.add_or_select(pos, 40)
+					ss.DrawCurve()
+					ent.polyshape.from_spline(ss.subpoints)
+					print ss.ControlPoints
+
+
+					spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+					print "spline_ent_id=",spline_ent_id
+					spline_ent = self.getEntFromID(spline_ent_id)
+					spline_ent.splineshape = ss
+					shape = spline_ent.physics.shapes[0]
+					#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == 'polysub':
 			polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
