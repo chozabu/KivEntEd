@@ -825,7 +825,7 @@ class TestGame(Widget):
 
 
 		if currentTool == 'spline':
-			newspline = Spline.Spline()
+			newspline = Spline.Spline(stepsize=1./self.mainTools.splineMenu.smoothnessSlider.value)
 			newspline.add_or_select((pos[0]-150, pos[1]), 2)
 			newspline.add_or_select((pos[0], pos[1]+170), 2)
 			newspline.add_or_select((pos[0]+150, pos[1]), 2)
