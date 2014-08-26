@@ -840,7 +840,9 @@ class TestGame(Widget):
 			#self.mainTools.setEnt(spline_ent_id)
 			shape = spline_ent.physics.shapes[0]
 			#ctouch['polygen'] = pg
-			self.mainTools.currentTool = 'splineed'#TODO set tool
+			self.mainTools.setTool('splineed')
+			self.mainTools.splineMenu.splineButton.state = 'normal'
+			self.mainTools.splineMenu.splineEdButton.state = 'down'
 
 
 		if currentTool == 'splineed':
