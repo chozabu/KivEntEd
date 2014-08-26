@@ -848,6 +848,19 @@ class TestGame(Widget):
 		if currentTool == 'splineed':
 			ent = self.mainTools.selectedEntity
 			if ent:
+				if not hasattr(ent, 'splineshape') and hasattr(ent, 'polyshape'):
+					pg = ent.polyshape
+					cont = pg.poly[0]
+					print len(cont)
+					cp = []
+					for pindex in xrange(0, len(cont), 4):
+						p=cont[pindex]
+						cp.append(p)
+					if len(cp)>4:
+						newspline = Spline.Spline()
+						newspline.ControlPoints = cp
+						ent.splineshape = newspline
+
 				if hasattr(ent, 'splineshape'):
 					ss = ent.splineshape
 					viewport = self.gameworld.systems['gameview']
@@ -865,6 +878,10 @@ class TestGame(Widget):
 		if currentTool == 'splinesub':
 			ent = self.mainTools.selectedEntity
 			if ent:
+				if not hasattr(ent, 'splineshape') and hasattr(ent, 'polyshape'):
+					pg = ent.polyshape
+					cont = pg.poly[0]
+					print len(cont)
 				if hasattr(ent, 'splineshape'):
 					print "entid=", ent.entity_id
 					ss = ent.splineshape
@@ -1006,6 +1023,8 @@ class TestGame(Widget):
 		ent =  self.getEntFromID(objid)
 		if hasattr(ent, 'polyshape'):
 			delattr(ent, 'polyshape')
+		if hasattr(ent, 'splineshape'):
+			delattr(ent, 'splineshape')
 		if hasattr(ent, "physics"):
 			b = ent.physics.body
 			if b.data == self.startID:self.startID=None
