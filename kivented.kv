@@ -717,11 +717,10 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            brushSizeSlider: brushSizeSlider
-            polyMergeButton: polyMergeButton
-            polySimpleButton: polySimpleButton
-            polyPhysButton: polyPhysButton
-            minlenslider: minlenslider
+            splineButton: splineButton
+            splineEdButton: splineEdButton
+            removePointButton: removePointButton
+            smoothnessSlider: smoothnessSlider
             ToggleButton:
                 group: 'ToolGroup'
                 id: splineButton
@@ -729,7 +728,7 @@ TestGame:
                 on_press: root.setTool("spline")
             ToggleButton:
                 group: 'ToolGroup'
-                id: splineButton
+                id: splineEdButton
                 text: 'Edit Spline'
                 on_press: root.setTool("splineed")
             ToggleButton:
