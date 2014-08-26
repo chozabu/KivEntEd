@@ -862,6 +862,22 @@ class TestGame(Widget):
 					shape = spline_ent.physics.shapes[0]
 					#self.create_poly((0,0),pg,ent.entity_id)
 
+		if currentTool == 'splinesub':
+			ent = self.mainTools.selectedEntity
+			if ent:
+				if hasattr(ent, 'splineshape'):
+					print "entid=", ent.entity_id
+					ss = ent.splineshape
+					if len(ss.ControlPoints)>3:
+						ss.remove_point(pos, 40)
+						ss.DrawCurve()
+						ent.polyshape.from_spline(ss.subpoints)
+						spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+						spline_ent = self.getEntFromID(spline_ent_id)
+						spline_ent.splineshape = ss
+						shape = spline_ent.physics.shapes[0]
+					#self.create_poly((0,0),pg,ent.entity_id)
+
 		if currentTool == 'polysub':
 			polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			for p in polys:
