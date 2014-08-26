@@ -389,6 +389,7 @@ class MainTools(FloatLayout):
 		self.gameref = None
 		self.entcpy = None #item on the clipboard
 		self.fireText = True
+		self.cpointids = []
 		#self.exampleLevels
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
@@ -756,9 +757,18 @@ class MainTools(FloatLayout):
 		self.selectedEntity = ent
 		self.inputPreview.text = ""
 		self.selectedMenu.shapeInfo.clear_widgets()
+		for id in self.cpointids:
+			self.gameref.delObj(id)
+		self.cpointids = []
 		if ent:
 			self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
 			#ent = self.selectedEntity
+			if hasattr(ent, 'splineshape'):
+
+				for p in ent.splineshape.ControlPoints:
+					pid = self.gameref.create_decoration(pos=(p[0], p[1]), width=20, height=20,
+																texture='plank')
+					self.cpointids.append(pid)
 			#print dir(ent.physics)
 			if hasattr(ent, 'physics'):
 				if fshape:

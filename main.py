@@ -564,6 +564,7 @@ class TestGame(Widget):
 					spline_ent = self.getEntFromID(spline_ent_id)
 					spline_ent.splineshape = ss
 					shape = spline_ent.physics.shapes[0]
+					self.mainTools.setEnt(spline_ent)
 					#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == "camera":
