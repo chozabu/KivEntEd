@@ -188,7 +188,6 @@ class Spline():
 			finalLines.extend(Lines2[:-1])
 
 			i += 1
-		print finalLines
 		finalLines.append(Lines2[-1])
 		self.subpoints = finalLines
 		return finalLines

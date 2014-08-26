@@ -25,7 +25,7 @@ class PolyGen():
 
 	def from_spline(self, points):
 		newp = Polygon()
-		print points
+		#print points
 		newp.addContour(points)
 		self.poly = newp
 

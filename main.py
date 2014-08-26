@@ -549,7 +549,7 @@ class TestGame(Widget):
 			ent = self.mainTools.selectedEntity
 			if ent:
 				if hasattr(ent, 'splineshape'):
-					print "entid=", ent.entity_id
+					#print "entid=", ent.entity_id
 					ss = ent.splineshape
 					#ss.add_or_select(pos, 40)
 
@@ -849,16 +849,13 @@ class TestGame(Widget):
 			ent = self.mainTools.selectedEntity
 			if ent:
 				if hasattr(ent, 'splineshape'):
-					print "entid=", ent.entity_id
 					ss = ent.splineshape
 					ss.add_or_select(pos, 40)
 					ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
-					print ss.ControlPoints
 
 
 					spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
-					print "spline_ent_id=",spline_ent_id
 					spline_ent = self.getEntFromID(spline_ent_id)
 					spline_ent.splineshape = ss
 					shape = spline_ent.physics.shapes[0]

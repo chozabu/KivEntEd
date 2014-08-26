@@ -772,7 +772,7 @@ class MainTools(FloatLayout):
 				self.selectedMenu.frictionLabel.text = "%0.2f" % shape.friction
 				self.selectedMenu.massLabel.text = "%0.2f" % shape.body.mass
 				self.selectedMenu.elasLabel.text = "%0.2f" % shape.elasticity
-				print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
+				#print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
 				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
 
 				if shape.__class__.__name__ == "Circle":
