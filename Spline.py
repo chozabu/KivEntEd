@@ -12,12 +12,15 @@ class Spline():
 		self.subpoints = []
 		self.stepsize = stepsize
 		self.selected_point = None
-	def add_or_select(self, mpos, selection_dist):
+	def add_or_select(self, mpos, selection_dist, max_range=300):
 		nearest, dist2, nindex = self.nearestPoint((mpos[0],mpos[1]))
 		#print "\n"
+		selected = None
 		if dist2 < selection_dist**2:
 			selected = nindex
-		else:
+		elif len(self.ControlPoints) < 3 or dist2< max_range**2:
+			import math
+			print math.sqrt(dist2)
 			selected = self.add_point((mpos[0],mpos[1]))
 		self.selected_point = selected
 		#print selected
@@ -48,7 +51,7 @@ class Spline():
 	def nearestSubPoint(self, pos):
 		return self._nearest(pos, self.subpoints)
 	def _nearest(self, pos, points):
-		shortest = 999999
+		shortest = 999999**2
 		nearest = None
 		index = -1
 		retindex = 0

@@ -553,8 +553,9 @@ class TestGame(Widget):
 					ss = ent.splineshape
 					#ss.add_or_select(pos, 40)
 
-					ss.ControlPoints[ss.selected_point] = pos
-					ss.DrawCurve()
+					if ss.selected_point != None:
+						ss.ControlPoints[ss.selected_point] = pos
+						ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
 					#print ss.ControlPoints
 
@@ -864,8 +865,9 @@ class TestGame(Widget):
 
 				if hasattr(ent, 'splineshape'):
 					ss = ent.splineshape
-					viewport = self.gameworld.systems['gameview']
-					ss.add_or_select(pos, 40*viewport.camera_scale)
+					camera_scale = self.gameworld.systems['gameview'].camera_scale
+					print camera_scale*300
+					ss.add_or_select(pos, 40*camera_scale, 300*camera_scale)
 					ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
 
