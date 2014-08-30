@@ -626,8 +626,11 @@ class TestGame(Widget):
 			if 'origAngle' not in ctouch: ctouch['origAngle'] = shape.body.angle-angle
 			shape.body.angle = (angle+ctouch['origAngle'])
 		if (currentTool == 'drag' or currentTool == 'paste'):
+			viewport = self.gameworld.systems['gameview']
 			if shape and (shape.body.is_static or self.mainTools.paused):
-				shape.body.position = (shape.body.position.x + touch.dx, shape.body.position.y + touch.dy)
+				dx = touch.dx*viewport.camera_scale
+				dy = touch.dy*viewport.camera_scale
+				shape.body.position = (shape.body.position.x + dx, shape.body.position.y + dy)
 				self.reindexEntID(shape.body.data)
 				if self.mainTools.paused:
 					(self.gameworld.systems['physics'].update(0.00000001))
