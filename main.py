@@ -559,14 +559,14 @@ class TestGame(Widget):
 					ent.polyshape.from_spline(ss.subpoints)
 					#print ss.ControlPoints
 
-
-					spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
-					#print "spline_ent_id=",spline_ent_id
-					spline_ent = self.getEntFromID(spline_ent_id)
-					spline_ent.splineshape = ss
-					shape = spline_ent.physics.shapes[0]
-					self.mainTools.setEnt(spline_ent)
-					#self.create_poly((0,0),pg,ent.entity_id)
+					if ent.polyshape.poly.area()>10:
+						spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+						#print "spline_ent_id=",spline_ent_id
+						spline_ent = self.getEntFromID(spline_ent_id)
+						spline_ent.splineshape = ss
+						shape = spline_ent.physics.shapes[0]
+						self.mainTools.setEnt(spline_ent)
+						#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == "camera":
 			#print len(self.touches)
