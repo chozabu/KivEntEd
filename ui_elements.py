@@ -964,4 +964,6 @@ class MainTools(FloatLayout):
 	def momemPressed(self, instance=None):
 		self.grav_backup, self.gameref.space.gravity = self.gameref.space.gravity, self.grav_backup
 		self.killMomem = not self.killMomem
+		if self.killMomem:self.leftMenu.momemButton.state = 'down'
+		else: self.leftMenu.momemButton.state = 'normal'
 		#instance.text = "Resume" if self.paused else "Pause"
