@@ -4,8 +4,7 @@ import cymunk as cy
 from kivy.core.audio import SoundLoader, Sound
 
 sound = SoundLoader.load('sounds/bing.wav')
-
-#Sound().status()
+sound.volume *= 0.2
 def collision_func(space, arbiter):
 	if arbiter.is_first_contact == 1:
 		second_body = arbiter.shapes[1].body
