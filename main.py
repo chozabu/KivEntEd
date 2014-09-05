@@ -306,6 +306,7 @@ class TestGame(Widget):
 	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		pg = PolyGen.PolyGen()
+		spline.DrawCurve()
 		pg.from_spline(spline.subpoints)
 		#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
 		spline_ent_id = self.create_poly(pos,pg,lastpolyid=lastpolyid, mass=mass, friction=friction,
@@ -315,6 +316,7 @@ class TestGame(Widget):
 
 		spline_ent = self.getEntFromID(spline_ent_id)
 		spline_ent.splineshape = spline
+		print "made spline"
 		return spline_ent_id
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
@@ -737,7 +739,17 @@ class TestGame(Widget):
 		#print currentTool, tshape
 		if currentTool == 'drag':
 			if ent:
-				if hasattr(ent, 'polyshape'):
+				if hasattr(ent, 'splineshape'):
+					ss = ent.splineshape
+					cps = ss.ControlPoints
+
+					for pindex in range(len(cps)):
+						p = cps[pindex]
+						cps[pindex]=(p[0]-xd, p[1]-yd)
+						#p[0]-=xd
+						#p[1]-=yd
+					self.create_spline((0,0),ss,ent.entity_id)
+				elif hasattr(ent, 'polyshape'):
 					pg = ent.polyshape
 					pg.poly.shift(-xd,-yd)
 					self.create_poly((0,0),pg,ent.entity_id)
@@ -960,8 +972,16 @@ class TestGame(Widget):
 				po = ent.polyshape.poly
 				poc = po.center()
 				shifter = (pos[0] - poc[0], pos[1] - poc[1])
-				po.shift(shifter[0], shifter[1])
-				self.create_poly((0,0),ent.polyshape,ent.entity_id)
+				if hasattr(ent, 'polyshape'):
+					ss = ent.splineshape
+					cps = ss.ControlPoints
+					for pindex in range(len(cps)):
+						p = cps[pindex]
+						cps[pindex]=(p[0]+shifter[0], p[1]+shifter[1])
+					self.create_spline((0,0),ss,ent.entity_id)
+				else:
+					po.shift(shifter[0], shifter[1])
+					self.create_poly((0,0),ent.polyshape,ent.entity_id)
 			elif hasattr(ent, 'physics'):
 				phys = ent.physics
 				phys.body.position = pos
