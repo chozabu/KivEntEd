@@ -4,7 +4,7 @@ import json
 import cymunk as cy
 import os
 import Polygon.IO as pio
-import PolyGen
+import PolyGen, Spline
 
 import base64
 
@@ -42,6 +42,10 @@ class Serials():
 			ed["load_order"] = e.load_order
 		if hasattr(e, "color"):
 			ed["color"] = [e.color.r,e.color.g,e.color.b,e.color.a]
+		if hasattr(e, 'splineshape'):
+			ss = e.splineshape
+			points = list(ss.ControlPoints)
+			ed["splineshape"] = {'ControlPoints':points, 'stepsize':ss.stepsize}
 		if hasattr(e, "polyshape"):
 			poly = e.polyshape.poly
 			polystr = base64.encodestring(pio.encodeBinary(poly))
@@ -225,6 +229,11 @@ class Serials():
 			print texture
 			if 'rotate' in e:angle = e['rotate']['r']
 			if 'position' in e:bp = (e['position']['x'], e['position']['y'])
+		if 'splineshape' in e:
+			#print "entid=", ent.entity_id
+			ss = e['splineshape']
+			points = ss['ControlPoints']
+			stype = 'spline'
 		color = (1,1,1,1)
 		if 'color' in e:
 			cl = e['color']
@@ -233,6 +242,13 @@ class Serials():
 		if stype == "decoration":
 			entID = self.gameref.create_circle(bp, radius=width, angle=angle, do_physics=False,
 													   texture=texture, selectNow=False, color=color)
+		elif 'splineshape' in e:
+			print "LOADING SPLINE"
+			newspline = Spline.Spline(stepsize=e['splineshape']['stepsize'])
+			newspline.ControlPoints = points
+			newspline.DrawCurve()
+
+			entID = self.gameref.create_spline(bp,newspline,selectNow=False)
 		elif stype == "circle":
 			entID = self.gameref.create_circle(bp, radius=radius, mass=mass,
 														  friction=friction,

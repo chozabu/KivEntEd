@@ -303,6 +303,19 @@ class TestGame(Widget):
 		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
 		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
+	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
+	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
+		pg = PolyGen.PolyGen()
+		pg.from_spline(spline.subpoints)
+		#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
+		spline_ent_id = self.create_poly(pos,pg,lastpolyid=lastpolyid, mass=mass, friction=friction,
+		                        elasticity=elasticity, angle=angle, x_vel=x_vel, y_vel=y_vel,
+		                        angular_velocity=angular_velocity, texture=texture, selectNow=selectNow,
+		                        do_physics = do_physics, collision_type = collision_type, color=color)#, do_physics=do_physics)
+
+		spline_ent = self.getEntFromID(spline_ent_id)
+		spline_ent.splineshape = spline
+		return spline_ent_id
 	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		#print "poly, oldpoly=", lastpolyid
@@ -836,12 +849,12 @@ class TestGame(Widget):
 			newspline.add_or_select((pos[0]+150, pos[1]), 2)
 			newspline.DrawCurve()
 
-			pg = PolyGen.PolyGen()
-			pg.from_spline(newspline.subpoints)
+			spline_ent_id = self.create_spline(pos,newspline,selectNow=True)
+			#pg = PolyGen.PolyGen()
+			#pg.from_spline(newspline.subpoints)
 			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			spline_ent_id =  self.create_poly(pos,pg,selectNow=True)#, do_physics=do_physics)
+			#spline_ent_id =  self.create_poly(pos,pg,selectNow=True)#, do_physics=do_physics)
 			spline_ent = self.getEntFromID(spline_ent_id)
-			spline_ent.splineshape = newspline
 			#self.mainTools.setEnt(spline_ent_id)
 			shape = spline_ent.physics.shapes[0]
 			#ctouch['polygen'] = pg
