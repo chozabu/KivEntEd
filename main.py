@@ -300,8 +300,8 @@ class TestGame(Widget):
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
+		if selectNow and do_physics: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		#self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
 		return entityID
 	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
