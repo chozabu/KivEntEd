@@ -281,8 +281,7 @@ class TestGame(Widget):
 							 'vel_limit': 2048,
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
-		create_component_dict = {'physics': physics_component,
-								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
+		create_component_dict = {'color':color,
 								 'position': pos, 'rotate': angle}
 		#component_order = ['color', 'position', 'rotate',
 		#				   'physics', 'physics_renderer']
@@ -625,8 +624,10 @@ class TestGame(Widget):
 				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
 				if dist > 10:
 					mass = self.mainTools.massSlider.value
+					do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-									texture=self.mainTools.spriteSpinner.text, selectNow=False)
+									texture=self.mainTools.spriteSpinner.text, selectNow=False,
+									do_physics=do_physics)
 					ctouch['pos'] = pos
 
 		shape = ctouch['touching']
