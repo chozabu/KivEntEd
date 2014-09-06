@@ -205,7 +205,7 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {#'physics': physics_component,
 								 'color':color,
-								 'position': pos, 'rotate': 0}
+								 'position': pos, 'rotate': angle}
 		#component_order = ['color', 'position', 'rotate',
 		#				   'physics_renderer']
 		render_component = {'texture': texture, 'size': (radius * 2, radius * 2)}
@@ -255,7 +255,7 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'physics': physics_component,
 								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
-								 'position': pos, 'rotate': 0}
+								 'position': pos, 'rotate': angle}
 		component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
@@ -283,7 +283,7 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'physics': physics_component,
 								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
-								 'position': pos, 'rotate': 0}
+								 'position': pos, 'rotate': angle}
 		#component_order = ['color', 'position', 'rotate',
 		#				   'physics', 'physics_renderer']
 
