@@ -45,8 +45,5 @@ Games:
 -MyWheelz
 
 Kivent:
--zoom camera!
--more polygon support
 -texture importing and/or themes
 --material library probably best option
--segment support?
