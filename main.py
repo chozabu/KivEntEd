@@ -1009,10 +1009,32 @@ class TestGame(Widget):
 		ents = []
 		for aid in self.entIDs:
 			entity = self.gameworld.entities[aid]
-			if not hasattr(entity, 'physics') and hasattr(entity, 'polyshape'):
-				isin = entity.polyshape.poly.isInside(pos[0],pos[1])
-				if isin:ents.append(entity)
+			if not hasattr(entity, 'physics'):
+				if hasattr(entity, 'polyshape'):
+					isin = entity.polyshape.poly.isInside(pos[0],pos[1])
+					if isin:ents.append(entity)
+				else:
+					isin = self.get_point_in_renderer(pos,entity)
+					#isin = entity.polyshape.poly.isInside(pos[0],pos[1])
+					if isin:ents.append(entity)
 		return ents
+	def get_point_in_renderer(self, point, ent):
+		if hasattr(ent, 'renderer'):
+			p = list(point)
+			p[0]-=ent.position.x
+			p[1]-=ent.position.y
+			x=p[0]
+			y=p[1]
+			angle = ent.rotate.r
+			transp = [
+			(x * cos(angle)) - (y * sin(angle)),
+			(y * cos(angle)) + (x * sin(angle))]
+			r = ent.renderer
+			#print transp, r.width/2., r.height/2.
+			if abs(transp[0]) < abs(r.width/2.) and abs(transp[1]) < abs(r.height/2.):
+				return True
+		return False
+
 	def get_touching_polys(self, pos, radius=30):
 		cs = PolyGen.Circle(radius, pos, 16)
 		polys = []
