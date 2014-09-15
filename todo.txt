@@ -18,6 +18,8 @@ tag items on server
 --save/load external entitys
 --save/load alternate atlas
 
+-edit non-physics objects
+
 -edit joints
 --select joints
 --delete joints
