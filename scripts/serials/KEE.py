@@ -240,7 +240,7 @@ class Serials():
 			color = (cl[0],cl[1],cl[2],cl[3])
 		entID = None
 		if stype == "decoration":
-			entID = self.gameref.create_circle(bp, radius=width, angle=angle, do_physics=False,
+			entID = self.gameref.create_box(bp, width=width, height=height, angle=angle, do_physics=False,
 													   texture=texture, selectNow=False, color=color)
 		elif 'splineshape' in e:
 			print "LOADING SPLINE"
