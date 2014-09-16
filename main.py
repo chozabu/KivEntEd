@@ -1025,7 +1025,7 @@ class TestGame(Widget):
 			p[1]-=ent.position.y
 			x=p[0]
 			y=p[1]
-			angle = ent.rotate.r
+			angle = -ent.rotate.r
 			transp = [
 			(x * cos(angle)) - (y * sin(angle)),
 			(y * cos(angle)) + (x * sin(angle))]
