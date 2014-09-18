@@ -710,6 +710,25 @@ class MainTools(FloatLayout):
 																 newrad,0)  #seems ineffective?
 			self.gameref.reindexEnt(self.selectedEntity)
 
+	def imgWidthChanged(self, value):
+		self.inputPreview.text = value
+		newval = float(value)
+		ent = self.selectedEntity
+		if ent:
+			if hasattr(ent, 'renderer'):
+				ent.renderer.width = newval
+			if hasattr(ent, 'physics_renderer'):
+				ent.physics_renderer.width = newval
+
+	def imgHeightChanged(self, value):
+		self.inputPreview.text = value
+		newval = float(value)
+		ent = self.selectedEntity
+		if ent:
+			if hasattr(ent, 'renderer'):
+				ent.renderer.height = newval
+			if hasattr(ent, 'physics_renderer'):
+				ent.physics_renderer.height = newval
 	def on_width_change(self, instance, value):
 		self.inputPreview.text = instance.text
 		space = self.gameref.space
@@ -809,6 +828,9 @@ class MainTools(FloatLayout):
 				self.rightMenu.add_widget(self.selectedMenuView)
 			if hasattr(ent, 'physics_renderer'):
 				self.selectedMenu.texLabel.text = ent.physics_renderer.texture
+				self.selectedMenu.imgWidthLabel.text = str(ent.physics_renderer.width)
+				self.selectedMenu.imgHeightLabel.text = str(ent.physics_renderer.height)
+				print "width=",ent.physics_renderer.width
 			if hasattr(ent, 'poly_renderer'):
 				texname = ent.poly_renderer.texture.split('/')[-1][:-4]
 				self.selectedMenu.texLabel.text = texname

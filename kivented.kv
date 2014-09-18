@@ -419,6 +419,8 @@ TestGame:
                 massLabel: massLabel
                 elasLabel: elasLabel
                 texLabel: texLabel
+                imgWidthLabel: imgWidthLabel
+                imgHeightLabel: imgHeightLabel
                 colTypeSpinner: colTypeSpinner
                 delButton: delButton
                 Label:
@@ -463,6 +465,25 @@ TestGame:
                     text: "texture"
                     on_text: if root.fireText: root.textureChanged(self)
                     values: root.sprite_list
+                BoxLayout:
+                    size_hint_y: None
+                    height: 60
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'dwidth'
+                        FloatInput:
+                            id: imgWidthLabel
+                            text: '1'
+                            on_text: if root.fireText: root.imgWidthChanged(self.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'dheight'
+                        FloatInput:
+                            id: imgHeightLabel
+                            text: '1'
+                            on_text: if root.fireText: root.imgHeightChanged(self.text)
                 BoxLayout:
                     size_hint_y: None
                     height: 60
