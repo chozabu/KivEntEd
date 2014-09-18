@@ -218,22 +218,21 @@ class TestGame(Widget):
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
 						   'renderer']
+		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
+	def getEntFromID(self, entID):
+		return self.gameworld.entities[entID]
+	def create_ent_from_dict(self,create_component_dict, component_order, selectNow = True):
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		self.entIDs.append(entityID)
 		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow and do_physics: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		if do_physics:phys = self.gameworld.entities[entityID].physics
-		if do_physics:phys.shapes[0].sensor = sensor
-		'''layers = 2**randint(1,7)
-		layers+=randint(0,1)
-		print self.gameworld.entities[entityID].physics.shapes[0].layers
-		self.gameworld.entities[entityID].physics.shapes[0].layers = layers+1#4294967295-layers-2
-		print layers, self.gameworld.entities[entityID].physics.shapes[0].layers'''
-		#c = cy.Circle(phys.body, 100)
-		#self.space.add(c)
+		#if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+		if selectNow:
+			do_physics = 'physics' in component_order
+			if do_physics:
+				self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
+			else:
+				self.mainTools.setEnt(self.gameworld.entities[entityID])
 		return entityID
-	def getEntFromID(self, entID):
-		return self.gameworld.entities[entID]
 	def create_segment(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0, color=(1,1,1,1)):
 		a= cy.Vec2d(-width/2,0)
@@ -258,12 +257,7 @@ class TestGame(Widget):
 								 'position': pos, 'rotate': angle}
 		component_order = ['color', 'position', 'rotate',
 						   'physics', 'physics_renderer']
-		entityID = self.gameworld.init_entity(create_component_dict, component_order)
-		self.entIDs.append(entityID)
-		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
-		return entityID
+		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0,
 				   color=(1,1,1,1), do_physics = True):
@@ -296,12 +290,7 @@ class TestGame(Widget):
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
 						   'renderer']
-		entityID = self.gameworld.init_entity(create_component_dict, component_order)
-		self.entIDs.append(entityID)
-		if self.mainTools.paused: (self.gameworld.systems['physics'].update(0.00001))
-		if selectNow and do_physics: self.mainTools.setShape(self.gameworld.entities[entityID].physics.shapes[0])
-		#self.gameworld.entities[entityID].physics.shapes[0].sensor = sensor
-		return entityID
+		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		pg = PolyGen.PolyGen()
