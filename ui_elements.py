@@ -355,12 +355,14 @@ class CircleSettings(BoxLayout):
 
 
 class BoxSettings(BoxLayout):
+	pass
+	'''
 	def on_touch_down(self, touch):
 		super(BoxSettings, self).on_touch_down(touch)
 		if self.collide_point(*touch.pos):
 			#touch.grab( self )
 			return True
-		return False
+		return False'''
 
 
 class MainTools(FloatLayout):
