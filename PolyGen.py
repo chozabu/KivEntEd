@@ -10,10 +10,47 @@ from Polygon.IO import *
 import Polygon.IO as pio
 from Polygon.Utils import tileEqual, tileBSP, convexHull, reducePoints
 from numpy import array
-import cymunk
+import cymunk as cy
 import math
 
 #import triangle
+
+
+
+def poly_area(verts):#Tartley - Jonathan Hartley, http://tartley.com
+	"""
+	Return area of a simple (ie. non-self-intersecting) polygon.
+	Will be negative for counterclockwise winding.
+	"""
+	accum = 0.0
+	for i in range(len(verts)):
+		j = (i + 1) % len(verts)
+		accum += verts[j][0] * verts[i][1] - verts[i][0] * verts[j][1]
+	return accum / 2
+
+def col_shapes_from_tris(triangles, verts,submass,elasticity,collision_type,friction):
+		col_shapes = []
+		tindex = -1
+		remlist = []
+		for t in triangles:
+			tindex +=1
+			pts = []
+			for i in t:
+				v = verts[i]
+				pts.append((v[0],v[1]))
+			iscw2 = poly_area(pts)
+			iscw= cy.is_clockwise(pts)
+			if not iscw:
+				pts = [pts[0],pts[2],pts[1]]
+			if (iscw2 > 2 or iscw2 < -2):
+				poly_dict = {
+					'vertices':pts, 'offset': (0, 0), 'mass':submass}
+				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
+					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
+				col_shapes.append(col_shape)
+			else:
+				remlist.append(tindex)
+		return col_shapes, remlist
 
 def tristripToKDict(ts, color):
 	tri_verts = []

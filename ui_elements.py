@@ -32,7 +32,6 @@ class FloatInput(TextInput):
 
 
 	def insert_text(self, substring, from_undo=False):
-		print 'inserting'
 		try:
 			float(self.text+substring)
 		except ValueError:

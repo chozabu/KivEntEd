@@ -31,19 +31,6 @@ import ui_elements
 import sys
 #import debugprint
 
-#Tartley - Jonathan Hartley, http://tartley.com
-def poly_area(verts):
-	"""
-	Return area of a simple (ie. non-self-intersecting) polygon.
-	Will be negative for counterclockwise winding.
-	"""
-	accum = 0.0
-	for i in range(len(verts)):
-		j = (i + 1) % len(verts)
-		accum += verts[j][0] * verts[i][1] - verts[i][0] * verts[j][1]
-	return accum / 2
-
-
 
 def cross(a, b):
 	return a[0]*b[1]-a[1]*b[0]
@@ -334,10 +321,7 @@ class TestGame(Widget):
 
 		pg = polygon
 
-		#TODO make individual points editable
-		#for p in pg.poly[0]:
-		#	self.create_decoration(pos=(p[0], p[1]), width=20, height=20,
-		#												texture='plank')
+
 		pg.color = color
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
@@ -351,54 +335,12 @@ class TestGame(Widget):
 		if tricount < 1: return
 		submass = mass/tricount
 		verts = create_dict['vertices']
-		col_shapes = []
-		'''crtest = 0
-		cptest = 0
-		bothtest = 0
-		failtest = 0'''
-		tindex = -1
-		remlist = []
-		for t in triangles:
-			tindex +=1
-			pts = []
-			for i in t:
-				v = verts[i]
-				pts.append((v[0],v[1]))
-			#print 'pts=',pts
-			iscw2 = poly_area(pts)
-			#a=pts[0]
-			#b=pts[1]
-			#c=pts[2]
-			#cro= cross((b[0]-a[0],b[1]-a[1]),(c[0]-a[0],c[1]-a[1]))
-			iscw= cy.is_clockwise(pts)
-			'''if cro<0 and iscw:
-				bothtest+=1
-			elif cro < 0:
-				crtest+=1
-			elif iscw2<0:
-				cptest+=1
-			else:
-				failtest+=1'''
-			#print ""
-			#print cro<0 or iscw
-			#print "cross=",cro
-			#print "clockwise=", iscw
-			#print iscw2
-			if not iscw:
-				#pass
-				#print "skipping"#should test better and reverse
-				pts = [pts[0],pts[2],pts[1]]
-			if (iscw2 > 2 or iscw2 < -2):
-				poly_dict = {
-					'vertices':pts, 'offset': (0, 0), 'mass':submass}
-				col_shape = {'shape_type': 'poly', 'elasticity': elasticity,
-					 'collision_type': collision_type, 'shape_info': poly_dict, 'friction': friction}
-				col_shapes.append(col_shape)
-			else:
-				remlist.append(tindex)
 		#print "bothtest, cptest, crtest, failtest"
 		#print bothtest, cptest, crtest, failtest
 		#print remlist #TODO really, this should be empty!
+
+		col_shapes, remlist = PolyGen.col_shapes_from_tris(triangles,verts,submass,elasticity,collision_type,friction)
+
 		remlist.reverse()
 		for r in remlist:
 			triangles.remove(triangles[r])
