@@ -21,15 +21,23 @@ serverURL = 'http://www.kiventedserve.chozabu.net'
 #if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 class FloatInput(TextInput):
+	def delete_selection(self, from_undo=False):
+		if self.selection_text == self.text:
+			self.text = '0'
+		else: super(FloatInput, self).delete_selection(from_undo=from_undo)
+	def do_backspace(self, from_undo=False, mode='bkspc'):
+		if len(self.text)<2:
+			self.text = '0'
+		else: super(FloatInput, self).do_backspace(from_undo=from_undo, mode=mode)
 
-    pat = re.compile('[^0-9]')
-    def insert_text(self, substring, from_undo=False):
-        pat = self.pat
-        if '.' in self.text:
-            s = re.sub(pat, '', substring)
-        else:
-            s = '.'.join([re.sub(pat, '', s) for s in substring.split('.', 1)])
-        return super(FloatInput, self).insert_text(s, from_undo=from_undo)
+
+	def insert_text(self, substring, from_undo=False):
+		print 'inserting'
+		try:
+			float(self.text+substring)
+		except ValueError:
+			if substring != '-':substring=""
+		return super(FloatInput, self).insert_text(substring, from_undo=from_undo)
 
 class PlainButton(Button):
 	def on_touch_down(self, touch):
