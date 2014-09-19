@@ -184,9 +184,10 @@ class Serials():
 	def loadRotate(self, s, e):
 		return s['r']
 	def loadPhysics(self, s, e):
+		s=dict(s)
 		#print s
 		s['col_shapes']=s['shapes']
-		for shape in s['shapes']:
+		for shape in s['col_shapes']:
 			#print "shape:", shape
 			if 'radius' in shape:
 				shape['shape_info']={'inner_radius': 0, 'outer_radius': shape['radius'],
@@ -206,9 +207,13 @@ class Serials():
 				print "NOT HANDLING SHAPE", shape
 			coltypestr = shape['collision_type']
 			ct = self.gameref.scripty.collision_types
+			#print "collision types"
+			#print shape['collision_type']
 			if coltypestr in ct:
 				collision_type = ct[coltypestr]
-				shape['collision_type'] = collision_type
+				if collision_type != str(collision_type):
+					shape['collision_type'] = collision_type
+			#print shape['collision_type']
 		for x in s['body']:
 			s[x]=s['body'][x]
 		if str(s['mass']) == 'inf': s['mass'] = 0
@@ -223,9 +228,9 @@ class Serials():
 		cd = {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5,'texture': str(s['texture']), 'do_texture':True}
-		print cd
+		#print cd
 		print "polytex:",s['texture']
-		return cd
+		#return cd
 	def loadEntFromDict(self, e, idConvDict=None):
 		sysfuncs={
 		'color':self.loadColors,
