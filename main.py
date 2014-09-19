@@ -344,6 +344,7 @@ class TestGame(Widget):
 		create_dict['do_texture'] = True
 		if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
 		create_dict['texture'] = texture
+		print texture
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
@@ -429,6 +430,8 @@ class TestGame(Widget):
 			self.entIDs.append(newpolyID)
 			newpoly = self.getEntFromID(newpolyID)
 			newpoly.polyshape = pg
+
+			print newpoly.poly_renderer.texture
 			#if not do_physics:
 			#	newpoly.load_order.remove('physics')
 			#newpoly.load_order = ['color', 'position', 'rotate', 'poly_renderer']

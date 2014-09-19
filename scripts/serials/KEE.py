@@ -175,7 +175,78 @@ class Serials():
 		for ct in clist:
 			scripty.add_col_type(ct)
 		scripty.loadHandlersFromDict(cdata)
+
+
+	def loadColors(self, s, e):
+		return tuple(s)
+	def loadPosition(self, s, e):
+		return (s['x'],s['y'])
+	def loadRotate(self, s, e):
+		return s['r']
+	def loadPhysics(self, s, e):
+		#print s
+		s['col_shapes']=s['shapes']
+		for shape in s['shapes']:
+			#print "shape:", shape
+			if 'radius' in shape:
+				shape['shape_info']={'inner_radius': 0, 'outer_radius': shape['radius'],
+					  'mass': s['body']['mass'], 'offset': (0, 0)}
+				shape['shape_type']='circle'
+			#print "shape:", shape
+			elif 'verts' in shape:
+				shape['shape_info']={'vertices': shape['verts'],
+					  'mass': s['body']['mass'], 'offset': (0, 0)}
+				shape['shape_type']='poly'
+				print shape
+			elif 'width' in shape:
+				shape['shape_info']={'width': shape['width'],'height': shape['height'],
+					  'mass': s['body']['mass']}
+				shape['shape_type']='box'
+			else:
+				print "NOT HANDLING SHAPE", shape
+			coltypestr = shape['collision_type']
+			ct = self.gameref.scripty.collision_types
+			if coltypestr in ct:
+				collision_type = ct[coltypestr]
+				shape['collision_type'] = collision_type
+		for x in s['body']:
+			s[x]=s['body'][x]
+		if str(s['mass']) == 'inf': s['mass'] = 0
+		return s
+	def loadPhysics_renderer(self, s, e):
+		#{u'width': 60.0, u'texture': u'orb', u'height': 60.0}
+		#{'texture': texture, 'size': (radius * 2, radius * 2)}
+		return {'texture': str(s['texture']), 'size': (s['width'],s['height'])}
+	def loadPoly_renderer(self,s,e):
+
+		new_triangles, new_vertices,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
+		cd = {'triangles': new_triangles, 'vertices': new_vertices,
+			'vert_count': vert_count, 'tri_count': tri_count,
+			'vert_data_count': 5,'texture': str(s['texture']), 'do_texture':True}
+		print cd
+		print "polytex:",s['texture']
+		return cd
 	def loadEntFromDict(self, e, idConvDict=None):
+		sysfuncs={
+		'color':self.loadColors,
+		'position':self.loadPosition,
+		'rotate':self.loadRotate,
+		'physics':self.loadPhysics,
+		'physics_renderer':self.loadPhysics_renderer,
+		'renderer':self.loadPhysics_renderer,
+		'poly_renderer':self.loadPoly_renderer,
+		}
+		load_order = [str(li) for li in e['load_order']]
+		create_dict = {}
+		for system in load_order:
+			if system in sysfuncs:
+				create_dict[str(system)]=sysfuncs[system](e[system],e)
+			else:
+				print "unknown system:", system, e[system]
+				create_dict[str(system)]=e[system]
+
+		entID =  self.gameref.create_ent_from_dict(create_dict, load_order, selectNow=False)
+		'''print create_dict
 		elasticity = None
 		friction = None
 		bp = (0,0)
@@ -271,17 +342,18 @@ class Serials():
 													   elasticity=elasticity, selectNow=False,
 													   collision_type=collision_type, color=color,
 													   do_physics="physics" in e)
-			#entID = self.gameref.create_poly(bp, width=shape['width'], height=shape['height'],
-			#										   mass=mass, angle=body['angle'],
-			#										   x_vel=body['velocity'][0], y_vel=body['velocity'][1],angular_velocity=body['angular_velocity'],
-			#										   texture=texture, selectNow=False, collision_type=collision_type, color=color)
 		else:
-			print "NOT LOADING UNRECOGNISED SHAPE:",e
+			print "NOT LOADING UNRECOGNISED SHAPE:",e'''
 		if entID != None:
 			if idConvDict!=None: idConvDict[e['orig_id']] = entID
 			newent = self.gameref.getEntFromID(entID)
 			if 'datadict' in e:
 				newent.datadict = e['datadict']
+			if hasattr(newent, 'poly_renderer'):
+				pg = base64.decodestring(e['polyviewbinary'])
+				pg = pio.decodeBinary(pg)
+				pg = PolyGen.PolyGen(pg)
+				newent.polyshape = pg
 		return entID
 	def loadFromDict(self, data):
 		print "LOADING"

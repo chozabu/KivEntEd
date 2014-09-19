@@ -15,6 +15,32 @@ import math
 
 #import triangle
 
+def tristripToKDict(ts, color):
+	tri_verts = []
+	new_triangles = []
+	tri_ap = new_triangles.append
+	vindex = 0
+	tri_count = 0
+	for strip in ts:
+		sindex = 0
+		striplen = len(strip)-2
+		for vert in strip:
+			#print sindex, striplen
+			if sindex < striplen:
+				tri_ap((vindex,vindex+1,vindex+2))
+				tri_count += 1
+			tri_verts.append(vert)
+			vindex+=1
+			sindex+=1
+
+	new_vertices = []
+	nv_ap = new_vertices.append
+	vert_count = 0
+	for tvert in tri_verts:
+		nv_ap([tvert[0], tvert[1], color[0], color[1], color[2], color[3], tvert[0]*0.01, tvert[1]*0.01])
+		vert_count += 1
+	return new_triangles, new_vertices,  tri_count, vert_count
+
 class PolyGen():
 	def __init__(self, poly=None, color=(1,1,1,0.9), keepsimple = False, minlinelen=2):
 		self.color = color
@@ -129,30 +155,7 @@ class PolyGen():
 	def pts_to_tristrip(self, pts):
 		ts = self.poly.triStrip()
 		color = self.color
-		tri_verts = []
-		new_triangles = []
-		tri_ap = new_triangles.append
-		vindex = 0
-		tri_count = 0
-		for strip in ts:
-			sindex = 0
-			striplen = len(strip)-2
-			for vert in strip:
-				#print sindex, striplen
-				if sindex < striplen:
-					tri_ap((vindex,vindex+1,vindex+2))
-					tri_count += 1
-				tri_verts.append(vert)
-				vindex+=1
-				sindex+=1
-
-		new_vertices = []
-		nv_ap = new_vertices.append
-		vert_count = 0
-		for tvert in tri_verts:
-			nv_ap([tvert[0], tvert[1], color[0], color[1], color[2], color[3], tvert[0]*0.01, tvert[1]*0.01])
-			vert_count += 1
-		return new_triangles, new_vertices,  tri_count, vert_count
+		return tristripToKDict(ts,color)
 
 	'''def initentity(self):
 		#create_dict = self.draw_rect_polygon(
