@@ -229,8 +229,8 @@ class Serials():
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5,'texture': str(s['texture']), 'do_texture':True}
 		#print cd
-		print "polytex:",s['texture']
-		#return cd
+		#print "polytex:",s['texture']
+		return cd
 	def loadEntFromDict(self, e, idConvDict=None):
 		sysfuncs={
 		'color':self.loadColors,
@@ -359,6 +359,14 @@ class Serials():
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
 				newent.polyshape = pg
+			if 'splineshape' in e:
+				print "LOADING SPLINE"
+				ss = e['splineshape']
+				points = ss['ControlPoints']
+				newspline = Spline.Spline(stepsize=e['splineshape']['stepsize'])
+				newspline.ControlPoints = points
+				newspline.DrawCurve()
+				newent.splineshape = newspline
 		return entID
 	def loadFromDict(self, data):
 		print "LOADING"
