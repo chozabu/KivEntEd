@@ -68,6 +68,14 @@ class TestGame(Widget):
 		except:
 			print 'Python python no keyboard'
 
+		size = Window.size
+		with self.canvas.before:
+			#Color(0.5, 0.65, 0.95)
+			self.bgrect = Rectangle(source='sprites/bgm.jpg', size=size)
+		Window.bind(on_resize=self.redogb)
+	def redogb(self, a,b,c):
+		size = Window.size
+		self.bgrect.size =Window.size
 
 	def init_game(self, dt):
 		if platform == 'android' or True:#apply kovaks hack to android only
