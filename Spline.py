@@ -1,6 +1,7 @@
-
-#original author - Ian Mallett
-#graciously allowed the use of this code ( - Kochanek-Bartels Spline - 1.0.0 - May 2008) under the GPL
+#This file implements a KB-Spline implementation inspired by public-domain code presented here:
+#    http://www.gamedev.net/topic/493088-3d-waypoints/
+#The core curve generation code by Ian Mallett is unchanged - check out his page at http://geometrian.com/
+__author__ = 'chozabu'
 
 class Spline():
 
