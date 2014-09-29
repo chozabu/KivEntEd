@@ -1207,11 +1207,3 @@ if __name__ == '__main__':
 		uploadCrash(traceback.format_exc())
 		print "---"
 		raise
-	#cProfile.run('KivEntEd().run()', 'kivented.prof')
-	'''sd_card_path = os.path.dirname('/sdcard/profiles/')
-	print sd_card_path
-	if not os.path.exists(sd_card_path):
-		print 'making directory'
-		os.mkdir(sd_card_path)
-	print 'path: ', sd_card_path
-	cProfile.run('KivEntEd().run()', sd_card_path + '/kivented.prof')'''
