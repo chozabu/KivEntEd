@@ -579,6 +579,17 @@ TestGame:
                 text: 'Settings'
                 on_press: root.changel2menu(root.settingsMenu)
             Label:
+                text: 'Quick'
+                size_hint_y: None
+                height: self.font_size+6
+                text_size: (self.width, self.height)
+            Button:
+                text: 'Quick Load'
+                on_press: root.loadPressed(self)
+            Button:
+                text: 'Quick Save'
+                on_press: root.savePressed(self)
+            Label:
                 text: 'Create'
                 size_hint_y: None
                 height: self.font_size+6
@@ -891,14 +902,8 @@ TestGame:
                 text: 'Load'
                 on_press: root.customlvlPressed()
             Button:
-                text: 'Quick Load'
-                on_press: root.loadPressed(self)
-            Button:
                 text: 'Examples'
                 on_press: root.changel3menu(root.examplesMenu)
-            Button:
-                text: 'Quick Save'
-                on_press: root.savePressed(self)
             Button:
                 text: 'Save As...'
                 on_press: root.saveAsPressed(self)
