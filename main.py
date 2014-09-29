@@ -748,6 +748,9 @@ class TestGame(Widget):
 							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
+	def get_cam_scale(self):
+		viewport = self.gameworld.systems['gameview']
+		return viewport.camera_scale
 	def zoomcam(self, sf, pos = (0,0)):
 		pwp = self.getWorldPosFromTuple(pos)
 		viewport = self.gameworld.systems['gameview']
@@ -758,6 +761,7 @@ class TestGame(Widget):
 		diff = (pap[0]-pwp[0], pap[1]-pwp[1])
 		viewport.camera_pos[0]+=diff[0]
 		viewport.camera_pos[1]+=diff[1]
+		self.mainTools.scale_cpoints(camera_scale)
 	def on_touch_down(self, touch):
 		print "TOUCHDOWN\n"
 		#print dir(touch)

@@ -777,7 +777,13 @@ class MainTools(FloatLayout):
 			self.selectedEntity.physics.shapes = [newshape]
 			self.selectedItem = newshape
 			self.selectedEntity.physics_renderer.height = newrad
+	def scale_cpoints(self,ns):
 
+		for id in self.cpointids:
+			e = self.gameref.gameworld.entities[id]
+			nsz = 25*math.sqrt(ns)
+			e.renderer.width=nsz
+			e.renderer.height=nsz
 	def setEnt(self, ent, fshape=None):
 		self.fireText = False
 		self.selectedItem = None
@@ -794,7 +800,9 @@ class MainTools(FloatLayout):
 			if hasattr(ent, 'splineshape'):
 
 				for p in ent.splineshape.ControlPoints:
-					pid = self.gameref.create_decoration(pos=(p[0], p[1]), width=20, height=20,
+					ns = self.gameref.get_cam_scale()
+					nsz = 25*math.sqrt(ns)
+					pid = self.gameref.create_decoration(pos=(p[0], p[1]), width=nsz, height=nsz,
 																texture='plank')
 					self.cpointids.append(pid)
 			#print dir(ent.physics)
