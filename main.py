@@ -1179,8 +1179,34 @@ class KivEntEd(App):
 		self.profile.disable()
 		self.profile.dump_stats('myapp.profile')'''
 
+
+def uploadCrash(crashstr):
+	print "uploading crash to ", ui_elements.serverURL
+	#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
+	import urllib
+	from kivy.network.urlrequest import UrlRequest
+	params = urllib.urlencode({
+	'version':__version__,
+	"crashData":crashstr
+	})
+	headers = {'Content-type': 'application/x-www-form-urlencoded',
+          'Accept': 'text/plain'}
+	req = UrlRequest(ui_elements.serverURL+'/uploadCrash', on_success=None, req_body=params,
+        req_headers=headers)
+	req.wait()
+	print "crash uploaded"
+
 if __name__ == '__main__':
-	KivEntEd().run()
+	try:
+		KivEntEd().run()
+	except:
+		print "unexpected error"
+		import traceback
+		#traceback.print_exc()
+		print "---"
+		uploadCrash(traceback.format_exc())
+		print "---"
+		raise
 	#cProfile.run('KivEntEd().run()', 'kivented.prof')
 	'''sd_card_path = os.path.dirname('/sdcard/profiles/')
 	print sd_card_path
