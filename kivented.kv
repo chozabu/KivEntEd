@@ -371,6 +371,7 @@ TestGame:
     examplesMenu: examplesMenu.__self__
     levelsMenu: levelsMenu.__self__
     inputPreview: inputPreview
+    cloneSpriteButton: cloneSpriteButton
 
     FloatLayout:
         id: topMenu
@@ -844,6 +845,10 @@ TestGame:
                     min:0
                     max:100
                     value:10
+            ToggleButton:
+                id: cloneSpriteButton
+                text: 'clone mode'
+                state: 'down'
         
         BoxLayout:
             id: joinMenu

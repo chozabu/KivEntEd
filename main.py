@@ -288,6 +288,74 @@ class TestGame(Widget):
 			component_order = ['color', 'position', 'rotate',
 						   'renderer']
 		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
+	def create_sprite(self, pos, shape_type='box', radius=40., width=None, height=None, mass=10., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
+				   angular_velocity=.0, texture=None, selectNow=True, sensor = False, collision_type = 0,
+				   color=None, do_physics = True, old_shape_id=None, old_shape=None, replace_old_shape=False):
+		if width == None:width=radius*2
+		if height == None:height=radius*2
+		print "color=",color
+		print "old_shape_id=",old_shape_id
+		print "old_shape=",old_shape
+		if old_shape_id:old_shape = self.getEntFromID(old_shape_id)
+		print "old_shape=",old_shape
+		if old_shape:
+
+			if do_physics == None:
+				#print oldpoly.load_order
+				do_physics = 'physics' in old_shape.load_order
+				#print do_physics
+			if hasattr(old_shape, 'physics'):
+				if friction == None: friction = old_shape.physics.shapes[0].friction
+				if elasticity == None: elasticity = old_shape.physics.shapes[0].elasticity
+			if color == None:
+				c = old_shape.color
+				print "c=",c
+				color = (c.r, c.g ,c.b ,c.a)
+				print color
+			if texture == None:
+				texture = old_shape.poly_renderer.texture
+			if replace_old_shape: self.delObj(old_shape_id)
+		if friction == None: friction = 1.0
+		if elasticity == None: elasticity = .5
+		if color == None:color = (1,1,1,1)
+		print color
+		if texture == None: texture = "snow"
+		if do_physics == None: do_physics = True
+
+		if shape_type == 'box':
+			shape_dict = {
+				'width': width,
+				'height': height,
+				'mass': mass}
+		elif shape_type == 'circle':
+			shape_dict = {'inner_radius': 0, 'outer_radius': radius,
+						  'mass': mass, 'offset': (0, 0)}
+		col_shape = {'shape_type': shape_type, 'elasticity': elasticity,
+					 'collision_type': collision_type, 'shape_info': shape_dict, 'friction': friction}
+		col_shapes = [col_shape]
+		physics_component = {'main_shape': shape_type,
+							 'velocity': (x_vel, y_vel),
+							 'position': pos, 'angle': angle,
+							 'angular_velocity': angular_velocity,
+							 'vel_limit': 2048,
+							 'ang_vel_limit': radians(2000),
+							 'mass': mass, 'col_shapes': col_shapes}
+		create_component_dict = {'color':color,
+								 'position': pos, 'rotate': angle}
+		#component_order = ['color', 'position', 'rotate',
+		#				   'physics', 'physics_renderer']
+
+		render_component = {'texture': texture, 'size': (width, height)}
+		if do_physics:
+			create_component_dict['physics'] = physics_component
+			create_component_dict['physics_renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
+						   'physics', 'physics_renderer']
+		else:
+			create_component_dict['renderer'] = render_component
+			component_order = ['color', 'position', 'rotate',
+						   'renderer']
+		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		pg = PolyGen.PolyGen()
@@ -325,7 +393,7 @@ class TestGame(Widget):
 			self.delObj(lastpolyid)
 		if friction == None: friction = 1.0
 		if elasticity == None: elasticity = .5
-		if color == None:color = (1,1,1,0.9)
+		if color == None:color = (1,1,1,1)
 		if texture == None: texture = "snow"
 		if do_physics == None: do_physics = True
 
@@ -713,8 +781,11 @@ class TestGame(Widget):
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
-			self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
+			#self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
+			#				texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
+			self.create_sprite((midx, midy), mass=mass, width=dist, height=10, angle=angle,
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							old_shape=self.mainTools.selectedEntity)
 
 		if currentTool == "start":
 			if self.startID < 0:
@@ -903,8 +974,13 @@ class TestGame(Widget):
 			ctouch['polygen'] = pg
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
+			color = (1,1,1,1)
+			if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
+				c = self.mainTools.selectedEntity.color
+				color = (c.r, c.g ,c.b ,c.a)
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
-															texture=self.mainTools.spriteSpinner.text)
+															texture=self.mainTools.spriteSpinner.text,
+															color=color)
 
 		if shape and currentTool == 'del':
 			if shape == self.mainTools.selectedItem:
