@@ -779,13 +779,17 @@ class TestGame(Widget):
 
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
+		last_obj = None
+		print "lastobj=",last_obj
+		if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
+			last_obj = self.mainTools.selectedEntity
 		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
 			#self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 			#				texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
 			self.create_sprite((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
-							old_shape=self.mainTools.selectedEntity)
+							old_shape=last_obj)
 
 		if currentTool == "start":
 			if self.startID < 0:
@@ -804,19 +808,24 @@ class TestGame(Widget):
 
 		if currentTool == "circle":
 			if dist < 4: dist = 8
-			self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
-			                   angle=angle, do_physics=do_physics)
+			#self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
+			#                   angle=angle, do_physics=do_physics)
+			self.create_sprite(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
+			                   angle=angle, do_physics=do_physics, shape_type='circle',
+							old_shape=last_obj)
 		if currentTool == "box":
 			width = fabs(xd)
 			height = fabs(yd)
 			if width< 4: width=8
 			if height< 4: height=8
-			self.create_box((midx, midy), mass=mass, width=width, height=height, angle=0,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
+			self.create_sprite((midx, midy), mass=mass, width=width, height=height, angle=0,
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							old_shape=last_obj)
 		if currentTool == "square":
 			if dist < 4: dist = 8
-			self.create_box(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
+			self.create_sprite(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
+							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							old_shape=last_obj)
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
 	def get_cam_scale(self):
