@@ -1014,13 +1014,16 @@ class TestGame(Widget):
 				#self.mainTools.setShape(shape)
 				space.reindex_shape(shape)
 				ctouch['touching'] = shape
-		if shape:
-			self.mainTools.setShape(shape)
-		else:
-			ents = self.getNonPhysAtPoint(pos)
-			ent = None
-			if len(ents):ent=ents[0]
-			self.mainTools.setEnt(ent)
+
+		canselect = currentTool in ['camera', 'drag', 'vortex','rotate', 'delete']
+		if canselect:
+			if shape:
+				self.mainTools.setShape(shape)
+			else:
+				ents = self.getNonPhysAtPoint(pos)
+				ent = None
+				if len(ents):ent=ents[0]
+				self.mainTools.setEnt(ent)
 
 
 		if shape and not shape.body.is_static and (
