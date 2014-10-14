@@ -314,7 +314,7 @@ class Serials():
 					self.gameref.startID = idConvDict[sid]
 			if "finishID" in settings:
 				fid = settings['finishID']
-				if fid != -1:
+				if fid != -1 and fid in idConvDict:
 					self.gameref.finishID = idConvDict[fid]
 			if "killMomem" in settings:
 				km = settings['killMomem']
