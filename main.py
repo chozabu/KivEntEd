@@ -1290,7 +1290,7 @@ if __name__ == '__main__':
 	except:
 		print "unexpected error"
 		import traceback
-		#traceback.print_exc()
+		traceback.print_exc()
 		print "---"
 		uploadCrash(traceback.format_exc())
 		print "---"
