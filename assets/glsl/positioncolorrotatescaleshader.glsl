@@ -30,13 +30,13 @@ void main (void) {
                     a_sin, a_cos, 0.0, 0.0,
                     0.0, 0.0, 1.0, 0.0,
                     0.0, 0.0, 0.0, 1.0 );
-  mat4 trans_mat = mat4(1.0, 0.0, 0.0, vCenter.x,
-              0.0, 1.0, 0.0, vCenter.y,
+  mat4 trans_mat = mat4(1.0, 0.0, 0.0, vCenter.x/400.,
+              0.0, 1.0, 0.0, vCenter.y/300.,
               0.0, 0.0, 1.0, 0.0,
               0.0, 0.0, 0.0, 1.0);
-  vec4 pos = vec4(vPosition.xy*vScale, 0.0, 1.0);
+  vec4 pos = vec4(vPosition.xy*vScale/400., 0.0, 1.0);
   vec4 trans_pos = pos * rot_mat * trans_mat;
-  gl_Position = projection_mat * modelview_mat * trans_pos;
+  gl_Position = projection_mat * modelview_mat * trans_pos-vec4(1.,1.,0,0);
 
 }
 
