@@ -238,18 +238,27 @@ class Serials():
 		'rotate':self.loadRotate,
 		'physics':self.loadPhysics,
 		'renderer':self.loadPhysics_renderer,
-		'renderer':self.loadPhysics_renderer,
-		'renderer':self.loadPoly_renderer,
+		'physics_renderer':self.loadPhysics_renderer,
+		#'renderer':self.loadPoly_renderer,
 		}
-		load_order = [str(li) for li in e['load_order']]
+		load_order = []#str(li) for li in e['load_order']]
+		comp=False
+		for li in e['load_order']:
+			if li=='physics_renderer':
+				li='renderer'
+				comp=True
+			load_order.append(li)
+
 		create_dict = {}
 		for system in load_order:
+			ns = system
+			if system=='renderer' and comp:ns='physics_renderer'
 			if system in sysfuncs:
-				create_dict[str(system)]=sysfuncs[system](e[system],e)
+				create_dict[str(system)]=sysfuncs[ns](e[ns],e)
 			else:
 				print "unknown system:", system, e[system]
 				create_dict[str(system)]=e[system]
-
+		print create_dict
 		entID =  self.gameref.create_ent_from_dict(create_dict, load_order, selectNow=False)
 		if entID != None:
 			if idConvDict!=None: idConvDict[e['orig_id']] = entID
