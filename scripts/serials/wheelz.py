@@ -79,7 +79,7 @@ class Serials():
 		name.text="LevelName"
 		'''
 
-		if (not hasattr(e, "physics") or not hasattr(e, "physics_renderer")) and not hasattr(e, 'polyshape'):
+		if (not hasattr(e, "physics") or not hasattr(e, "renderer")) and not hasattr(e, 'polyshape'):
 			print "not doing shape"
 			return None
 
@@ -130,8 +130,8 @@ class Serials():
 			pd.set("background", "true")
 		pr = None
 		texname = None
-		if hasattr(e, 'physics_renderer'):
-			pr = e.physics_renderer
+		if hasattr(e, 'renderer'):
+			pr = e.renderer
 			texname = pr.texture
 		if hasattr(e, 'poly_renderer'):
 			pr = e.poly_renderer
@@ -142,9 +142,9 @@ class Serials():
 			td.set("id", texname)
 		verts = []
 		if shape_type == "box":
-			verts = self.getboxverts(b.angle, e.physics_renderer.width, e.physics_renderer.height)
+			verts = self.getboxverts(b.angle, e.renderer.width, e.renderer.height)
 		elif shape_type == "circle":
-			verts = self.getcircleverts(e.physics_renderer.width/2.0)
+			verts = self.getcircleverts(e.renderer.width/2.0)
 		elif shape_type == "poly":
 			verts = e.polyshape.poly[0]
 		for v in verts:
@@ -152,7 +152,7 @@ class Serials():
 			vd.set("x", str(v[0]*xmScale))
 			vd.set("y", str(v[1]*xmScale))
 
-		#e.physics_renderer.texture
+		#e.renderer.texture
 
 	def exportEntsToXML(self, root, xmScale):
 		entsdict = []

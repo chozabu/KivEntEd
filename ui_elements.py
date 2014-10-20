@@ -614,8 +614,8 @@ class MainTools(FloatLayout):
 
 	def textureChanged(self, instance):
 		ent = self.selectedEntity
-		if hasattr(ent, 'physics_renderer'):
-			ent.physics_renderer.texture = instance.text
+		if hasattr(ent, 'renderer'):
+			ent.renderer.texture = instance.text
 		elif hasattr(ent, 'poly_renderer'):
 			tex = 'sprites/'+instance.text+'.png'
 			ent.poly_renderer.texture = tex
@@ -711,8 +711,8 @@ class MainTools(FloatLayout):
 		if self.selectedItem and self.selectedEntity:
 			self.selectedItem.radius = newrad
 			self.selectedItem.unsafe_set_radius(newrad)
-			self.selectedEntity.physics_renderer.width = newrad * 2
-			self.selectedEntity.physics_renderer.height = newrad * 2
+			self.selectedEntity.renderer.width = newrad * 2
+			self.selectedEntity.renderer.height = newrad * 2
 			self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
 																 newrad,0)  #seems ineffective?
 			self.gameref.reindexEnt(self.selectedEntity)
@@ -724,8 +724,8 @@ class MainTools(FloatLayout):
 		if ent:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.width = newval
-			if hasattr(ent, 'physics_renderer'):
-				ent.physics_renderer.width = newval
+			if hasattr(ent, 'renderer'):
+				ent.renderer.width = newval
 
 	def imgHeightChanged(self, value):
 		self.inputPreview.text = value
@@ -734,15 +734,15 @@ class MainTools(FloatLayout):
 		if ent:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.height = newval
-			if hasattr(ent, 'physics_renderer'):
-				ent.physics_renderer.height = newval
+			if hasattr(ent, 'renderer'):
+				ent.renderer.height = newval
 	def on_width_change(self, instance, value):
 		self.inputPreview.text = instance.text
 		space = self.gameref.space
 		newrad = float(value)
 		#if self.selectedItem and self.selectedEntity:
 		#self.selectedItem.width = (newrad)
-		#self.selectedEntity.physics_renderer.width = newrad
+		#self.selectedEntity.renderer.width = newrad
 		#space.reindex_shape(self.selectedItem)
 		#print dir(self.selectedEntity)
 		#print dir(self.selectedEntity.physics)
@@ -759,7 +759,7 @@ class MainTools(FloatLayout):
 			#print shape.body._shapes
 			self.selectedEntity.physics.shapes = [newshape]
 			self.selectedItem = newshape
-			self.selectedEntity.physics_renderer.width = newrad
+			self.selectedEntity.renderer.width = newrad
 
 	def on_height_change(self, instance, value):
 		self.inputPreview.text = instance.text
@@ -776,7 +776,7 @@ class MainTools(FloatLayout):
 			space.remove(self.selectedItem)
 			self.selectedEntity.physics.shapes = [newshape]
 			self.selectedItem = newshape
-			self.selectedEntity.physics_renderer.height = newrad
+			self.selectedEntity.renderer.height = newrad
 	def scale_cpoints(self,ns):
 
 		for id in self.cpointids:
@@ -841,11 +841,11 @@ class MainTools(FloatLayout):
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
-			if hasattr(ent, 'physics_renderer'):
-				self.selectedMenu.texLabel.text = ent.physics_renderer.texture
-				self.selectedMenu.imgWidthLabel.text = str(ent.physics_renderer.width)
-				self.selectedMenu.imgHeightLabel.text = str(ent.physics_renderer.height)
-				print "width=",ent.physics_renderer.width
+			'''if hasattr(ent, 'renderer'):
+				self.selectedMenu.texLabel.text = ent.renderer.texture
+				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
+				self.selectedMenu.imgHeightLabel.text = str(ent.renderer.height)
+				print "width=",ent.renderer.width'''
 			if hasattr(ent, 'poly_renderer'):
 				texname = ent.poly_renderer.texture.split('/')[-1][:-4]
 				self.selectedMenu.texLabel.text = texname
@@ -857,10 +857,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
 			r  = None
-			if hasattr(ent,"physics_renderer"):
+			'''if hasattr(ent,"renderer"):
 				self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
-				                                                 width=ent.physics_renderer.width*1.1+10, height=ent.physics_renderer.height*1.1+10,
+				                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
 																texture='emptybox')
+			'''
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 		self.fireText = True

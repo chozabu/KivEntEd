@@ -27,6 +27,9 @@ TestGame:
         ColorSystem:
             system_id: 'color'
             gameworld: gameworld
+        ScaleSystem:
+            system_id: 'scale'
+            gameworld: gameworld
         GameView:
             system_id: 'gameview'
             focus_entity: False
@@ -36,7 +39,7 @@ TestGame:
             do_scroll: True
             do_scroll_lock: False
             size: root.size
-            camera_scale: 2.0
+            #camera_scale: 2.0
         GameMap:
             system_id: 'map'
             map_size: root.size
@@ -46,22 +49,10 @@ TestGame:
             system_id: 'renderer'
             do_rotate: True
             do_color: True
-            shader_source: 'assets/glsl/positionrotateshader.glsl'
+            do_scale: True
+            shader_source: 'assets/glsl/positioncolorrotatescaleshader.glsl'
             atlas_dir: 'assets/'
             atlas: 'myatlas'
-        DynamicRenderer:
-            gameworld: gameworld
-            system_id: 'physics_renderer'
-            do_color: True
-            shader_source: 'assets/glsl/positionrotateshader.glsl'
-            atlas_dir: 'assets/'
-            atlas: 'myatlas'
-            physics_system: 'physics'
-        StaticVertMeshRenderer:
-            gameworld: gameworld
-            system_id: 'poly_renderer'
-            shader_source: 'assets/shaders/poscolorshader.glsl'
-            vertex_data_count: 6
         CymunkPhysics:
             gameworld: root.gameworld
             system_id: 'physics'

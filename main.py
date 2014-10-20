@@ -21,6 +21,9 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.core.window import Window
 import kivent
+from kivent import texture_manager
+
+texture_manager.load_atlas('assets/myatlas.atlas')
 from kivy.graphics import *
 from kivy.atlas import Atlas
 
@@ -51,7 +54,7 @@ class TestGame(Widget):
 		self.entIDs = []
 		self.mainTools = self.ids['gamescreenmanager'].ids['main_screen'].ids['mainTools']
 		self.mainTools.setRef(self)
-		self.mainTools.setTool("poly")
+		self.mainTools.setTool("circle")
 		self.startID = -1
 		self.finishID = -1
 		self.selectedShapeID = None
@@ -91,6 +94,13 @@ class TestGame(Widget):
 			self._init_game(0)
 
 
+	def ensure_startup(self):
+		systems_to_check = ['map', 'physics', 'renderer', 'rotate', 'position']
+		systems = self.gameworld.systems
+		for each in systems_to_check:
+			if each not in systems:
+				return False
+		return True
 
 	def _init_game(self, dt):
 		self.setup_map()
@@ -129,6 +139,7 @@ class TestGame(Widget):
 	def init_sprites(self, dt):
 		#self.gameworld.systems['renderer'].do_rotate = True
 		#self.gameworld.systems['renderer'].on_do_rotate(None,None)
+		return
 		usprites = self.gameworld.systems['renderer'].uv_dict.keys()
 		sprites = []
 		for k in usprites:
@@ -180,8 +191,8 @@ class TestGame(Widget):
 	def create_decoration(self, pos=(0, 0), width=40, height=40, angle=0, texture="sheep", color=(1,1,1,1)):
 		create_component_dict = {
 			'renderer': {'texture': texture, 'size': (width, height)},
-			'position': pos, 'rotate': angle ,'color':color}
-		component_order = ['color', 'position', 'rotate', 'renderer']
+			'position': pos, 'rotate': angle ,'color':color, 'scale':1.}
+		component_order = ['color', 'position', 'rotate', 'renderer', 'scale']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		return entityID
 
@@ -202,15 +213,15 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {#'physics': physics_component,
 								 'color':color,
-								 'position': pos, 'rotate': angle}
+								 'position': pos, 'rotate': angle, 'scale':1}
 		#component_order = ['color', 'position', 'rotate',
-		#				   'physics_renderer']
+		#				   'renderer']
 		render_component = {'texture': texture, 'size': (radius * 2, radius * 2)}
 		if do_physics:
 			create_component_dict['physics'] = physics_component
-			create_component_dict['physics_renderer'] = render_component
+			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'physics', 'physics_renderer']
+						   'physics', 'renderer', 'scale']
 		else:
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
@@ -250,10 +261,10 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'physics': physics_component,
-								 'physics_renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
+								 'renderer': {'texture': texture, 'size': (width, height)}, 'color':color,
 								 'position': pos, 'rotate': angle}
 		component_order = ['color', 'position', 'rotate',
-						   'physics', 'physics_renderer']
+						   'physics', 'renderer']
 		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_box(self, pos, width=40., height=40., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture="face_box", selectNow=True, sensor = False, collision_type = 0,
@@ -273,16 +284,16 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'color':color,
-								 'position': pos, 'rotate': angle}
+								 'position': pos, 'rotate': angle, 'scale':1}
 		#component_order = ['color', 'position', 'rotate',
-		#				   'physics', 'physics_renderer']
+		#				   'physics', 'renderer']
 
 		render_component = {'texture': texture, 'size': (width, height)}
 		if do_physics:
 			create_component_dict['physics'] = physics_component
-			create_component_dict['physics_renderer'] = render_component
+			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'physics', 'physics_renderer']
+						   'physics', 'renderer', 'scale']
 		else:
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
@@ -341,20 +352,20 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {'color':color,
-								 'position': pos, 'rotate': angle}
+								 'position': pos, 'rotate': angle, 'scale':1}
 		#component_order = ['color', 'position', 'rotate',
-		#				   'physics', 'physics_renderer']
+		#				   'physics', 'renderer']
 
 		render_component = {'texture': texture, 'size': (width, height)}
 		if do_physics:
 			create_component_dict['physics'] = physics_component
-			create_component_dict['physics_renderer'] = render_component
+			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'physics', 'physics_renderer']
+						   'physics', 'renderer', 'scale']
 		else:
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'renderer']
+						   'renderer', 'scale']
 		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_spline(self, pos, spline, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
@@ -477,11 +488,19 @@ class TestGame(Widget):
 	def setEntIDPosSizeRot(self, entID, x,y,w,h,r=0):
 		self.setEntPosSizeRot(self.gameworld.entities[entID], x,y,w,h,r)
 	def setEntPosSizeRot(self, ent, x,y,w,h,r=0):
-		ent.position.x = x
+		print "--------"
+		print ent.position.x
+		ent.position.x = x#*0.1
+		viewport = self.gameworld.systems['gameview']
+		print viewport.camera_scale
+		print viewport.camera_pos
+		print viewport.size
 		ent.position.y = y
-		ent.renderer.width = w
-		ent.renderer.height = h
+		#ent.renderer.width = w
+		#ent.renderer.height = h
 		ent.rotate.r = r
+		ent.scale.s = w/80.
+		print '--------'
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
 			#print "removing ",j, " from space"
@@ -662,7 +681,7 @@ class TestGame(Widget):
 				self.reindexEntID(shape.body.data)
 				if self.mainTools.paused:
 					(self.gameworld.systems['physics'].update(0.00000001))
-					(self.gameworld.systems['physics_renderer'].update(0.00000001))
+					(self.gameworld.systems['renderer'].update(0.00000001))
 					(self.gameworld.systems['renderer'].update(0.00000001))
 					#space.reindex_shape(shape)
 			#else:
@@ -987,7 +1006,7 @@ class TestGame(Widget):
 			if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
 				c = self.mainTools.selectedEntity.color
 				color = (c.r, c.g ,c.b ,c.a)
-			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=0, height=0,
+			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=40, height=40,
 															texture=self.mainTools.spriteSpinner.text,
 															color=color)
 
@@ -1164,8 +1183,8 @@ class TestGame(Widget):
 			sbox.position.x =ent.position.x
 			sbox.position.y =ent.position.y
 			bb = ent.physics.shapes[0].cache_bb()
-			sbox.renderer.width = (bb['r']-bb['l'])*1.05+5
-			sbox.renderer.height = (bb['t']-bb['b'])*1.05+5
+			#sbox.renderer.width = (bb['r']-bb['l'])*1.05+5
+			#sbox.renderer.height = (bb['t']-bb['b'])*1.05+5
 		for j, je in self.jointEnts.iteritems():
 			#j = je.joint
 			b1l = j.a.local_to_world(cy.Vec2d(j.anchor1['x'],j.anchor1['y']))
@@ -1214,9 +1233,9 @@ class TestGame(Widget):
 
 	def setup_states(self):
 		self.gameworld.add_state(state_name='main',
-								 systems_added=['color', 'rotate', 'renderer', 'physics_renderer'],
+								 systems_added=['color', 'rotate', 'renderer', 'renderer', 'scale'],
 								 systems_removed=[], systems_paused=[],
-								 systems_unpaused=['color', 'rotate', 'renderer', 'physics_renderer'],
+								 systems_unpaused=['color', 'rotate', 'renderer', 'renderer', 'scale'],
 								 screenmanager_screen='main')
 
 	def set_state(self):

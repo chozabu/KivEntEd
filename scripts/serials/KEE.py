@@ -37,7 +37,7 @@ class Serials():
 
 	def entToDict(self, e):
 		ed = {"orig_id": e.entity_id}
-		#'load_order', 'physics', 'physics_renderer', 'position', 'rotate'
+		#'load_order', 'physics', 'renderer', 'position', 'rotate'
 		if hasattr(e, "load_order"):
 			ed["load_order"] = e.load_order
 		if hasattr(e, "color"):
@@ -78,10 +78,10 @@ class Serials():
 		if hasattr(e, "poly_renderer"):
 			prd = {"texture": e.poly_renderer.texture}
 			ed["poly_renderer"] = prd
-		if hasattr(e, "physics_renderer"):
-			prd = {"width": e.physics_renderer.width, "height": e.physics_renderer.height,
-				   "texture": e.physics_renderer.texture}
-			ed["physics_renderer"] = prd
+		if hasattr(e, "renderer"):
+			prd = {"width": e.renderer.width, "height": e.renderer.height,
+				   "texture": e.renderer.texture}
+			ed["renderer"] = prd
 		if hasattr(e, "renderer"):
 			prd = {"width": e.renderer.width, "height": e.renderer.height,
 				   "texture": e.renderer.texture}
@@ -237,7 +237,7 @@ class Serials():
 		'position':self.loadPosition,
 		'rotate':self.loadRotate,
 		'physics':self.loadPhysics,
-		'physics_renderer':self.loadPhysics_renderer,
+		'renderer':self.loadPhysics_renderer,
 		'renderer':self.loadPhysics_renderer,
 		'poly_renderer':self.loadPoly_renderer,
 		}
