@@ -324,7 +324,7 @@ class TestGame(Widget):
 				color = (c.r, c.g ,c.b ,c.a)
 				print color
 			if texture == None:
-				texture = old_shape.poly_renderer.texture
+				texture = old_shape.renderer.texture
 			if replace_old_shape: self.delObj(old_shape_id)
 		if friction == None: friction = 1.0
 		if elasticity == None: elasticity = .5
@@ -399,8 +399,8 @@ class TestGame(Widget):
 			if color == None:
 				c = oldpoly.color
 				color = (c.r, c.g ,c.b ,c.a)
-			if texture == None:
-				texture = oldpoly.poly_renderer.texture
+			#if texture == None:
+			#	texture = oldpoly.renderer.texture
 			self.delObj(lastpolyid)
 		if friction == None: friction = 1.0
 		if elasticity == None: elasticity = .5
@@ -415,7 +415,7 @@ class TestGame(Widget):
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 		create_dict['do_texture'] = True
-		if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
+		#if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
 		create_dict['texture'] = texture
 		print texture
 
@@ -444,16 +444,16 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 
 		create_component_dict = {'color':color,
-						 'position': pos, 'rotate': 0, 'poly_renderer': create_dict}
-		component_order = ['color', 'position', 'rotate', 'poly_renderer']
+						 'position': pos, 'rotate': 0, 'renderer': create_dict, 'scale':1.}
+		component_order = ['color', 'position', 'rotate', 'renderer']
 		if do_physics:
 			create_component_dict['physics'] = physics_component
-			component_order = ['color', 'position', 'rotate', 'physics', 'poly_renderer']
+			component_order = ['color', 'position', 'rotate', 'physics', 'renderer', 'scale']
 		if lastpolyid and 0:
 			poly = self.getEntFromID(lastpolyid)
 
-			poly.poly_renderer.vert_mesh.load_from_python(verts, triangles)#, create_dict['vert_count'], create_dict['tri_count'])
-			self.gameworld.systems['poly_renderer'].redraw_entity(lastpolyid)
+			poly.renderer.vert_mesh.load_from_python(verts, triangles)#, create_dict['vert_count'], create_dict['tri_count'])
+			self.gameworld.systems['renderer'].redraw_entity(lastpolyid)
 			return lastpolyid
 		else:
 			#print "col_shapes=",col_shapes
@@ -462,13 +462,13 @@ class TestGame(Widget):
 			newpoly = self.getEntFromID(newpolyID)
 			newpoly.polyshape = pg
 
-			print newpoly.poly_renderer.texture
+			#print newpoly.renderer.texture
 			#if not do_physics:
 			#	newpoly.load_order.remove('physics')
-			#newpoly.load_order = ['color', 'position', 'rotate', 'poly_renderer']
+			#newpoly.load_order = ['color', 'position', 'rotate', 'renderer']
 			if selectNow: self.mainTools.setEnt(self.gameworld.entities[newpolyID])
 
-			#newpoly.poly_renderer.texture.wrap = 'repeat'
+			#newpoly.renderer.texture.wrap = 'repeat'
 
 			#print "poly has: " + str(len(triangles)) + " triangles"
 			return newpolyID

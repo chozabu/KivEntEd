@@ -133,8 +133,8 @@ class Serials():
 		if hasattr(e, 'renderer'):
 			pr = e.renderer
 			texname = pr.texture
-		if hasattr(e, 'poly_renderer'):
-			pr = e.poly_renderer
+		if hasattr(e, 'renderer'):
+			pr = e.renderer
 			texname = pr.texture.split('/')[-1][:-4]
 		if texname:
 			td = ET.SubElement(ed,'usetexture')

@@ -606,7 +606,7 @@ class MainTools(FloatLayout):
 
 	def simplifyPolyPressed(self, instance):
 		ent = self.selectedEntity
-		if hasattr(ent, 'poly_renderer'):
+		if hasattr(ent, 'renderer'):
 			#ent.polyshape.remove_short_lines()
 			ent.polyshape.remove_some_pts(.8)
 
@@ -616,10 +616,10 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if hasattr(ent, 'renderer'):
 			ent.renderer.texture = instance.text
-		elif hasattr(ent, 'poly_renderer'):
+		elif hasattr(ent, 'renderer'):
 			tex = 'sprites/'+instance.text+'.png'
-			ent.poly_renderer.texture = tex
-			self.gameref.gameworld.systems['poly_renderer'].redraw_entity(ent.entity_id)
+			ent.renderer.texture = tex
+			self.gameref.gameworld.systems['renderer'].redraw_entity(ent.entity_id)
 		else:
 			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,texture=instance.text)
 
@@ -846,11 +846,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
 				self.selectedMenu.imgHeightLabel.text = str(ent.renderer.height)
 				print "width=",ent.renderer.width'''
-			if hasattr(ent, 'poly_renderer'):
-				texname = ent.poly_renderer.texture.split('/')[-1][:-4]
-				self.selectedMenu.texLabel.text = texname
+			'''if hasattr(ent, 'renderer'):
+				#texname = ent.renderer.texture.split('/')[-1][:-4]
+				#self.selectedMenu.texLabel.text = texname
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
-				self.selectedMenu.shapeInfo.add_widget(ps)
+				self.selectedMenu.shapeInfo.add_widget(ps)'''
 			if hasattr(ent, 'color'):
 				self.selectedMenu.redLabel.text = str(ent.color.r)
 				self.selectedMenu.greenLabel.text = str(ent.color.g)

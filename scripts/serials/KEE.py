@@ -75,9 +75,9 @@ class Serials():
 				shapes.append(self.shapeToDict(s))
 			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
 			ed["physics"] = pd
-		if hasattr(e, "poly_renderer"):
-			prd = {"texture": e.poly_renderer.texture}
-			ed["poly_renderer"] = prd
+		if hasattr(e, "renderer"):
+			prd = {"texture": e.renderer.texture}
+			ed["renderer"] = prd
 		if hasattr(e, "renderer"):
 			prd = {"width": e.renderer.width, "height": e.renderer.height,
 				   "texture": e.renderer.texture}
@@ -239,7 +239,7 @@ class Serials():
 		'physics':self.loadPhysics,
 		'renderer':self.loadPhysics_renderer,
 		'renderer':self.loadPhysics_renderer,
-		'poly_renderer':self.loadPoly_renderer,
+		'renderer':self.loadPoly_renderer,
 		}
 		load_order = [str(li) for li in e['load_order']]
 		create_dict = {}
@@ -256,7 +256,7 @@ class Serials():
 			newent = self.gameref.getEntFromID(entID)
 			if 'datadict' in e:
 				newent.datadict = e['datadict']
-			if hasattr(newent, 'poly_renderer'):
+			if hasattr(newent, 'renderer'):
 				pg = base64.decodestring(e['polyviewbinary'])
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
