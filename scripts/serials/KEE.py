@@ -232,6 +232,7 @@ class Serials():
 		#print "polytex:",s['texture']
 		return cd
 	def loadEntFromDict(self, e, idConvDict=None):
+		return
 		sysfuncs={
 		'color':self.loadColors,
 		'position':self.loadPosition,
