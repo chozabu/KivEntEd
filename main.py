@@ -24,11 +24,14 @@ import kivent
 from kivent import texture_manager
 from kivent import VertMesh
 
+texnames = []
+
 #texture_manager.load_atlas('assets/myatlas.atlas')
 #texture_manager.load_image('assets/a2.png')
 import glob
 for fn in glob.glob('./sprites/*.png'):
 	texture_manager.load_image(fn)
+	texnames.append(fn.split('/')[-1][:-4])
 
 from kivy.graphics import *
 from kivy.atlas import Atlas
@@ -145,10 +148,9 @@ class TestGame(Widget):
 	def init_sprites(self, dt):
 		#self.gameworld.systems['renderer'].do_rotate = True
 		#self.gameworld.systems['renderer'].on_do_rotate(None,None)
-		return
-		usprites = self.gameworld.systems['renderer'].uv_dict.keys()
+		#usprites = self.gameworld.systems['renderer'].uv_dict.keys()
 		sprites = []
-		for k in usprites:
+		for k in texnames:
 			if k != 'atlas_size' and k != 'main_texture': sprites.append(str(k))
 		self.mainTools.sprite_list = sprites
 
