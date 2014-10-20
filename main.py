@@ -24,8 +24,12 @@ import kivent
 from kivent import texture_manager
 from kivent import VertMesh
 
-texture_manager.load_atlas('assets/myatlas.atlas')
-texture_manager.load_image('assets/a2.png')
+#texture_manager.load_atlas('assets/myatlas.atlas')
+#texture_manager.load_image('assets/a2.png')
+import glob
+for fn in glob.glob('./sprites/*.png'):
+	texture_manager.load_image(fn)
+
 from kivy.graphics import *
 from kivy.atlas import Atlas
 
@@ -461,7 +465,7 @@ class TestGame(Widget):
 		for i in range(vert_count):
 			vert_mesh[i] = all_verts[i]
 
-		rdict = {'texture': 'a2',#texture,
+		rdict = {'texture': texture,
 			'vert_mesh': vert_mesh,
 			#'size': (64, 64),
 			'render': True}
