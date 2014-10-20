@@ -499,7 +499,7 @@ class TestGame(Widget):
 		#ent.renderer.width = w
 		#ent.renderer.height = h
 		ent.rotate.r = r
-		ent.scale.s = w/80.
+		ent.scale.s = w/40.
 		print '--------'
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
