@@ -22,6 +22,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 import kivent
 from kivent import texture_manager
+from kivent import VertMesh
 
 texture_manager.load_atlas('assets/myatlas.atlas')
 from kivy.graphics import *
@@ -443,12 +444,36 @@ class TestGame(Widget):
 							 'ang_vel_limit': radians(2000),
 							 'mass': mass, 'col_shapes': col_shapes}
 
+		render_system = self.gameworld.systems['renderer']
+		all_verts = create_dict['vertices']
+		vert_count = len(all_verts)
+		ot=triangles
+		triangles=[]
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		vert_mesh =  VertMesh(render_system.attribute_count,
+			vert_count, index_count)
+		print triangles
+		print all_verts
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+
+		rdict = {'texture': 'Dirt',#texture,
+			'vert_mesh': vert_mesh,
+			#'size': (64, 64),
+			'render': True}
+		print "***"
+		print rdict
+		print pos
 		create_component_dict = {'color':color,
-						 'position': pos, 'rotate': 0, 'renderer': create_dict, 'scale':1.}
+						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.}
 		component_order = ['color', 'position', 'rotate', 'renderer']
 		if do_physics:
 			create_component_dict['physics'] = physics_component
 			component_order = ['color', 'position', 'rotate', 'physics', 'renderer', 'scale']
+		#print create_component_dict
 		if lastpolyid and 0:
 			poly = self.getEntFromID(lastpolyid)
 

@@ -74,7 +74,7 @@ def tristripToKDict(ts, color):
 	nv_ap = new_vertices.append
 	vert_count = 0
 	for tvert in tri_verts:
-		nv_ap([tvert[0], tvert[1], color[0], color[1], color[2], color[3], tvert[0]*0.01, tvert[1]*0.01])
+		nv_ap([tvert[0], tvert[1], tvert[0]*0.001, tvert[1]*0.001, color[0], color[1], color[2], color[3]])
 		vert_count += 1
 	return new_triangles, new_vertices,  tri_count, vert_count
 
