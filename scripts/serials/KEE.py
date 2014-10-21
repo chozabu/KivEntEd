@@ -75,16 +75,18 @@ class Serials():
 				shapes.append(self.shapeToDict(s))
 			pd = {"shapes": shapes, "shape_type": e.physics.shape_type, "body": bd}
 			ed["physics"] = pd
-		if hasattr(e, "renderer"):
+		'''if hasattr(e, "renderer"):
 			prd = {"texture": e.renderer.texture}
 			ed["renderer"] = prd
 		if hasattr(e, "renderer"):
 			prd = {"width": e.renderer.width, "height": e.renderer.height,
 				   "texture": e.renderer.texture}
-			ed["renderer"] = prd
+			ed["renderer"] = prd'''
 		if hasattr(e, "renderer"):
+			#print dir(e.renderer)
+			#print e.renderer.texture_key
 			prd = {"width": e.renderer.width, "height": e.renderer.height,
-				   "texture": e.renderer.texture}
+				   "texture": e.renderer.texture_key}
 			ed["renderer"] = prd
 		if hasattr(e, "position"):
 			pd = {"x": e.position.x, "y": e.position.y}
@@ -198,7 +200,7 @@ class Serials():
 				shape['shape_info']={'vertices': shape['verts'],
 					  'mass': s['body']['mass'], 'offset': (0, 0)}
 				shape['shape_type']='poly'
-				print shape
+				#print shape
 			elif 'width' in shape:
 				shape['shape_info']={'width': shape['width'],'height': shape['height'],
 					  'mass': s['body']['mass']}
@@ -227,12 +229,11 @@ class Serials():
 		new_triangles, new_vertices,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
 		cd = {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
-			'vert_data_count': 5,'texture': str(s['texture']), 'do_texture':True}
+			'vert_data_count': 5,'texture': str(s['texture']).split('/')[-1][:-4], 'do_texture':True}
 		#print cd
 		#print "polytex:",s['texture']
 		return cd
 	def loadEntFromDict(self, e, idConvDict=None):
-		return
 		sysfuncs={
 		'color':self.loadColors,
 		'position':self.loadPosition,
@@ -240,25 +241,37 @@ class Serials():
 		'physics':self.loadPhysics,
 		'renderer':self.loadPhysics_renderer,
 		'physics_renderer':self.loadPhysics_renderer,
-		#'renderer':self.loadPoly_renderer,
+		'poly_renderer':self.loadPoly_renderer,
 		}
 		load_order = []#str(li) for li in e['load_order']]
-		comp=False
+		poly=False
+		rname = 'renderer'
 		for li in e['load_order']:
 			if li=='physics_renderer':
+				rname = str(li)
 				li='renderer'
-				comp=True
-			load_order.append(li)
+			if li=='poly_renderer':
+				rname = str(li)
+				li='renderer'
+				poly=True
+			load_order.append(str(li))
 
 		create_dict = {}
+		print "\nxxxxxx"
+		print e
+		print "yyyyyyyy\n"
 		for system in load_order:
 			ns = system
-			if system=='renderer' and comp:ns='physics_renderer'
+			if system=='renderer' and rname!= 'renderer':ns=rname
 			if system in sysfuncs:
 				create_dict[str(system)]=sysfuncs[ns](e[ns],e)
 			else:
 				print "unknown system:", system, e[system]
 				create_dict[str(system)]=e[system]
+		if 'scale' not in create_dict:
+			create_dict['scale']=1.
+			load_order.append('scale')
+		print '.-.-.-.-.'
 		print create_dict
 		entID =  self.gameref.create_ent_from_dict(create_dict, load_order, selectNow=False)
 		if entID != None:
@@ -266,7 +279,7 @@ class Serials():
 			newent = self.gameref.getEntFromID(entID)
 			if 'datadict' in e:
 				newent.datadict = e['datadict']
-			if hasattr(newent, 'renderer'):
+			if hasattr(newent, 'poly_renderer'):
 				pg = base64.decodestring(e['polyviewbinary'])
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
