@@ -227,7 +227,7 @@ class TestGame(Widget):
 							 'mass': mass, 'col_shapes': col_shapes}
 		create_component_dict = {#'physics': physics_component,
 								 'color':color,
-								 'position': pos, 'rotate': angle, 'scale':1}
+								 'position': pos, 'rotate': angle, 'scale':1.}
 		#component_order = ['color', 'position', 'rotate',
 		#				   'renderer']
 		render_component = {'texture': texture, 'size': (radius * 2, radius * 2)}
@@ -239,7 +239,7 @@ class TestGame(Widget):
 		else:
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'renderer']
+						   'renderer', 'scale']
 		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def getEntFromID(self, entID):
 		return self.gameworld.entities[entID]
@@ -311,7 +311,7 @@ class TestGame(Widget):
 		else:
 			create_component_dict['renderer'] = render_component
 			component_order = ['color', 'position', 'rotate',
-						   'renderer']
+						   'renderer', 'scale']
 		return self.create_ent_from_dict(create_component_dict, component_order, selectNow)
 	def create_sprite(self, pos, shape_type='box', radius=40., width=None, height=None, mass=10., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 				   angular_velocity=.0, texture=None, selectNow=True, sensor = False, collision_type = 0,
