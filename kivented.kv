@@ -51,12 +51,10 @@ TestGame:
             do_color: True
             do_scale: True
             shader_source: 'assets/glsl/positioncolorrotatescaleshader.glsl'
-            atlas_dir: 'assets/'
-            atlas: 'myatlas'
+            gameview: 'gameview'
         CymunkPhysics:
             gameworld: root.gameworld
             system_id: 'physics'
-            viewport: 'gameview'
     GameScreenManager:
         id: gamescreenmanager
         size: root.size
