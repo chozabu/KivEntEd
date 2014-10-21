@@ -86,8 +86,11 @@ class Serials():
 		if hasattr(e, "renderer"):
 			#print dir(e.renderer)
 			#print e.renderer.texture_key
-			prd = {"width": e.renderer.width, "height": e.renderer.height,
-				   "texture": e.renderer.texture_key}
+			if e.renderer.width != 0:
+				prd = {"width": e.renderer.width, "height": e.renderer.height,
+					   "texture": e.renderer.texture_key}
+			else:
+				prd = {"texture": e.renderer.texture_key}
 			ed["renderer"] = prd
 		if hasattr(e, "position"):
 			pd = {"x": e.position.x, "y": e.position.y}
@@ -226,6 +229,8 @@ class Serials():
 	def loadPhysics_renderer(self, s, e):
 		#{u'width': 60.0, u'texture': u'orb', u'height': 60.0}
 		#{'texture': texture, 'size': (radius * 2, radius * 2)}
+		if 'width' not in s:
+			return self.loadPoly_renderer(s,e)
 		return {'texture': str(s['texture']), 'size': (s['width'],s['height'])}
 	def loadPoly_renderer(self,s,e):
 
@@ -245,7 +250,9 @@ class Serials():
 		vert_mesh.indices = triangles
 		for i in range(vert_count):
 			vert_mesh[i] = all_verts[i]
-		texture=str(s['texture']).split('/')[-1][:-4]
+		texture = str(s['texture'])
+		if texture.endswith('.png'):
+			texture=texture.split('/')[-1][:-4]
 		rdict = {'texture': texture,
 			'vert_mesh': vert_mesh,
 			#'size': (64, 64),
