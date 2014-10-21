@@ -5,6 +5,7 @@ import cymunk as cy
 import os
 import Polygon.IO as pio
 import PolyGen, Spline
+from kivent import VertMesh
 
 import base64
 
@@ -226,13 +227,34 @@ class Serials():
 		return {'texture': str(s['texture']), 'size': (s['width'],s['height'])}
 	def loadPoly_renderer(self,s,e):
 
-		new_triangles, new_vertices,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
-		cd = {'triangles': new_triangles, 'vertices': new_vertices,
+		triangles, all_verts,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
+
+		render_system = self.gameref.gameworld.systems['renderer']
+		vert_count = len(all_verts)
+		ot=triangles
+		triangles=[]
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		vert_mesh =  VertMesh(render_system.attribute_count,
+			vert_count, index_count)
+		print triangles
+		print all_verts
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+		texture=str(s['texture']).split('/')[-1][:-4]
+		rdict = {'texture': texture,
+			'vert_mesh': vert_mesh,
+			#'size': (64, 64),
+			'render': True}
+
+		'''cd = {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
-			'vert_data_count': 5,'texture': str(s['texture']).split('/')[-1][:-4], 'do_texture':True}
-		#print cd
+			'vert_data_count': 5,'texture': texture, 'do_texture':True}
+		'''#print cd
 		#print "polytex:",s['texture']
-		return cd
+		return rdict
 	def loadEntFromDict(self, e, idConvDict=None):
 		sysfuncs={
 		'color':self.loadColors,
@@ -279,7 +301,8 @@ class Serials():
 			newent = self.gameref.getEntFromID(entID)
 			if 'datadict' in e:
 				newent.datadict = e['datadict']
-			if hasattr(newent, 'poly_renderer'):
+			#if hasattr(newent, 'poly_renderer'):
+			if 'polyviewbinary' in e:
 				pg = base64.decodestring(e['polyviewbinary'])
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
