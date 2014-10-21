@@ -288,9 +288,6 @@ class Serials():
 			load_order.append(str(li))
 
 		create_dict = {}
-		print "\nxxxxxx"
-		print e
-		print "yyyyyyyy\n"
 		for system in load_order:
 			ns = system
 			if system=='renderer' and rname!= 'renderer':ns=rname
@@ -302,8 +299,6 @@ class Serials():
 		if 'scale' not in create_dict:
 			create_dict['scale']=1.
 			load_order.append('scale')
-		print '.-.-.-.-.'
-		print create_dict
 		entID =  self.gameref.create_ent_from_dict(create_dict, load_order, selectNow=False)
 		if entID != None:
 			if idConvDict!=None: idConvDict[e['orig_id']] = entID

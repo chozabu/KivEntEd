@@ -431,7 +431,6 @@ class TestGame(Widget):
 		create_dict['do_texture'] = True
 		#if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
 		create_dict['texture'] = texture
-		print texture
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
@@ -467,8 +466,6 @@ class TestGame(Widget):
 		index_count = len(triangles)
 		vert_mesh =  VertMesh(render_system.attribute_count,
 			vert_count, index_count)
-		print triangles
-		print all_verts
 		vert_mesh.indices = triangles
 		for i in range(vert_count):
 			vert_mesh[i] = all_verts[i]
@@ -477,8 +474,6 @@ class TestGame(Widget):
 			'vert_mesh': vert_mesh,
 			#'size': (64, 64),
 			'render': True}
-		print "***"
-		print rdict
 		print pos
 		create_component_dict = {'color':color,
 						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.}
@@ -923,8 +918,8 @@ class TestGame(Widget):
 		else: self.selectedListIndex =0
 		self.lastlist = shapes
 		#self.selectedShape = shape
-		print "touched shape:", shape
-		print "touched shapes:", shapes
+		#print "touched shape:", shape
+		#print "touched shapes:", shapes
 		self.touches[touch.id] = {"active": False, "pos": pos, "newpos": pos, "screenpos": (touch.x, touch.y),
 								  "tool": self.mainTools.currentTool, "onmenu": False, "touching": shape,
 								  "touchingnow": shape, "ownbody": cy.Body()}
@@ -932,11 +927,11 @@ class TestGame(Widget):
 		if self.mainTools.on_touch_down(touch):  #True:#touch.x < self.width*.1:
 			ctouch["onmenu"] = True
 			#sresult = super(TestGame, self).on_touch_down(touch)
-			print "clicked in menu"
+			#print "clicked in menu"
 			return
-		print "not in menu"
+		#print "not in menu"
 		currentTool = self.mainTools.currentTool
-		print "Tool is: " + currentTool
+		#print "Tool is: " + currentTool
 		ctouch['active'] = True
 
 
