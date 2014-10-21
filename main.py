@@ -24,6 +24,12 @@ import kivent
 from kivent import texture_manager
 from kivent import VertMesh
 
+'''from kivy.config import Config
+Window.fullscreen = True
+Window.width=100
+Config.set('graphics', 'width', '1920')
+Config.set('graphics', 'height', '1080')'''
+
 texnames = []
 
 #texture_manager.load_atlas('assets/myatlas.atlas')
