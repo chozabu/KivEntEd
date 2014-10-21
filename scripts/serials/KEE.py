@@ -95,6 +95,8 @@ class Serials():
 		if hasattr(e, "rotate"):
 			rd = {"r": e.rotate.r}
 			ed["rotate"] = rd
+		if hasattr(e, "scale"):
+			ed["scale"] = e.scale.s
 		if hasattr(e, 'datadict'):
 			ed['datadict'] = dict(e.datadict)
 		return ed
