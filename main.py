@@ -593,6 +593,12 @@ class TestGame(Widget):
 		oldc = self.blocal((p.position.x,p.position.y),p)
 		shifter = (oldc[0] - poc[0], oldc[1] - poc[1])
 		po.shift(shifter[0], shifter[1])
+		if hasattr(p, 'splineshape'):
+			ss = p.splineshape
+			cps = ss.ControlPoints
+			for pindex in range(len(cps)):
+				cp = cps[pindex]
+				cps[pindex]=(cp[0]+shifter[0], cp[1]+shifter[1])
 		bp=p.physics.body.position
 		npos = (bp[0]-shifter[0], bp[1]-shifter[1])
 		p.physics.body.position=newc#npos'''
