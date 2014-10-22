@@ -439,7 +439,7 @@ class TestGame(Widget):
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
 		if tricount < 1: return
-		submass = mass/tricount
+		submass = float(mass)/float(tricount)
 		verts = create_dict['vertices']
 		#print "bothtest, cptest, crtest, failtest"
 		#print bothtest, cptest, crtest, failtest
@@ -1015,8 +1015,8 @@ class TestGame(Widget):
 			newspline.add_or_select((0, 0+170), 2)
 			newspline.add_or_select((0+150, 0), 2)
 			newspline.DrawCurve()
-
-			spline_ent_id = self.create_spline(pos,newspline,selectNow=True)
+			mass = self.mainTools.massSlider.value
+			spline_ent_id = self.create_spline(pos,newspline,selectNow=True,mass=mass)
 			#pg = PolyGen.PolyGen()
 			#pg.from_spline(newspline.subpoints)
 			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
@@ -1103,19 +1103,21 @@ class TestGame(Widget):
 				e = polys[0]
 				lastpolyid = e.entity_id
 				pg = e.polyshape
-				pos=self.blocal(pos,e)
+				lpos=self.blocal(pos,e)
 			else:
 				npos=pos
+				lpos=(0,0)
 				polyMenu = self.mainTools.polyMenu
 				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
 				                     minlinelen=polyMenu.minlenslider.value)
-			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+			pg.draw_circle_polygon(lpos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
 
 			if lastpolyid != None:
 				ctouch['lastpolyid'] = self.update_poly(e)
 			else:
-				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics)
+				mass = self.mainTools.massSlider.value
+				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics,mass=mass)
 			ctouch['polygen'] = pg
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
