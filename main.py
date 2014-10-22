@@ -481,7 +481,7 @@ class TestGame(Widget):
 		#print pos
 		create_component_dict = {'color':color,
 						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.}
-		component_order = ['color', 'position', 'rotate', 'renderer']
+		component_order = ['color', 'position', 'rotate', 'renderer', 'scale']
 		if do_physics:
 			create_component_dict['physics'] = physics_component
 			component_order = ['color', 'position', 'rotate', 'physics', 'renderer', 'scale']
