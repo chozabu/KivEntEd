@@ -387,7 +387,7 @@ class TestGame(Widget):
 		spline.DrawCurve()
 		pg.from_spline(spline.subpoints)
 		#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-		spline_ent_id = self.create_poly(pos,pg,lastpolyid=lastpolyid, mass=mass, friction=friction,
+		spline_ent_id = self.create_poly(pg,pos,lastpolyid=lastpolyid, mass=mass, friction=friction,
 		                        elasticity=elasticity, angle=angle, x_vel=x_vel, y_vel=y_vel,
 		                        angular_velocity=angular_velocity, texture=texture, selectNow=selectNow,
 		                        do_physics = do_physics, collision_type = collision_type, color=color)#, do_physics=do_physics)
@@ -396,7 +396,7 @@ class TestGame(Widget):
 		spline_ent.splineshape = spline
 		print "made spline"
 		return spline_ent_id
-	def create_poly(self, pos, polygon, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
+	def create_poly(self, polygon, pos=None, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
 	angular_velocity=.0, texture=None, selectNow=True, do_physics = None, collision_type = 0, color=None):
 		#print "poly, oldpoly=", lastpolyid
 
@@ -413,6 +413,9 @@ class TestGame(Widget):
 			if color == None:
 				c = oldpoly.color
 				color = (c.r, c.g ,c.b ,c.a)
+			if pos == None:
+				op=oldpoly.position
+				pos=(op.x,op.y)
 			#if texture == None:
 			#	texture = oldpoly.renderer.texture
 			self.delObj(lastpolyid)
@@ -421,6 +424,7 @@ class TestGame(Widget):
 		if color == None:color = (1,1,1,1)
 		if texture == None: texture = "snow"
 		if do_physics == None: do_physics = True
+		if pos == None:pos=(0,0)
 
 		pg = polygon
 
@@ -450,7 +454,7 @@ class TestGame(Widget):
 		if len(col_shapes) == 0:return None
 		physics_component = {'main_shape': 'poly',
 							 'velocity': (x_vel, y_vel),
-							 'position': (0,0), 'angle': angle,
+							 'position': pos, 'angle': angle,
 							 'angular_velocity': angular_velocity,
 							 'vel_limit': 2048,
 							 'ang_vel_limit': radians(2000),
@@ -490,6 +494,7 @@ class TestGame(Widget):
 			return lastpolyid
 		else:
 			#print "col_shapes=",col_shapes
+			print pos
 			newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
 			self.entIDs.append(newpolyID)
 			newpoly = self.getEntFromID(newpolyID)
@@ -575,7 +580,14 @@ class TestGame(Widget):
 		#qj.entity_id = jrid
 		self.jointEnts[qj] = jrent
 
-
+	def update_poly(self, p):
+		return self.create_poly(p.polyshape,(p.position.x,p.position.y),p.entity_id)
+	def blocal(self, pos,ent):
+		position = cy.Vec2d(pos[0], pos[1])
+		if hasattr(ent, "physics"):
+			lpos = ent.physics.body.world_to_local(position)
+			return(lpos['x'],lpos['y'])
+		return pos
 	def on_touch_move(self, touch):
 		if touch.id not in self.touches: return
 		self.mainTools.on_touch_move(touch)
@@ -606,21 +618,28 @@ class TestGame(Widget):
 					pg = p.polyshape
 					pg.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 					pg.sub_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
-					self.create_poly(pos,p.polyshape,p.entity_id)
+					#self.create_poly(p.polyshape,(0,0),p.entity_id)
+					self.update_poly(p)
 				ctouch['pos'] = pos
 
 		if 'polygen' in ctouch:
 			pg = ctouch['polygen']
 			if dist > 10:
 
-				pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-				pg.draw_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
-				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
 				lpid=None
+				npos = (0,0)
 				if 'lastpolyid' in ctouch:
 					lpid = ctouch['lastpolyid']
+					npos=None
 					del ctouch['lastpolyid']
-				ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
+				le = self.getEntFromID(lpid)
+				mousepos = self.blocal(pos,le)
+				midpos = self.blocal((midx,midy),le)
+				pg.draw_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+				pg.draw_square_polygon(midpos,dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
+				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
+
+				ctouch['lastpolyid'] = self.create_poly(pg,npos,lpid)
 				ctouch['pos'] = pos
 
 		if currentTool == 'splineed':
@@ -638,7 +657,7 @@ class TestGame(Widget):
 					#print ss.ControlPoints
 
 					if ent.polyshape.poly.area()>10:
-						spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+						spline_ent_id = self.create_poly(ent.polyshape,pos,ent.entity_id)
 						#print "spline_ent_id=",spline_ent_id
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
@@ -750,10 +769,12 @@ class TestGame(Widget):
 		if 'polygen' in ctouch:
 			pg = ctouch['polygen']
 			lpid=None
+			npos=(0,0)
 			if 'lastpolyid' in ctouch:
 				lpid = ctouch['lastpolyid']
+				npos=None
 				del ctouch['lastpolyid']
-			ctouch['lastpolyid'] = self.create_poly(pos,pg,lpid)
+			ctouch['lastpolyid'] = self.create_poly(pg, npos,lpid)
 
 		tshape = ctouch['touching']
 		if tshape and shape:
@@ -814,10 +835,10 @@ class TestGame(Widget):
 						#p[0]-=xd
 						#p[1]-=yd
 					self.create_spline((0,0),ss,ent.entity_id)
-				elif hasattr(ent, 'polyshape'):
-					pg = ent.polyshape
-					pg.poly.shift(-xd,-yd)
-					self.create_poly((0,0),pg,ent.entity_id)
+				#elif hasattr(ent, 'polyshape'):
+				#	pg = ent.polyshape
+				#	pg.poly.shift(-xd,-yd)
+				#	#self.create_poly(pg,lastpolyid=ent.entity_id)
 
 		if currentTool == 'rotate' and tshape:
 			ispoly =  tshape.__class__.__name__ == 'Poly'
@@ -827,7 +848,7 @@ class TestGame(Widget):
 				ent = self.getEntFromID(entID)
 				pg = ent.polyshape
 				pg.poly.rotate(bang)
-				self.create_poly((0,0),pg,entID)
+				self.create_poly(pg,lastpolyid=entID)
 
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
@@ -946,7 +967,7 @@ class TestGame(Widget):
 			#pg = PolyGen.PolyGen()
 			#pg.from_spline(newspline.subpoints)
 			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			#spline_ent_id =  self.create_poly(pos,pg,selectNow=True)#, do_physics=do_physics)
+			#spline_ent_id =  self.create_poly(pg,pos,selectNow=True)#, do_physics=do_physics)
 			spline_ent = self.getEntFromID(spline_ent_id)
 			#self.mainTools.setEnt(spline_ent_id)
 			shape = spline_ent.physics.shapes[0]
@@ -1012,26 +1033,28 @@ class TestGame(Widget):
 			polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			for p in polys:
 				p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-				self.create_poly(pos,p.polyshape,p.entity_id)
+				self.create_poly(p.polyshape,lastpolyid=p.entity_id)
 
 
 
 		if currentTool == 'poly':
 			polys = []
 			lastpolyid = None
+			npos=None
 			if self.mainTools.polyMenu.polyMergeButton.state != 'normal':
 				polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			if len(polys)>0:
 				e = polys[0]
 				lastpolyid = e.entity_id
 				pg = e.polyshape
+				pos=self.blocal(pos,e)
 			else:
 				polyMenu = self.mainTools.polyMenu
 				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
 				                     minlinelen=polyMenu.minlenslider.value)
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			ctouch['lastpolyid'] = self.create_poly(pos,pg, lastpolyid=lastpolyid, do_physics=do_physics)
+			ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics)
 			ctouch['polygen'] = pg
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
@@ -1067,7 +1090,7 @@ class TestGame(Widget):
 					self.create_spline((0,0),ss,ent.entity_id)
 				else:
 					po.shift(shifter[0], shifter[1])
-					self.create_poly((0,0),ent.polyshape,ent.entity_id)
+					self.create_poly(ent.polyshape,lastpolyid=ent.entity_id)
 			elif hasattr(ent, 'physics'):
 				phys = ent.physics
 				phys.body.position = pos
@@ -1124,11 +1147,16 @@ class TestGame(Widget):
 		return False
 
 	def get_touching_polys(self, pos, radius=30):
-		cs = PolyGen.Circle(radius, pos, 16)
 		polys = []
+		position = cy.Vec2d(pos[0], pos[1])
 		for eid in self.entIDs:
 			e = self.getEntFromID(eid)
 			if hasattr(e, "polyshape"):
+				lpos = pos
+				if hasattr(e, "physics"):
+					lpos = e.physics.body.world_to_local(position)
+					lpos=(lpos['x'],lpos['y'])
+				cs = PolyGen.Circle(radius, lpos, 16)
 				if cs.overlaps(e.polyshape.poly):
 					polys.append(e)
 		return polys
