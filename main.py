@@ -587,14 +587,15 @@ class TestGame(Widget):
 
 
 		#notes for changing center of mass
-		'''po = pg.poly
+		po = pg.poly
 		poc = po.center()
+		newc = self.bworld(poc,p)
 		oldc = self.blocal((p.position.x,p.position.y),p)
 		shifter = (oldc[0] - poc[0], oldc[1] - poc[1])
 		po.shift(shifter[0], shifter[1])
 		bp=p.physics.body.position
 		npos = (bp[0]-shifter[0], bp[1]-shifter[1])
-		p.physics.body.position=npos'''
+		p.physics.body.position=newc#npos'''
 
 
 		create_dict = pg.draw_from_Polygon()
@@ -662,6 +663,7 @@ class TestGame(Widget):
 			del p.physics.shapes[:]
 
 			#Body body, vertices, offset=(0, 0), auto_order_vertices=True):
+			moment=0
 			for csi in col_shapes:
 				si = csi['shape_info']
 				newshape= cy.Poly(pb,si['vertices'])
@@ -669,7 +671,9 @@ class TestGame(Widget):
 				newshape.elasticity = elasticity
 				self.space.add(newshape)
 				p.physics.shapes.append(newshape)
+				moment+= cy.moment_for_poly(submass, si['vertices'])
 				#print si
+			pb.moment = moment
 
 
 		return p.entity_id
