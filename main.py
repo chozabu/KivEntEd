@@ -618,7 +618,8 @@ class TestGame(Widget):
 			collision_type = 0
 			friction = p.physics.shapes[0].friction
 			elasticity = p.physics.shapes[0].elasticity
-			mass=0
+			mass=p.physics.body.mass
+			print friction
 
 			submass = mass/tricount
 			verts = create_dict['vertices']
@@ -652,6 +653,8 @@ class TestGame(Widget):
 			for csi in col_shapes:
 				si = csi['shape_info']
 				newshape= cy.Poly(pb,si['vertices'])
+				newshape.friction=friction
+				newshape.elasticity = elasticity
 				self.space.add(newshape)
 				p.physics.shapes.append(newshape)
 				#print si
