@@ -872,11 +872,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
 			r  = None
-			'''if hasattr(ent,"renderer"):
+			if hasattr(ent,"renderer"):
 				self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
 				                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
 																texture='emptybox')
-			'''
+
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)
 		self.fireText = True
