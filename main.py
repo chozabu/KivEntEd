@@ -580,9 +580,9 @@ class TestGame(Widget):
 		#qj.entity_id = jrid
 		self.jointEnts[qj] = jrent
 
-	def update_poly(self, p):
+	def update_poly(self, p, pg=None):
 
-		pg = p.polyshape
+		if pg==None:pg = p.polyshape
 
 
 		create_dict = pg.draw_from_Polygon()
@@ -653,28 +653,22 @@ class TestGame(Widget):
 					midpos = self.blocal((midx,midy),p)
 					pg.sub_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 					pg.sub_square_polygon(midpos,dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
-					#self.create_poly(p.polyshape,(0,0),p.entity_id)
 					self.update_poly(p)
 				ctouch['pos'] = pos
 
-		if 'polygen' in ctouch:
+		if 'polygen' in ctouch and 'lastpolyid' in ctouch:
 			pg = ctouch['polygen']
 			if dist > 10:
-
-				lpid=None
-				npos = (0,0)
-				if 'lastpolyid' in ctouch:
-					lpid = ctouch['lastpolyid']
-					npos=None
-					del ctouch['lastpolyid']
+				lpid = ctouch['lastpolyid']
+				del ctouch['lastpolyid']
 				le = self.getEntFromID(lpid)
 				mousepos = self.blocal(pos,le)
 				midpos = self.blocal((midx,midy),le)
 				pg.draw_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				pg.draw_square_polygon(midpos,dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
 				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
-
-				ctouch['lastpolyid'] = self.create_poly(pg,npos,lpid)
+				if lpid!=None:
+					ctouch['lastpolyid'] = self.update_poly(le)#_poly(pg,npos,lpid)
 				ctouch['pos'] = pos
 
 		if currentTool == 'splineed':
@@ -693,13 +687,12 @@ class TestGame(Widget):
 					#print ss.ControlPoints
 
 					if ent.polyshape.poly.area()>10:
-						spline_ent_id = self.update_poly(ent)#self.create_poly(ent.polyshape,lastpolyid=ent.entity_id)
+						spline_ent_id = self.update_poly(ent)
 						#print "spline_ent_id=",spline_ent_id
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
 						shape = spline_ent.physics.shapes[0]
 						self.mainTools.setEnt(spline_ent)
-						#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == "camera":
 			#print len(self.touches)
@@ -802,16 +795,6 @@ class TestGame(Widget):
 
 		if ctouch['onmenu']: return
 
-		if 'polygen' in ctouch:
-			pg = ctouch['polygen']
-			lpid=None
-			npos=(0,0)
-			if 'lastpolyid' in ctouch:
-				lpid = ctouch['lastpolyid']
-				npos=None
-				del ctouch['lastpolyid']
-			ctouch['lastpolyid'] = self.create_poly(pg, npos,lpid)
-
 		tshape = ctouch['touching']
 		if tshape and shape:
 			sposition = cy.Vec2d(spos[0], spos[1])
@@ -857,25 +840,6 @@ class TestGame(Widget):
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
-		ent = self.mainTools.selectedEntity
-		#print currentTool, tshape
-		'''if currentTool == 'drag':
-			if ent:
-				if hasattr(ent, 'splineshape'):
-					ss = ent.splineshape
-					cps = ss.ControlPoints
-
-					for pindex in range(len(cps)):
-						p = cps[pindex]
-						cps[pindex]=(p[0]-xd, p[1]-yd)
-						#p[0]-=xd
-						#p[1]-=yd
-					self.create_spline((0,0),ss,ent.entity_id)
-				#elif hasattr(ent, 'polyshape'):
-				#	pg = ent.polyshape
-				#	pg.poly.shift(-xd,-yd)
-				#	#self.create_poly(pg,lastpolyid=ent.entity_id)
-		'''
 		if currentTool == 'rotate' and tshape:
 			ispoly =  tshape.__class__.__name__ == 'Poly'
 			if ispoly:
