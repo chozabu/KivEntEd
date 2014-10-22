@@ -615,13 +615,10 @@ class MainTools(FloatLayout):
 	def textureChanged(self, instance):
 		ent = self.selectedEntity
 		if hasattr(ent, 'renderer'):
-			ent.renderer.texture = instance.text
-		elif hasattr(ent, 'renderer'):
-			tex = 'sprites/'+instance.text+'.png'
-			ent.renderer.texture = tex
-			self.gameref.gameworld.systems['renderer'].redraw_entity(ent.entity_id)
-		else:
-			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,texture=instance.text)
+			ent.renderer.texture_key = instance.text
+			#if hasattr(ent, 'polyshape'):
+			#	self.gameref.update_poly(ent)
+			self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
 
 	def redChanged(self, strval):
 		self.inputPreview.text = strval
@@ -858,11 +855,11 @@ class MainTools(FloatLayout):
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
-			'''if hasattr(ent, 'renderer'):
-				self.selectedMenu.texLabel.text = ent.renderer.texture
+			if hasattr(ent, 'renderer'):
+				self.selectedMenu.texLabel.text = ent.renderer.texture_key
 				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
 				self.selectedMenu.imgHeightLabel.text = str(ent.renderer.height)
-				print "width=",ent.renderer.width'''
+				print "width=",ent.renderer.width
 			'''if hasattr(ent, 'renderer'):
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
 				#self.selectedMenu.texLabel.text = texname
