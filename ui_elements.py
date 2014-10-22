@@ -627,40 +627,29 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if ent:
 			ent.color.r = fval
-			if self.selectedItem.__class__.__name__ == 'Poly':
-				c = ent.color
-				color = (c.r, c.g ,c.b ,c.a)
-				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
+			#if self.selectedItem.__class__.__name__ == 'Poly':
+			#	c = ent.color
+			#	color = (c.r, c.g ,c.b ,c.a)
+			#	self.gameref.update_poly(ent,color=color)
+			#	#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def greenChanged(self, strval):
 		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.g = fval
-			if self.selectedItem.__class__.__name__ == 'Poly':
-				c = ent.color
-				color = (c.r, c.g ,c.b ,c.a)
-				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def blueChanged(self, strval):
 		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.b = fval
-			if self.selectedItem.__class__.__name__ == 'Poly':
-				c = ent.color
-				color = (c.r, c.g ,c.b ,c.a)
-				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 	def opacityChanged(self, strval):
 		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.a = fval
-			if self.selectedItem.__class__.__name__ == 'Poly':
-				c = ent.color
-				color = (c.r, c.g ,c.b ,c.a)
-				self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 
 	def frictionChanged(self, instance):
 		self.inputPreview.text = instance.text

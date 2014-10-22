@@ -580,9 +580,10 @@ class TestGame(Widget):
 		#qj.entity_id = jrid
 		self.jointEnts[qj] = jrent
 
-	def update_poly(self, p, pg=None):
+	def update_poly(self, p, pg=None, color=None):
 
 		if pg==None:pg = p.polyshape
+		if color!=None:pg.color=color
 
 
 		create_dict = pg.draw_from_Polygon()
