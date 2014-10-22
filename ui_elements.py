@@ -784,6 +784,23 @@ class MainTools(FloatLayout):
 			nsz = 25*math.sqrt(ns)
 			e.renderer.width=nsz
 			e.renderer.height=nsz
+	def redo_cpoints(self):
+
+		for id in self.cpointids:
+			self.gameref.delObj(id)
+		self.cpointids = []
+		if self.selectedEntity:
+			ent = self.selectedEntity
+			#ent = self.selectedEntity
+			if hasattr(ent, 'splineshape'):
+
+				for p in ent.splineshape.ControlPoints:
+					ns = self.gameref.get_cam_scale()
+					nsz = 25*math.sqrt(ns)
+					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
+																texture='plank')
+					self.cpointids.append(pid)
+
 	def setEnt(self, ent, fshape=None):
 		self.fireText = False
 		self.selectedItem = None

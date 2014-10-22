@@ -951,6 +951,7 @@ class TestGame(Widget):
 			self.create_sprite(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
 							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
 							old_shape=last_obj)
+		self.mainTools.redo_cpoints()
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
 		#del self.touches[touch.id]
 	def get_cam_scale(self):
@@ -1073,7 +1074,8 @@ class TestGame(Widget):
 					ss = ent.splineshape
 					if len(ss.ControlPoints)>3:
 						viewport = self.gameworld.systems['gameview']
-						ss.remove_point(pos, 40*viewport.camera_scale)
+						lpos=self.blocal(pos,ent)
+						ss.remove_point(lpos, 40*viewport.camera_scale)
 						ss.DrawCurve()
 						ent.polyshape.from_spline(ss.subpoints)
 						spline_ent_id = self.update_poly(ent)
