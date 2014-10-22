@@ -610,7 +610,8 @@ class MainTools(FloatLayout):
 			#ent.polyshape.remove_short_lines()
 			ent.polyshape.remove_some_pts(.8)
 
-			self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
+			self.gameref.update_poly(ent)
+			#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
 
 	def textureChanged(self, instance):
 		ent = self.selectedEntity
@@ -860,11 +861,11 @@ class MainTools(FloatLayout):
 				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
 				self.selectedMenu.imgHeightLabel.text = str(ent.renderer.height)
 				print "width=",ent.renderer.width
-			'''if hasattr(ent, 'renderer'):
+			if hasattr(ent, 'polyshape'):
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
 				#self.selectedMenu.texLabel.text = texname
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
-				self.selectedMenu.shapeInfo.add_widget(ps)'''
+				self.selectedMenu.shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
 				self.selectedMenu.redLabel.text = str(ent.color.r)
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
