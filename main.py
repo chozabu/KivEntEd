@@ -586,6 +586,17 @@ class TestGame(Widget):
 		if color!=None:pg.color=color
 
 
+		#notes for changing center of mass
+		'''po = pg.poly
+		poc = po.center()
+		oldc = self.blocal((p.position.x,p.position.y),p)
+		shifter = (oldc[0] - poc[0], oldc[1] - poc[1])
+		po.shift(shifter[0], shifter[1])
+		bp=p.physics.body.position
+		npos = (bp[0]-shifter[0], bp[1]-shifter[1])
+		p.physics.body.position=npos'''
+
+
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 
