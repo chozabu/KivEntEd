@@ -616,8 +616,10 @@ class TestGame(Widget):
 				polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				for p in polys:
 					pg = p.polyshape
-					pg.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-					pg.sub_square_polygon((midx,midy),dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
+					mousepos = self.blocal(pos,p)
+					midpos = self.blocal((midx,midy),p)
+					pg.sub_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+					pg.sub_square_polygon(midpos,dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
 					#self.create_poly(p.polyshape,(0,0),p.entity_id)
 					self.update_poly(p)
 				ctouch['pos'] = pos
@@ -1032,7 +1034,8 @@ class TestGame(Widget):
 		if currentTool == 'polysub':
 			polys = self.get_touching_polys(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			for p in polys:
-				p.polyshape.sub_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+				mousepos = self.blocal(pos,p)
+				p.polyshape.sub_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 				self.create_poly(p.polyshape,lastpolyid=p.entity_id)
 
 
