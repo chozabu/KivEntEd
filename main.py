@@ -628,7 +628,7 @@ class TestGame(Widget):
 
 
 		if hasattr(p, 'physics'):
-			collision_type = 0
+			collision_type = p.physics.shapes[0].collision_type
 			friction = p.physics.shapes[0].friction
 			elasticity = p.physics.shapes[0].elasticity
 			mass=p.physics.body.mass
