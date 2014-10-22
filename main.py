@@ -612,6 +612,51 @@ class TestGame(Widget):
 		for i in range(vert_count):
 			vert_mesh[i] = all_verts[i]
 		if rebatch:self.gameworld.systems['renderer'].rebatch_entity(p.entity_id)
+
+
+		if hasattr(p, 'physics'):
+			collision_type = 0
+			friction = p.physics.shapes[0].friction
+			elasticity = p.physics.shapes[0].elasticity
+			mass=0
+
+			submass = mass/tricount
+			verts = create_dict['vertices']
+			#print "bothtest, cptest, crtest, failtest"
+			#print bothtest, cptest, crtest, failtest
+			#print remlist #TODO really, this should be empty!
+
+			col_shapes, remlist = PolyGen.col_shapes_from_tris(ot,verts,submass,elasticity,collision_type,friction)
+
+			remlist.reverse()
+			for r in remlist:
+				triangles.remove(triangles[r])
+
+			#print p.physics.shapes[0]
+			#print col_shapes[0]
+			pb=p.physics.body
+			#{'shape_type': 'poly',
+			#  'collision_type': 0,
+			#  'shape_info': {'mass': 0,
+			#    'vertices': [(398.0171083928111, 121.72645456434876), (387.4219335439801, 127.28723129572253), (409.982891607189, 121.72645456434876)],
+			#    'offset': (0, 0)},
+			#  'elasticity': 0.5,
+			#  'friction': 1.0}
+			#for oldshape in p.physics.shapes:
+			#	self.space.remove(oldshape)
+			self.space.remove(p.physics.shapes)
+			print len(p.physics.shapes)
+			del p.physics.shapes[:]
+
+			#Body body, vertices, offset=(0, 0), auto_order_vertices=True):
+			for csi in col_shapes:
+				si = csi['shape_info']
+				newshape= cy.Poly(pb,si['vertices'])
+				self.space.add(newshape)
+				p.physics.shapes.append(newshape)
+				#print si
+
+
 		return p.entity_id
 		#return self.create_poly(p.polyshape,(p.position.x,p.position.y),p.entity_id)
 	def blocal(self, pos,ent):
@@ -840,7 +885,7 @@ class TestGame(Widget):
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
-		if currentTool == 'rotate' and tshape:
+		'''if currentTool == 'rotate' and tshape:
 			ispoly =  tshape.__class__.__name__ == 'Poly'
 			if ispoly:
 				bang =  tshape.body.angle
@@ -848,7 +893,7 @@ class TestGame(Widget):
 				ent = self.getEntFromID(entID)
 				pg = ent.polyshape
 				pg.poly.rotate(bang)
-				self.create_poly(pg,lastpolyid=entID)
+				self.update_poly(ent)'''
 
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
@@ -1056,7 +1101,11 @@ class TestGame(Widget):
 				                     minlinelen=polyMenu.minlenslider.value)
 			pg.draw_circle_polygon(pos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
 			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics)
+
+			if lastpolyid != None:
+				ctouch['lastpolyid'] = self.update_poly(e)
+			else:
+				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics)
 			ctouch['polygen'] = pg
 
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
