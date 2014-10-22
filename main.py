@@ -1136,7 +1136,7 @@ class TestGame(Widget):
 		if currentTool == "paste" and self.mainTools.entcpy:
 			pastedEID = self.serials.loadEntFromDict(self.mainTools.entcpy)
 			ent = self.gameworld.entities[pastedEID]
-			if hasattr(ent, 'polyshape'):
+			'''if hasattr(ent, 'polyshape'):
 				po = ent.polyshape.poly
 				poc = po.center()
 				shifter = (pos[0] - poc[0], pos[1] - poc[1])
@@ -1150,13 +1150,15 @@ class TestGame(Widget):
 				else:
 					po.shift(shifter[0], shifter[1])
 					self.update_poly(ent)
-			elif hasattr(ent, 'physics'):
+			el'''
+			if hasattr(ent, 'physics'):
 				phys = ent.physics
 				phys.body.position = pos
 				shape = phys.shapes[0]
 				#self.mainTools.setShape(shape)
 				space.reindex_shape(shape)
 				ctouch['touching'] = shape
+			self.mainTools.setEnt(ent)
 
 		canselect = currentTool in ['camera', 'drag', 'vortex','rotate', 'delete']
 		if canselect:
