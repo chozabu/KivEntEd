@@ -478,7 +478,7 @@ class TestGame(Widget):
 			'vert_mesh': vert_mesh,
 			#'size': (64, 64),
 			'render': True}
-		print pos
+		#print pos
 		create_component_dict = {'color':color,
 						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.}
 		component_order = ['color', 'position', 'rotate', 'renderer']
@@ -494,7 +494,7 @@ class TestGame(Widget):
 			return lastpolyid
 		else:
 			#print "col_shapes=",col_shapes
-			print pos
+			#print pos
 			newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
 			self.entIDs.append(newpolyID)
 			newpoly = self.getEntFromID(newpolyID)
@@ -581,12 +581,45 @@ class TestGame(Widget):
 		self.jointEnts[qj] = jrent
 
 	def update_poly(self, p):
-		return self.create_poly(p.polyshape,(p.position.x,p.position.y),p.entity_id)
+
+		pg = p.polyshape
+
+
+		create_dict = pg.draw_from_Polygon()
+		if create_dict == False:return
+
+		triangles = create_dict['triangles']
+		tricount = len(triangles)
+		if tricount < 1: return
+
+
+		all_verts = create_dict['vertices']
+		vert_count = len(all_verts)
+		ot=triangles
+		triangles=[]
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		vert_mesh = p.renderer.vert_mesh
+		rebatch=False
+		if vert_mesh.index_count != index_count: rebatch=True
+		if vert_mesh.vertex_count != vert_count: rebatch=True
+		vert_mesh.index_count = index_count
+		vert_mesh.vertex_count = vert_count
+			#VertMesh(render_system.attribute_count,
+			#vert_count, index_count)
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+		if rebatch:self.gameworld.systems['renderer'].rebatch_entity(p.entity_id)
+		return p.entity_id
+		#return self.create_poly(p.polyshape,(p.position.x,p.position.y),p.entity_id)
 	def blocal(self, pos,ent):
 		position = cy.Vec2d(pos[0], pos[1])
 		if hasattr(ent, "physics"):
 			lpos = ent.physics.body.world_to_local(position)
 			return(lpos['x'],lpos['y'])
+		print "non-physics local not implemented"
 		return pos
 	def on_touch_move(self, touch):
 		if touch.id not in self.touches: return
@@ -653,13 +686,14 @@ class TestGame(Widget):
 					#ss.add_or_select(pos, 40)
 
 					if ss.selected_point != None:
-						ss.ControlPoints[ss.selected_point] = pos
+						#print self.blocal(pos,ent)
+						ss.ControlPoints[ss.selected_point] = self.blocal(pos,ent)
 						ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
 					#print ss.ControlPoints
 
 					if ent.polyshape.poly.area()>10:
-						spline_ent_id = self.create_poly(ent.polyshape,pos,ent.entity_id)
+						spline_ent_id = self.update_poly(ent)#self.create_poly(ent.polyshape,lastpolyid=ent.entity_id)
 						#print "spline_ent_id=",spline_ent_id
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
@@ -825,7 +859,7 @@ class TestGame(Widget):
 
 		ent = self.mainTools.selectedEntity
 		#print currentTool, tshape
-		if currentTool == 'drag':
+		'''if currentTool == 'drag':
 			if ent:
 				if hasattr(ent, 'splineshape'):
 					ss = ent.splineshape
@@ -841,7 +875,7 @@ class TestGame(Widget):
 				#	pg = ent.polyshape
 				#	pg.poly.shift(-xd,-yd)
 				#	#self.create_poly(pg,lastpolyid=ent.entity_id)
-
+		'''
 		if currentTool == 'rotate' and tshape:
 			ispoly =  tshape.__class__.__name__ == 'Poly'
 			if ispoly:
@@ -855,7 +889,7 @@ class TestGame(Widget):
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 		last_obj = None
-		print "lastobj=",last_obj
+		#print "lastobj=",last_obj
 		if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
 			last_obj = self.mainTools.selectedEntity
 		if (currentTool == "draw" or currentTool == "plank"):
@@ -960,9 +994,9 @@ class TestGame(Widget):
 
 		if currentTool == 'spline':
 			newspline = Spline.Spline(stepsize=1./self.mainTools.splineMenu.smoothnessSlider.value)
-			newspline.add_or_select((pos[0]-150, pos[1]), 2)
-			newspline.add_or_select((pos[0], pos[1]+170), 2)
-			newspline.add_or_select((pos[0]+150, pos[1]), 2)
+			newspline.add_or_select((0-150, 0), 2)
+			newspline.add_or_select((0, 0+170), 2)
+			newspline.add_or_select((0+150, 0), 2)
 			newspline.DrawCurve()
 
 			spline_ent_id = self.create_spline(pos,newspline,selectNow=True)
@@ -999,12 +1033,13 @@ class TestGame(Widget):
 					ss = ent.splineshape
 					camera_scale = self.gameworld.systems['gameview'].camera_scale
 					print camera_scale*300
-					ss.add_or_select(pos, 40*camera_scale, 300*camera_scale)
+					lpos=self.blocal(pos,ent)
+					ss.add_or_select(lpos, 40*camera_scale, 300*camera_scale)
 					ss.DrawCurve()
 					ent.polyshape.from_spline(ss.subpoints)
 
 
-					spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+					spline_ent_id = self.update_poly(ent)
 					spline_ent = self.getEntFromID(spline_ent_id)
 					spline_ent.splineshape = ss
 					shape = spline_ent.physics.shapes[0]
@@ -1025,7 +1060,7 @@ class TestGame(Widget):
 						ss.remove_point(pos, 40*viewport.camera_scale)
 						ss.DrawCurve()
 						ent.polyshape.from_spline(ss.subpoints)
-						spline_ent_id = self.create_poly(pos,ent.polyshape,ent.entity_id)
+						spline_ent_id = self.update_poly(ent)
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
 						shape = spline_ent.physics.shapes[0]
@@ -1036,7 +1071,7 @@ class TestGame(Widget):
 			for p in polys:
 				mousepos = self.blocal(pos,p)
 				p.polyshape.sub_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-				self.create_poly(p.polyshape,lastpolyid=p.entity_id)
+				self.update_poly(p)
 
 
 
@@ -1093,7 +1128,7 @@ class TestGame(Widget):
 					self.create_spline((0,0),ss,ent.entity_id)
 				else:
 					po.shift(shifter[0], shifter[1])
-					self.create_poly(ent.polyshape,lastpolyid=ent.entity_id)
+					self.update_poly(ent)
 			elif hasattr(ent, 'physics'):
 				phys = ent.physics
 				phys.body.position = pos
