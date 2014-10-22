@@ -802,7 +802,7 @@ class MainTools(FloatLayout):
 				for p in ent.splineshape.ControlPoints:
 					ns = self.gameref.get_cam_scale()
 					nsz = 25*math.sqrt(ns)
-					pid = self.gameref.create_decoration(pos=(p[0], p[1]), width=nsz, height=nsz,
+					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
 																texture='plank')
 					self.cpointids.append(pid)
 			#print dir(ent.physics)

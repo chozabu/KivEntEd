@@ -666,6 +666,13 @@ class TestGame(Widget):
 			return(lpos['x'],lpos['y'])
 		print "non-physics local not implemented"
 		return pos
+	def bworld(self, pos,ent):
+		position = cy.Vec2d(pos[0], pos[1])
+		if hasattr(ent, "physics"):
+			lpos = ent.physics.body.local_to_world(position)
+			return(lpos['x'],lpos['y'])
+		print "non-physics local not implemented"
+		return pos
 	def on_touch_move(self, touch):
 		if touch.id not in self.touches: return
 		self.mainTools.on_touch_move(touch)
@@ -1096,6 +1103,7 @@ class TestGame(Widget):
 				pg = e.polyshape
 				pos=self.blocal(pos,e)
 			else:
+				npos=pos
 				polyMenu = self.mainTools.polyMenu
 				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
 				                     minlinelen=polyMenu.minlenslider.value)
