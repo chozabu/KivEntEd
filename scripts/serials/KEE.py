@@ -195,21 +195,22 @@ class Serials():
 		s=dict(s)
 		#print s
 		s['col_shapes']=s['shapes']
+		submass = s['body']['mass']/float(len(s['col_shapes']))
 		for shape in s['col_shapes']:
 			#print "shape:", shape
 			if 'radius' in shape:
 				shape['shape_info']={'inner_radius': 0, 'outer_radius': shape['radius'],
-					  'mass': s['body']['mass'], 'offset': (0, 0)}
+					  'mass': submass, 'offset': (0, 0)}
 				shape['shape_type']='circle'
 			#print "shape:", shape
 			elif 'verts' in shape:
 				shape['shape_info']={'vertices': shape['verts'],
-					  'mass': s['body']['mass'], 'offset': (0, 0)}
+					  'mass': submass, 'offset': (0, 0)}
 				shape['shape_type']='poly'
 				#print shape
 			elif 'width' in shape:
 				shape['shape_info']={'width': shape['width'],'height': shape['height'],
-					  'mass': s['body']['mass']}
+					  'mass': submass}
 				shape['shape_type']='box'
 			else:
 				print "NOT HANDLING SHAPE", shape
