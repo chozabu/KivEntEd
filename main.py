@@ -128,6 +128,11 @@ class TestGame(Widget):
 		self.serials = serialisation.Serials(self)
 		self.scripty = ObjScripts(self)
 
+		print glob.glob(self.dataDir+'sprites/*.png')
+		for fn in glob.glob(self.dataDir+'sprites/*.png'):
+			texture_manager.load_image(fn)
+			texnames.append(fn.split('/')[-1][:-4])
+
 		noload = True
 		fileNamePath = self.dataDir+"settings.jso"
 		if os.path.exists(self.dataDir+"settings.jso"):
@@ -152,10 +157,6 @@ class TestGame(Widget):
 		Clock.schedule_once(self.init_sprites)
 
 	def init_sprites(self, dt):
-		print glob.glob(self.dataDir+'sprites/*.png')
-		for fn in glob.glob(self.dataDir+'sprites/*.png'):
-			texture_manager.load_image(fn)
-			texnames.append(fn.split('/')[-1][:-4])
 		self.mainTools.sprite_list = texnames
 
 	def reindexEntID(self, entityID):

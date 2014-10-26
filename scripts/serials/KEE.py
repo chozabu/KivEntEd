@@ -159,7 +159,7 @@ class Serials():
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
 		worlddict = self.exportDict()
-		with open(dataDir + fileName, 'w') as fo:
+		with open(dataDir + 'levels/' + fileName, 'w') as fo:
 			json.dump(worlddict, fo)
 		settingsDict = {"lastSave":fileName}
 		with open(dataDir + "settings.jso", 'w') as fo:
