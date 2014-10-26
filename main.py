@@ -756,7 +756,7 @@ class TestGame(Widget):
 					ss = ent.splineshape
 					#ss.add_or_select(pos, 40)
 
-					if ss.selected_point != None:
+					if ss.selected_point != None and ss.selected_point < len(ss.ControlPoints):
 						#print self.blocal(pos,ent)
 						ss.ControlPoints[ss.selected_point] = self.blocal(pos,ent)
 						ss.DrawCurve()
