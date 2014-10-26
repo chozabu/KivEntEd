@@ -155,10 +155,13 @@ class TestGame(Widget):
 		#self.gameworld.systems['renderer'].do_rotate = True
 		#self.gameworld.systems['renderer'].on_do_rotate(None,None)
 		#usprites = self.gameworld.systems['renderer'].uv_dict.keys()
-		sprites = []
-		for k in texnames:
-			if k != 'atlas_size' and k != 'main_texture': sprites.append(str(k))
-		self.mainTools.sprite_list = sprites
+		print self.dataDir+'sprites/*.png'
+		print glob.glob(self.dataDir+'sprites/*.png')
+		for fn in glob.glob(self.dataDir+'sprites/*.png'):
+			print fn
+			texture_manager.load_image(fn)
+			texnames.append(fn.split('/')[-1][:-4])
+		self.mainTools.sprite_list = texnames
 
 	def reindexEntID(self, entityID):
 		self.reindexEnt(self.gameworld.entities[entityID])
@@ -1401,6 +1404,10 @@ class KivEntEd(App):
 		print "dd="+dataDir
 		if not os.path.exists(dataDir):
 			os.makedirs(dataDir)
+		if not os.path.exists(dataDir+'/levels'):
+			os.makedirs(dataDir+'/levels')
+		if not os.path.exists(dataDir+'/sprites'):
+			os.makedirs(dataDir+'/sprites')
 		self.root.dataDir = dataDir
 
 	def on_pause(self):
