@@ -152,13 +152,8 @@ class TestGame(Widget):
 		Clock.schedule_once(self.init_sprites)
 
 	def init_sprites(self, dt):
-		#self.gameworld.systems['renderer'].do_rotate = True
-		#self.gameworld.systems['renderer'].on_do_rotate(None,None)
-		#usprites = self.gameworld.systems['renderer'].uv_dict.keys()
-		print self.dataDir+'sprites/*.png'
 		print glob.glob(self.dataDir+'sprites/*.png')
 		for fn in glob.glob(self.dataDir+'sprites/*.png'):
-			print fn
 			texture_manager.load_image(fn)
 			texnames.append(fn.split('/')[-1][:-4])
 		self.mainTools.sprite_list = texnames
