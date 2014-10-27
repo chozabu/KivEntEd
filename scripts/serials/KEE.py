@@ -170,7 +170,7 @@ class Serials():
 		return worlddict
 
 	def loadJSON(self, fileName="defaultlevel.json"):
-		self.loadExtJSON(self.dataDir + fileName)
+		self.loadExtJSON(self.dataDir + 'levels/' + fileName)
 
 	def loadExtJSON(self, fileNamePath):
 		if not os.path.isfile(fileNamePath): return
