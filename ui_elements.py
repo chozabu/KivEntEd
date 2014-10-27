@@ -411,7 +411,7 @@ class MainTools(FloatLayout):
 		self.nameBox.text = instance.text
 	def loadCustom(self, instance):
 		self.gameref.clearAll()
-		self.gameref.serials.loadJSON("levels/"+instance.text+".json")
+		self.gameref.serials.loadJSON(instance.text+".json")
 		self.nameBox.text = instance.text
 	def customlvlPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
