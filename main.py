@@ -533,10 +533,10 @@ class TestGame(Widget):
 		print viewport.camera_pos
 		print viewport.size
 		ent.position.y = y
-		#ent.renderer.width = w
-		#ent.renderer.height = h
+		ent.renderer.width = w
+		ent.renderer.height = h
 		ent.rotate.r = r
-		ent.scale.s = w/40.
+		#ent.scale.s = w/40.
 		print '--------'
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
