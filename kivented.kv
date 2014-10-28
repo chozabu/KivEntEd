@@ -546,7 +546,7 @@ TestGame:
                 Button:
                     id: copyButton
                     text: 'copy'
-                    on_press: root.entcpy = root.gameref.serials.entToDict(root.selectedEntity)
+                    on_press: root.copy_pressed(self)
                 Button:
                     text: 'Variables'
                     on_press: root.varsPressed(self)

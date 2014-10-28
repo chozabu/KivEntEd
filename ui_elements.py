@@ -403,7 +403,9 @@ class MainTools(FloatLayout):
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)
-
+	def copy_pressed(self, instance):
+		entcpy = self.gameref.serials.entToDict(self.selectedEntity)
+		self.entcpy = json.loads(json.dumps(entcpy))
 	def loadExample(self, instance):
 		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
 		self.gameref.clearAll()
