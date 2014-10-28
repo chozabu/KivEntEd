@@ -525,19 +525,12 @@ class TestGame(Widget):
 	def setEntIDPosSizeRot(self, entID, x,y,w,h,r=0):
 		self.setEntPosSizeRot(self.gameworld.entities[entID], x,y,w,h,r)
 	def setEntPosSizeRot(self, ent, x,y,w,h,r=0):
-		print "--------"
-		print ent.position.x
-		ent.position.x = x#*0.1
-		viewport = self.gameworld.systems['gameview']
-		print viewport.camera_scale
-		print viewport.camera_pos
-		print viewport.size
+		ent.position.x = x
 		ent.position.y = y
 		ent.renderer.width = w
 		ent.renderer.height = h
 		ent.rotate.r = r
 		#ent.scale.s = w/40.
-		print '--------'
 	def deleteJoint(self, j):
 		if j in self.space.constraints:
 			#print "removing ",j, " from space"
