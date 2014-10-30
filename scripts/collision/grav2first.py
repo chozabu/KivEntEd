@@ -2,6 +2,9 @@ __author__ = 'chozabu'
 import cymunk as cy
 from math import *
 
+#import line_profiler
+#profile = line_profiler.LineProfiler()
+
 #this is a refrence to kiventeds scripting system
 scripty = None
 
@@ -9,7 +12,7 @@ scripty = None
 defaults  = {
 	"forcemul": 1
 }
-
+#@profile
 def collision_func(space, arbiter):
 	firstshape = arbiter.shapes[0]
 	if firstshape.__class__.__name__ != "Circle": return True
@@ -28,6 +31,16 @@ def collision_func(space, arbiter):
 	#if hasattr(e1, 'datadict'):
 	#	if 'forcemul' in e1.datadict:
 	invrad*=float(e1.datadict['forcemul'])/len(e1.physics.shapes)
-	force = cy.Vec2d(uv.x*invrad, uv.y*invrad)
-	second_body.apply_impulse(force)
+	second_body.apply_impulse(cy.Vec2d(uv.x*invrad, uv.y*invrad))
 	return False
+
+'''
+profile.add_function(collision_func)
+profile.enable()
+
+from kivy.clock import Clock
+def dumpstats(dt):
+	profile.dump_stats("grav2first.prof")
+	print "dumped stats"
+Clock.schedule_once(dumpstats,5)
+'''
