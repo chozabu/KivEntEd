@@ -509,12 +509,12 @@ class MainTools(FloatLayout):
 		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
 
 	def wheelzPressed(self, instance):
-		fileName = self.nameBox.text+".lvl"
-		self.gameref.serials.exportXML(fileName)
 		from kivy.utils import platform
 		try:
 			if platform != 'android':
-				bashCommand = "adb push /home/chozabu/git/KivEntEd/" + fileName + " /sdcard/xlvls/"
+				fileName = self.gameref.dataDir+"wheelzlevels/"+self.nameBox.text+".lvl"
+				self.gameref.serials.exportXML(fileName)
+				bashCommand = "adb push " + fileName + " /sdcard/xlvls/"
 				#bashCommand = "pwd"
 				#os.system(bashCommand)
 				import subprocess
@@ -524,6 +524,9 @@ class MainTools(FloatLayout):
 				output = process.communicate()[0]
 				print output
 				#fileName = '/sdcard/xlvls/'+fileName
+			else:
+				fileName = "/sdcard/xlvls//"+self.nameBox.text+".lvl"
+				self.gameref.serials.exportXML(fileName)
 		except:
 			print "could not push wheelz level to phone"
 
@@ -908,7 +911,7 @@ class MainTools(FloatLayout):
 		self.downloadsBox.listLevels()
 		self.gameref.touches = {}
 	def saveThumb(self):
-		filename = self.nameBox.text+".png"
+		filename = self.gameref.dataDir+"thumbs/"+self.nameBox.text+".png"
 		self.gameref.export_to_png(filename=filename)
 		baseWidth = 150
 		from PIL import Image

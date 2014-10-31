@@ -46,6 +46,3 @@ Games:
 -extreme tilt maze
 -MyWheelz
 
-Kivent:
--texture importing and/or themes
---material library probably best option

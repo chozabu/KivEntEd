@@ -1397,6 +1397,10 @@ class KivEntEd(App):
 			os.makedirs(dataDir+'/levels')
 		if not os.path.exists(dataDir+'/sprites'):
 			os.makedirs(dataDir+'/sprites')
+		if not os.path.exists(dataDir+'/thumbs'):
+			os.makedirs(dataDir+'/thumbs')
+		if not os.path.exists(dataDir+'/wheelzlevels'):
+			os.makedirs(dataDir+'/wheelzlevels')
 		self.root.dataDir = dataDir
 
 	def on_pause(self):
