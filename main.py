@@ -696,6 +696,8 @@ class TestGame(Widget):
 		space = self.space
 		ctouch = self.touches[touch.id]
 
+		ctouch["screenpos"]= (touch.x, touch.y)
+
 		if ctouch['onmenu']: return
 		pos = self.getWorldPosFromTouch(touch)
 		spos = ctouch['pos']
@@ -1315,6 +1317,7 @@ class TestGame(Widget):
 		return tup[0]*viewport.camera_scale - viewport.camera_pos[0], tup[1]*viewport.camera_scale - viewport.camera_pos[1]
 
 	def update(self, dt):
+		dt = 20.0/1000.0
 		for o in self.todelete:
 			self.delObj(o)
 		self.todelete = []
@@ -1355,7 +1358,8 @@ class TestGame(Widget):
 			for t in self.touches:
 				ctouch = self.touches[t]
 				if ctouch['active']:
-					pos = ctouch['newpos']
+					pos = self.getWorldPosFromTuple(ctouch["screenpos"])
+					#pos = ctouch['newpos']
 					if ctouch['tool'] == 'vortex':
 						self.pull2point(pos)
 					elif ctouch['tool'] == 'del' and 'touchingnow' in ctouch:
