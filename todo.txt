@@ -9,16 +9,13 @@ kivent dynamic polygon support
 --current triangle winding check could be better
 
 -multiple selection
---select box, individual add/subtract
---edit friction, mass, width, etc
+--individual add/subtract
+--edit radius, width, more?
 
 tag items on server
 
--upload/download ents/atlas/scripts to net
+-upload/download ents/scripts/textures to net
 --save/load external entitys
---save/load alternate atlas
-
--edit non-physics objects
 
 -edit joints
 --select joints
@@ -37,12 +34,12 @@ more scripting?
 -script UI?
 
 
--import wheelz levels?
--improve wheelz export
+-fix wheelz export
 --export joints better
 
 
 Games:
--extreme tilt maze
 -MyWheelz
-
+-extreme tilt maze
+-ninjarun?
+-make own player game?
