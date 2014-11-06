@@ -385,6 +385,7 @@ class MainTools(FloatLayout):
 		self.killMomem = False
 		self.selectedItem = None
 		self.selectedEntity = None
+		self.selectedEntitys = []
 		self.toolSettings = {"circle": {"texture": "sheep"},
 							 "square": {"texture": "Dirt"},
 							 "box": {"texture": "face_box"},
@@ -654,6 +655,10 @@ class MainTools(FloatLayout):
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
+			ent.color.a = fval
+
+		for ent in self.selectedEntitys:
+			print ent
 			ent.color.a = fval
 
 	def frictionChanged(self, instance):

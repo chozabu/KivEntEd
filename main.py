@@ -921,6 +921,22 @@ class TestGame(Widget):
 				pg.poly.rotate(bang)
 				self.update_poly(ent)'''
 
+		if currentTool == "select-box":
+			l=min(spos[0],pos[0])
+			r=max(spos[0],pos[0])
+			b=min(spos[1],pos[1])
+			t=max(spos[1],pos[1])
+			cbb = cy.BB(l,b,r,t)
+			bbresult =  self.space.bb_query(cbb)
+			sents = []
+			sdict = {}
+			for r in bbresult:
+				sid = r.body.data
+				if sid not in sdict:
+					sdict[sid] = True
+					sents.append(self.getEntFromID(sid))
+			self.mainTools.selectedEntitys = sents
+
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 		last_obj = None
@@ -1026,6 +1042,8 @@ class TestGame(Widget):
 		currentTool = self.mainTools.currentTool
 		#print "Tool is: " + currentTool
 		ctouch['active'] = True
+
+		self.mainTools.selectedEntitys = []
 
 
 		if currentTool == 'spline':
