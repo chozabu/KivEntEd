@@ -741,8 +741,10 @@ class MainTools(FloatLayout):
 		if ent:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.width = newval
+		for ent in self.selectedEntitys:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.width = newval
+
 
 	def imgHeightChanged(self, value):
 		self.inputPreview.text = value
@@ -751,6 +753,7 @@ class MainTools(FloatLayout):
 		if ent:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.height = newval
+		for ent in self.selectedEntitys:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.height = newval
 	def on_width_change(self, instance, value):
