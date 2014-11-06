@@ -826,9 +826,9 @@ class TestGame(Widget):
 			shape.body.angle = (angle+ctouch['origAngle'])
 		if (currentTool == 'drag' or currentTool == 'paste'):
 			viewport = self.gameworld.systems['gameview']
+			dx = touch.dx*viewport.camera_scale
+			dy = touch.dy*viewport.camera_scale
 			if shape and (shape.body.is_static or self.mainTools.paused):
-				dx = touch.dx*viewport.camera_scale
-				dy = touch.dy*viewport.camera_scale
 				shape.body.position = (shape.body.position.x + dx, shape.body.position.y + dy)
 				self.reindexEntID(shape.body.data)
 				if self.mainTools.paused:
@@ -836,6 +836,10 @@ class TestGame(Widget):
 					(self.gameworld.systems['renderer'].update(0.00000001))
 					(self.gameworld.systems['renderer'].update(0.00000001))
 					#space.reindex_shape(shape)
+			print self.mainTools.selectedEntitys
+			for e in self.mainTools.selectedEntitys:
+				e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
+				self.reindexEnt(e)
 			#else:
 			#	ent = self.mainTools.selectedEntity#TODO alter position component here
 
@@ -1043,7 +1047,7 @@ class TestGame(Widget):
 		#print "Tool is: " + currentTool
 		ctouch['active'] = True
 
-		self.mainTools.selectedEntitys = []
+		#self.mainTools.selectedEntitys = []
 
 
 		if currentTool == 'spline':
