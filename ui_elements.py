@@ -821,7 +821,7 @@ class MainTools(FloatLayout):
 																texture='plank')
 					self.cpointids.append(pid)
 	def setEnts(self, sents):
-		self.mainTools = sents
+		self.selectedEntitys = sents
 		entnum = len(sents)
 		if entnum>0:
 			if self.selectedMenuView not in self.rightMenu.children:
