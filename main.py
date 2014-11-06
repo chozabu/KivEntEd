@@ -795,7 +795,7 @@ class TestGame(Widget):
 			#yd = spos[1] - pos[1]
 			#dist = sqrt(xd ** 2 + yd ** 2)
 
-			if currentTool == "box":
+			if currentTool in ["box", 'select-box']:
 				self.setEntIDPosSizeRot(psid, midx,midy,xd,yd)
 			if currentTool == "circle":
 				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
@@ -1157,6 +1157,11 @@ class TestGame(Widget):
 				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics,mass=mass)
 			ctouch['polygen'] = pg
 
+		if currentTool in ["select-box`"]:
+			color = (1,1,1,1)
+			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=40, height=40,
+															texture='emptybox',
+															color=color)
 		if currentTool in ["draw", "square", "box", "circle", "plank"]:
 			color = (1,1,1,1)
 			if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
