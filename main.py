@@ -935,7 +935,7 @@ class TestGame(Widget):
 				if sid not in sdict:
 					sdict[sid] = True
 					sents.append(self.getEntFromID(sid))
-			self.mainTools.selectedEntitys = sents
+			self.mainTools.setEnts(sents)
 
 
 		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
@@ -1157,7 +1157,7 @@ class TestGame(Widget):
 				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics,mass=mass)
 			ctouch['polygen'] = pg
 
-		if currentTool in ["select-box`"]:
+		if currentTool in ["select-box"]:
 			color = (1,1,1,1)
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=40, height=40,
 															texture='emptybox',

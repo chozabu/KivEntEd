@@ -820,7 +820,13 @@ class MainTools(FloatLayout):
 					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
 																texture='plank')
 					self.cpointids.append(pid)
-
+	def setEnts(self, sents):
+		self.mainTools = sents
+		entnum = len(sents)
+		if entnum>0:
+			if self.selectedMenuView not in self.rightMenu.children:
+				self.rightMenu.add_widget(self.selectedMenuView)
+		self.selectedMenu.selectedLabel.text = str(entnum)+" items"
 	def setEnt(self, ent, fshape=None):
 		self.fireText = False
 		self.selectedItem = None
