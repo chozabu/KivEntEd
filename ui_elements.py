@@ -638,17 +638,23 @@ class MainTools(FloatLayout):
 			#	color = (c.r, c.g ,c.b ,c.a)
 			#	self.gameref.update_poly(ent,color=color)
 			#	#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
+		for ent in self.selectedEntitys:
+			ent.color.r = fval
 	def greenChanged(self, strval):
 		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
 			ent.color.g = fval
+		for ent in self.selectedEntitys:
+			ent.color.g = fval
 	def blueChanged(self, strval):
 		self.inputPreview.text = strval
 		fval = float(strval)
 		ent = self.selectedEntity
 		if ent:
+			ent.color.b = fval
+		for ent in self.selectedEntitys:
 			ent.color.b = fval
 	def opacityChanged(self, strval):
 		self.inputPreview.text = strval
@@ -658,7 +664,6 @@ class MainTools(FloatLayout):
 			ent.color.a = fval
 
 		for ent in self.selectedEntitys:
-			print ent
 			ent.color.a = fval
 
 	def frictionChanged(self, instance):
@@ -667,10 +672,14 @@ class MainTools(FloatLayout):
 		if self.selectedEntity:
 			for shape in self.selectedEntity.physics.shapes:
 				shape.friction = fval
-				self.gameref.reindexEnt(self.selectedEntity)
-		elif self.selectedItem:
-			self.selectedItem.friction = fval
-		self.gameref.reindexEnt(self.selectedEntity)
+			self.gameref.reindexEnt(self.selectedEntity)
+		#elif self.selectedItem:
+		#	self.selectedItem.friction = fval
+		#self.gameref.reindexEnt(self.selectedEntity)
+		for ent in self.selectedEntitys:
+			for shape in ent.physics.shapes:
+				shape.friction = fval
+			self.gameref.reindexEnt(ent)
 
 	def massChanged(self, instance):
 		self.inputPreview.text = instance.text
@@ -689,17 +698,28 @@ class MainTools(FloatLayout):
 				self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
 																 self.selectedItem.radius,0)  #seems ineffective?
 
+		for ent in self.selectedEntitys:
+			if hasattr(ent, 'physics'):
+				ent.physics.body.mass = fval
+				self.gameref.reindexEnt(ent)
+				#todo - update moment
+
 	def elasChanged(self, instance):
 		self.inputPreview.text = instance.text
 		fval = float(instance.text)
 		if self.selectedEntity:
 			for shape in self.selectedEntity.physics.shapes:
 				shape.elasticity = fval
-				self.gameref.reindexEnt(self.selectedEntity)
+			#self.gameref.reindexEnt(self.selectedEntity)
 		elif self.selectedItem:
 			self.selectedItem.elasticity = fval
 
 		self.gameref.reindexEnt(self.selectedEntity)
+		for ent in self.selectedEntitys:
+			if hasattr(ent, 'physics'):
+				for shape in ent.physics.shapes:
+					shape.elasticity = fval
+				self.gameref.reindexEnt(ent)
 
 	def on_rad_change(self, instance, value):
 		self.inputPreview.text = instance.text
