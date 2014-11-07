@@ -1354,7 +1354,7 @@ class TestGame(Widget):
 			sbox = self.getEntFromID(self.selectedShapeID)
 			sbox.position.x =ent.position.x
 			sbox.position.y =ent.position.y
-			bb = ent.physics.shapes[0].cache_bb()
+			#bb = ent.physics.shapes[0].cache_bb()
 			#sbox.renderer.width = (bb['r']-bb['l'])*1.05+5
 			#sbox.renderer.height = (bb['t']-bb['b'])*1.05+5
 		for j, je in self.jointEnts.iteritems():
