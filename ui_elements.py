@@ -832,6 +832,7 @@ class MainTools(FloatLayout):
 		for sb in self.selectedEntitysBoxes:
 			self.gameref.delObj(sb.entity_id)
 			self.gameref.selectedShapeID = None
+		self.selectedEntitysBoxes = []
 		for ent in sents:
 			if hasattr(ent,"renderer") and hasattr(ent, 'physics'):
 				shape = ent.physics.shapes[0]
@@ -849,7 +850,12 @@ class MainTools(FloatLayout):
 		for id in self.cpointids:
 			self.gameref.delObj(id)
 		self.cpointids = []
+		if self.gameref.selectedShapeID != None:
+			self.gameref.delObj(self.gameref.selectedShapeID)
+			self.gameref.selectedShapeID = None
 		if ent:
+			if self.selectedMenuView not in self.rightMenu.children:
+				self.rightMenu.add_widget(self.selectedMenuView)
 			self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
 			#ent = self.selectedEntity
 			if hasattr(ent, 'splineshape'):
@@ -890,12 +896,6 @@ class MainTools(FloatLayout):
 					self.selectedMenu.shapeInfo.add_widget(bs)
 				#elif shape.__class__.__name__ == "Poly":
 
-		if self.gameref.selectedShapeID != None:
-			self.gameref.delObj(self.gameref.selectedShapeID)
-			self.gameref.selectedShapeID = None
-		if ent:
-			if self.selectedMenuView not in self.rightMenu.children:
-				self.rightMenu.add_widget(self.selectedMenuView)
 			if hasattr(ent, 'renderer'):
 				self.selectedMenu.texLabel.text = ent.renderer.texture_key
 				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
@@ -911,7 +911,6 @@ class MainTools(FloatLayout):
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
-			r  = None
 			if hasattr(ent,"renderer"):# and hasattr(ent, 'physics'):
 				'''if fshape:
 					shape=fshape
