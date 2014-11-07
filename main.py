@@ -834,9 +834,7 @@ class TestGame(Widget):
 				if self.mainTools.paused:
 					(self.gameworld.systems['physics'].update(0.00000001))
 					(self.gameworld.systems['renderer'].update(0.00000001))
-					(self.gameworld.systems['renderer'].update(0.00000001))
 					#space.reindex_shape(shape)
-			print self.mainTools.selectedEntitys
 			for e in self.mainTools.selectedEntitys:
 				e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
 				self.reindexEnt(e)
@@ -1293,6 +1291,7 @@ class TestGame(Widget):
 		self.finishID = -1
 
 		self.mainTools.setShape(None)
+		self.mainTools.setEnts([])
 		space = self.space
 		print "clearing objects"
 		for eid in list(self.entIDs):

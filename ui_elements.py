@@ -386,6 +386,7 @@ class MainTools(FloatLayout):
 		self.selectedItem = None
 		self.selectedEntity = None
 		self.selectedEntitys = []
+		self.selectedEntitysBoxes = []
 		self.toolSettings = {"circle": {"texture": "sheep"},
 							 "square": {"texture": "Dirt"},
 							 "box": {"texture": "face_box"},
@@ -827,6 +828,17 @@ class MainTools(FloatLayout):
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
 		self.selectedMenu.selectedLabel.text = str(entnum)+" items"
+
+		for sb in self.selectedEntitysBoxes:
+			self.gameref.delObj(sb.entity_id)
+			self.gameref.selectedShapeID = None
+		for ent in sents:
+			if hasattr(ent,"renderer") and hasattr(ent, 'physics'):
+				shape = ent.physics.shapes[0]
+				entID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
+				                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
+																texture='emptybox',angle=ent.rotate.r)
+				self.selectedEntitysBoxes.append(self.gameref.gameworld.entities[entID])
 	def setEnt(self, ent, fshape=None):
 		self.fireText = False
 		self.selectedItem = None
