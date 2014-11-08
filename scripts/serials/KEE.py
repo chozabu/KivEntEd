@@ -182,6 +182,16 @@ class Serials():
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict}
 		return customdict
 
+	def writeSerialisedData(self, data, fileName):
+		dataDir = self.dataDir
+		fileNamePath=dataDir + 'groups/' + fileName
+		with open(fileNamePath, 'wb') as fo:
+				fo.write(data)
+	def readSerialisedData(self, fileName):
+		dataDir = self.dataDir
+		fileNamePath=dataDir + 'groups/' + fileName
+		with open(fileNamePath, 'r') as fo:
+				return fo.read()
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
 		worlddict = self.exportDict()

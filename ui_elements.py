@@ -408,11 +408,24 @@ class MainTools(FloatLayout):
 	def copy_pressed(self, instance):
 		entcpy = self.gameref.serials.entToDict(self.selectedEntity)
 		self.entcpy = json.dumps(entcpy)
+	def copy_group_pressed(self, instance=None):
+		if not self.selectedEntitys:return
+		entscpy = self.gameref.serials.jsonserials.exportCustomDict(self.selectedEntitys)
+		self.entscpy = json.dumps(entscpy)
 	def export_pressed(self, instance):
 		if not self.selectedEntitys:return
 		entscpy = self.gameref.serials.jsonserials.exportCustomDict(self.selectedEntitys)
-		print entscpy
 		self.entscpy = json.dumps(entscpy)
+
+		ti=TextInput(text="",multiline=False)
+		popup = Popup(content=ti,
+		              size_hint=(0.3, 0.2),title='Enter Entity Name')
+		popup.bind(on_dismiss=self.on_got_export_name)
+		popup.open()
+	def on_got_export_name(self, instance):
+		gameref = self.gameref
+		newname = instance.content.text
+		self.gameref.serials.jsonserials.writeSerialisedData(self.entscpy, newname+'.json')
 	def loadExample(self, instance):
 		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
 		self.gameref.clearAll()
@@ -422,6 +435,10 @@ class MainTools(FloatLayout):
 		self.gameref.clearAll()
 		self.gameref.serials.loadJSON(instance.text+".json")
 		self.nameBox.text = instance.text
+	def loadCustomGroup(self, instance):
+		newname = instance.text
+		self.entscpy = self.gameref.serials.jsonserials.readSerialisedData(newname+'.json')
+		self.setTool('paste-group')
 	def customlvlPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
 		self.levelsMenu.clear_widgets()
@@ -430,11 +447,19 @@ class MainTools(FloatLayout):
 			newb.bind(on_press=self.loadCustom)
 			self.levelsMenu.add_widget(newb)
 		self.changel3menu(self.levelsMenu)
+	def customgroupPressed(self):
+		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"groups/*.json")]
+		self.groupsMenu.clear_widgets()
+		for levelname in levels:
+			newb = Button(text=levelname, font_size=14)
+			newb.bind(on_press=self.loadCustomGroup)
+			self.groupsMenu.add_widget(newb)
+		self.changel3menu(self.groupsMenu)
 
 
 	def init_tools(self, dt):
 		self.l2menus = [self.settingsMenu, self.joinMenu, self.createMenu, self.entityMenu,
-		                self.fileMenu, self.polyMenu, self.splineMenu]
+		                self.fileMenu, self.polyMenu, self.splineMenu, self.groupsMenu]
 		self.l3menus = [self.examplesMenu,self.levelsMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"

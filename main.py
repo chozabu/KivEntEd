@@ -1182,7 +1182,10 @@ class TestGame(Widget):
 
 
 		if currentTool == "paste-group" and self.mainTools.entscpy:
-			newsel = self.serials.jsonserials.loadFromDict(json.loads(self.mainTools.entscpy))
+			print self.mainTools.entscpy
+			entsdict = json.loads(self.mainTools.entscpy)
+			print entsdict
+			newsel = self.serials.jsonserials.loadFromDict(entsdict)
 			print newsel
 			ent=newsel[0]
 			pdiff=(0,0)
@@ -1455,6 +1458,8 @@ class KivEntEd(App):
 			os.makedirs(dataDir+'/thumbs')
 		if not os.path.exists(dataDir+'/wheelzlevels'):
 			os.makedirs(dataDir+'/wheelzlevels')
+		if not os.path.exists(dataDir+'/groups'):
+			os.makedirs(dataDir+'/groups')
 		self.root.dataDir = dataDir
 
 	def on_pause(self):
