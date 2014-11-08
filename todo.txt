@@ -1,31 +1,27 @@
-kivent dynamic polygon support
--multi-shape physics UI
---control/view settings of individual shapes in body.
--merging/splitting polys
--updating poly points
---individual point edit/add/delete
---smoothe selection
--generate optimal convex hulls from concave
---current triangle winding check could be better
-
--multiple selection
---individual add/subtract
---edit radius, width, more?
-
 tag items on server
 
 -upload/download ents/scripts/textures to net
---save/load external entitys
+
+improve UI
+-modularise
+-images
+-scroll tables, rather than box views?
+-multi-shape physics UI
+--control/view settings of individual shapes in body.
 
 -edit joints
 --select joints
 --delete joints
 --change joint params
 
-improve UI
--modularise
--images
--scroll tables, rather than box views?
+
+-generate optimal convex hulls from concave
+--cython wrap https://code.google.com/p/polypartition/ ?
+
+-multiple selection
+--individual add/subtract
+--edit radius, width, more?
+
 
 more scripting?
 -set on update scripts?
@@ -34,8 +30,6 @@ more scripting?
 -script UI?
 
 
--fix wheelz export
---export joints better
 
 
 Games:
@@ -43,3 +37,13 @@ Games:
 -extreme tilt maze
 -ninjarun?
 -make own player game?
+
+For Later:
+
+-fix wheelz export
+--export joints better
+--current triangle winding check could be better
+
+-merging/splitting polys
+--individual point edit/add/delete
+--smoothe selection
