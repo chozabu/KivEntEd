@@ -550,6 +550,9 @@ TestGame:
                 Button:
                     text: 'Variables'
                     on_press: root.varsPressed(self)
+                Button:
+                    text: 'Copy Group'
+                    on_press: root.export_pressed(self)
         
     BoxLayout:
         id: leftMenu
@@ -605,6 +608,11 @@ TestGame:
                 id: pasteButton
                 text: 'Paste'
                 on_press: root.setTool("paste")
+            ToggleButton:
+                group: 'ToolGroup'
+                id: pasteGButton
+                text: 'Paste group'
+                on_press: root.setTool("paste-group")
             Label:
                 text: 'Interact:'
                 size_hint_y: None

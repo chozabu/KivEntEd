@@ -1181,8 +1181,31 @@ class TestGame(Widget):
 			return
 
 
+		if currentTool == "paste-group" and self.mainTools.entscpy:
+			newsel = self.serials.jsonserials.loadFromDict(json.loads(self.mainTools.entscpy))
+			print newsel
+			ent=newsel[0]
+			pdiff=(0,0)
+			if hasattr(ent, 'physics'):
+				phys = ent.physics
+				cy.Body.position
+				pdiff = (pos[0]-phys.body.position[0],pos[1]-phys.body.position[1])
+			elif hasattr(ent, 'position'):
+				ep = ent.position
+				pdiff = (pos[0]-ep.x,pos[1]-ep.y)
+			for ent in newsel:
+				if hasattr(ent, 'physics'):
+					phys = ent.physics
+					npos = (phys.body.position[0]+pdiff[0],phys.body.position[1]+pdiff[1])
+					phys.body.position = npos
+					self.reindexEnt(ent)
+				elif hasattr(ent, 'position'):
+					ep = ent.position
+					ep.x+=pdiff[0]
+					ep.y+=pdiff[1]
+			self.mainTools.setEnts(newsel)
 		if currentTool == "paste" and self.mainTools.entcpy:
-			pastedEID = self.serials.loadEntFromDict(self.mainTools.entcpy)
+			pastedEID = self.serials.loadEntFromDict(json.loads(self.mainTools.entcpy))
 			ent = self.gameworld.entities[pastedEID]
 			'''if hasattr(ent, 'polyshape'):
 				po = ent.polyshape.poly
@@ -1202,10 +1225,11 @@ class TestGame(Widget):
 			if hasattr(ent, 'physics'):
 				phys = ent.physics
 				phys.body.position = pos
-				shape = phys.shapes[0]
-				#self.mainTools.setShape(shape)
-				space.reindex_shape(shape)
+				self.reindexEnt(ent)
 				ctouch['touching'] = shape
+			elif hasattr(ent, 'position'):
+				ep = ent.position
+				ep.x,ep.y=pos
 			self.mainTools.setEnt(ent)
 
 		canselect = currentTool in ['camera', 'drag', 'vortex','rotate', 'delete']

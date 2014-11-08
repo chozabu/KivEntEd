@@ -407,7 +407,12 @@ class MainTools(FloatLayout):
 		Clock.schedule_once(self.init_tools)
 	def copy_pressed(self, instance):
 		entcpy = self.gameref.serials.entToDict(self.selectedEntity)
-		self.entcpy = json.loads(json.dumps(entcpy))
+		self.entcpy = json.dumps(entcpy)
+	def export_pressed(self, instance):
+		if not self.selectedEntitys:return
+		entscpy = self.gameref.serials.jsonserials.exportCustomDict(self.selectedEntitys)
+		print entscpy
+		self.entscpy = json.dumps(entscpy)
 	def loadExample(self, instance):
 		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
 		self.gameref.clearAll()
@@ -824,9 +829,10 @@ class MainTools(FloatLayout):
 	def setEnts(self, sents):
 		self.selectedEntitys = sents
 		entnum = len(sents)
-		if entnum>0:
+		if sents:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
+
 		self.selectedMenu.selectedLabel.text = str(entnum)+" items"
 
 		for sb in self.selectedEntitysBoxes:

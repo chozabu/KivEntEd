@@ -104,10 +104,9 @@ class Serials():
 			ed['datadict'] = dict(e.datadict)
 		return ed
 
-	def exportJointsToDicts(self):
-		space = self.space
+	def exportJointsToDicts(self, constraints):
 		jds = []
-		for j in space.constraints:
+		for j in constraints:
 			jtype = j.__class__.__name__
 			anchor1 = j.anchor1
 			#if None == j.a.data and j.a != space.static_body:
@@ -124,19 +123,24 @@ class Serials():
 				jd['damping'] = j.damping
 			jds.append(jd)
 		return jds
-	def exportEntsToDicts(self):
+	def exportEntIDsToDicts(self, entids):
 		entsdict = []
-		for eid in self.gameref.entIDs:
+		for eid in entids:
 			e = self.gameworld.entities[eid]
-			#print "\n"
+			ed = self.entToDict(e)
+			entsdict.append(ed)
+		return entsdict
+	def exportEntsToDicts(self, ents):
+		entsdict = []
+		for e in ents:
 			ed = self.entToDict(e)
 			entsdict.append(ed)
 		return entsdict
 
 	def exportDict(self):
 		space = self.space
-		entslist = self.exportEntsToDicts()
-		jointslist = self.exportJointsToDicts()
+		entslist = self.exportEntIDsToDicts(self.gameref.entIDs)
+		jointslist = self.exportJointsToDicts(space.constraints)
 
 		collision_typeslist = self.gameref.mainTools.col_types
 		collision_typesdict = self.gameref.scripty.collision_handlers
@@ -155,6 +159,28 @@ class Serials():
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID,
 								  "killMomem":self.gameref.mainTools.killMomem, "paused": self.gameref.mainTools.paused}}
 		return worlddict
+	def getConstraintsFromEnts(self, ents):
+		gameworld = self.gameref.gameworld
+		gwe=gameworld.entities
+		#for e in ents
+	def exportCustomDict(self, ents):
+		space = self.space
+		gameref = self.gameref
+		getJointsOnBody = gameref.getJointsOnBody
+		entslist = self.exportEntsToDicts(ents)
+		jdict = {}
+		for e in ents:
+			if hasattr(e, 'physics'):
+				for j in getJointsOnBody(e.physics.body):
+					jdict[j]=True
+		jointslist = self.exportJointsToDicts(list(jdict))
+
+		collision_typeslist = self.gameref.mainTools.col_types
+		collision_typesdict = self.gameref.scripty.collision_handlers
+
+		customdict = {"ents": entslist, "jointslist": jointslist,
+					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict}
+		return customdict
 
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
@@ -330,19 +356,20 @@ class Serials():
 		idConvDict = {}
 		for e in ents:
 			self.loadEntFromDict(e, idConvDict=idConvDict)
+		selfgameworldentities = self.gameworld.entities
 		if "jointslist" in data:
 			jointslist = data['jointslist']
 			for j in jointslist:
 				if j['a'] in idConvDict:
 					b1id = idConvDict[j['a']]
 					#print j['a'], b1id
-					b1 = self.gameworld.entities[b1id].physics.body
+					b1 = selfgameworldentities[b1id].physics.body
 				else:
 					b1 = cy.Body()
 				if j['b'] in idConvDict:
 					b2id = idConvDict[j['b']]
 					#print j['b'], b2id
-					b2 = self.gameworld.entities[b2id].physics.body
+					b2 = selfgameworldentities[b2id].physics.body
 				else:
 					b2 = cy.Body()
 				kwargs = {}
@@ -374,3 +401,4 @@ class Serials():
 			if "paused" in settings:
 				pm = settings['paused']
 				if not self.gameref.mainTools.paused: self.gameref.mainTools.paused = pm
+		return [selfgameworldentities[v] for v in idConvDict.itervalues()]
