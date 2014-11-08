@@ -654,9 +654,11 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if hasattr(ent, 'renderer'):
 			ent.renderer.texture_key = instance.text
-			#if hasattr(ent, 'polyshape'):
-			#	self.gameref.update_poly(ent)
 			self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		for ent in self.selectedEntitys:
+			if hasattr(ent, 'renderer'):
+				ent.renderer.texture_key = instance.text
+				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
 
 	def redChanged(self, strval):
 		self.inputPreview.text = strval
