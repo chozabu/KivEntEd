@@ -168,11 +168,16 @@ class Serials():
 		gameref = self.gameref
 		getJointsOnBody = gameref.getJointsOnBody
 		entslist = self.exportEntsToDicts(ents)
+		print entslist
+		entiddict={}
+		for e in entslist:entiddict[e['orig_id']]=True
 		jdict = {}
+		#get joints where both ends are connected to one of our ents
 		for e in ents:
 			if hasattr(e, 'physics'):
 				for j in getJointsOnBody(e.physics.body):
-					jdict[j]=True
+					if j.a.data in entiddict and j.b.data in entiddict:
+						jdict[j]=True
 		jointslist = self.exportJointsToDicts(list(jdict))
 
 		collision_typeslist = self.gameref.mainTools.col_types
