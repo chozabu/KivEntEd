@@ -20,9 +20,10 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.core.window import Window
-import kivent
-from kivent import texture_manager
-from kivent import VertMesh
+import kivent_core
+import kivent_cymunk
+from kivent_core.renderers import texture_manager, VertMesh
+from kivy.graphics import *
 
 '''from kivy.config import Config
 Window.fullscreen = True

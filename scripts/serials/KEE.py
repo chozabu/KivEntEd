@@ -5,7 +5,8 @@ import cymunk as cy
 import os
 import Polygon.IO as pio
 import PolyGen, Spline
-from kivent import VertMesh
+#from kivent import VertMesh
+from kivent_core.renderers import texture_manager, VertMesh
 
 import base64
 
