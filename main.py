@@ -11,7 +11,7 @@ import Spline
 
 #import cProfile
 
-__version__ = "0.1"
+__version__ = "0.3"
 
 import serialisation
 from objscripts import ObjScripts

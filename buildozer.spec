@@ -32,7 +32,8 @@ version.filename = %(source.dir)s/main.py
 # version = 1.2.0
 
 # (list) Application requirements
-requirements = sqlite3,numpy,polygon,pil,kivent
+#requirements = sqlite3,numpy,polygon,pil,kivent
+requirements = sqlite3,numpy,polygon,pil,kivy==master,cymunk==master,kivent_cymunk,kivent_core
 
 # (list) Garden requirements
 #garden_requirements =
@@ -80,6 +81,7 @@ android.ndk = 9c
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #android.p4a_dir =
+android.p4a_dir = /home/chozabu/git/bnewrp4a/
 
 # (list) python-for-android whitelist
 android.p4a_whitelist = lib-dynload/_lsprof.so,_lsprof
