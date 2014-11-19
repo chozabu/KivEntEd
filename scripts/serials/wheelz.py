@@ -132,10 +132,7 @@ class Serials():
 		texname = None
 		if hasattr(e, 'renderer'):
 			pr = e.renderer
-			texname = pr.texture
-		if hasattr(e, 'renderer'):
-			pr = e.renderer
-			texname = pr.texture.split('/')[-1][:-4]
+			texname = pr.texture_key
 		if texname:
 			td = ET.SubElement(ed,'usetexture')
 			texname = xmTexDict.get(texname,texname)

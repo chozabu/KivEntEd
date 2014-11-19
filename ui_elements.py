@@ -542,25 +542,22 @@ class MainTools(FloatLayout):
 
 	def wheelzPressed(self, instance):
 		from kivy.utils import platform
-		try:
-			if platform != 'android':
-				fileName = self.gameref.dataDir+"wheelzlevels/"+self.nameBox.text+".lvl"
-				self.gameref.serials.exportXML(fileName)
-				bashCommand = "adb push " + fileName + " /sdcard/xlvls/"
-				#bashCommand = "pwd"
-				#os.system(bashCommand)
+		if platform != 'android':
+			fileName = self.gameref.dataDir+"wheelzlevels/"+self.nameBox.text+".lvl"
+			self.gameref.serials.exportXML(fileName)
+			try:
 				import subprocess
-				#print bashCommand
-				#print bashCommand.split()
+				bashCommand = "adb push " + fileName + " /sdcard/xlvls/"
 				process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 				output = process.communicate()[0]
 				print output
-				#fileName = '/sdcard/xlvls/'+fileName
-			else:
-				fileName = "/sdcard/xlvls//"+self.nameBox.text+".lvl"
-				self.gameref.serials.exportXML(fileName)
-		except:
-			print "could not push wheelz level to phone"
+			except:
+				print "could not push wheelz level to phone"
+
+			#fileName = '/sdcard/xlvls/'+fileName
+		else:
+			fileName = "/sdcard/xlvls//"+self.nameBox.text+".lvl"
+			self.gameref.serials.exportXML(fileName)
 
 
 	def clearPressed(self, instance):
