@@ -412,7 +412,7 @@ class MainTools(FloatLayout):
 	@selectedEntity.setter
 	def selectedEntity(self, selectedEntity):
 		if selectedEntity == None: self.setEnts(None)
-		else: self.selectedEntitys = [selectedEntity]
+		else: self.setEnts([selectedEntity])
 	def copy_pressed(self, instance):
 		entcpy = self.gameref.serials.entToDict(self.selectedEntity)
 		self.entcpy = json.dumps(entcpy)
@@ -852,7 +852,7 @@ class MainTools(FloatLayout):
 
 		for sb in self.selectedEntitysBoxes:
 			self.gameref.delObj(sb.entity_id)
-			self.gameref.selectedShapeID = None
+			#self.gameref.selectedShapeID = None
 		self.selectedEntitysBoxes = []
 		for ent in sents:
 			if hasattr(ent,"renderer") and hasattr(ent, 'physics'):
@@ -871,9 +871,9 @@ class MainTools(FloatLayout):
 		for id in self.cpointids:
 			self.gameref.delObj(id)
 		self.cpointids = []
-		if self.gameref.selectedShapeID != None:
-			self.gameref.delObj(self.gameref.selectedShapeID)
-			self.gameref.selectedShapeID = None
+		#if self.gameref.selectedShapeID != None:
+		#	self.gameref.delObj(self.gameref.selectedShapeID)
+		#	self.gameref.selectedShapeID = None
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
@@ -932,15 +932,15 @@ class MainTools(FloatLayout):
 				self.selectedMenu.greenLabel.text = str(ent.color.g)
 				self.selectedMenu.blueLabel.text = str(ent.color.b)
 				self.selectedMenu.opacityLabel.text = str(ent.color.a)
-			if hasattr(ent,"renderer"):# and hasattr(ent, 'physics'):
+			#if hasattr(ent,"renderer"):# and hasattr(ent, 'physics'):
 				'''if fshape:
 					shape=fshape
 				else:
 					shape = self.selectedEntity.physics.shapes[0]
 				print "xp=",ent.position.x'''
-				self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(ent.position.x, ent.position.y),
-				                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
-																texture='emptybox',angle=ent.rotate.r)
+				#self.gameref.selectedShapeID = self.gameref.create_decoration(pos=(ent.position.x, ent.position.y),
+				#                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
+				#												texture='emptybox',angle=ent.rotate.r)
 
 		else:
 			self.rightMenu.remove_widget(self.selectedMenuView)

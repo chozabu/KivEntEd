@@ -73,7 +73,7 @@ class TestGame(Widget):
 		self.mainTools.setTool("circle")
 		self.startID = -1
 		self.finishID = -1
-		self.selectedShapeID = None
+		#self.selectedShapeID = None
 		self.space = None
 		self.serials = None
 		self.scripty = None
@@ -1378,13 +1378,13 @@ class TestGame(Widget):
 		self.mainTools.update(dt)
 		ent = self.mainTools.selectedEntity
 
-		if self.selectedShapeID != None and ent != None:
+		'''if self.selectedShapeID != None and ent != None:
 			sbox = self.getEntFromID(self.selectedShapeID)
 			sbox.position.x =ent.position.x
 			sbox.position.y =ent.position.y
 			#bb = ent.physics.shapes[0].cache_bb()
 			#sbox.renderer.width = (bb['r']-bb['l'])*1.05+5
-			#sbox.renderer.height = (bb['t']-bb['b'])*1.05+5
+			#sbox.renderer.height = (bb['t']-bb['b'])*1.05+5'''
 		for j, je in self.jointEnts.iteritems():
 			#j = je.joint
 			b1l = j.a.local_to_world(cy.Vec2d(j.anchor1['x'],j.anchor1['y']))
