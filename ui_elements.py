@@ -384,7 +384,7 @@ class MainTools(FloatLayout):
 		self.paused = False
 		self.killMomem = False
 		self.selectedItem = None
-		self.selectedEntity = None
+		#self.selectedEntity = None
 		self.selectedEntitys = []
 		self.selectedEntitysBoxes = []
 		self.toolSettings = {"circle": {"texture": "sheep"},
@@ -405,6 +405,14 @@ class MainTools(FloatLayout):
 		#self.col_types.append("default")
 		#self.col_types.append("vortex")
 		Clock.schedule_once(self.init_tools)
+	@property
+	def selectedEntity(self):
+		if  self.selectedEntitys: return self.selectedEntitys[0]
+		return None
+	@selectedEntity.setter
+	def selectedEntity(self, selectedEntity):
+		if selectedEntity == None: self.setEnts(None)
+		else: self.selectedEntitys = [selectedEntity]
 	def copy_pressed(self, instance):
 		entcpy = self.gameref.serials.entToDict(self.selectedEntity)
 		self.entcpy = json.dumps(entcpy)
@@ -663,11 +671,6 @@ class MainTools(FloatLayout):
 		ent = self.selectedEntity
 		if ent:
 			ent.color.r = fval
-			#if self.selectedItem.__class__.__name__ == 'Poly':
-			#	c = ent.color
-			#	color = (c.r, c.g ,c.b ,c.a)
-			#	self.gameref.update_poly(ent,color=color)
-			#	#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id,color=color)
 		for ent in self.selectedEntitys:
 			ent.color.r = fval
 	def greenChanged(self, strval):
@@ -703,9 +706,6 @@ class MainTools(FloatLayout):
 			for shape in self.selectedEntity.physics.shapes:
 				shape.friction = fval
 			self.gameref.reindexEnt(self.selectedEntity)
-		#elif self.selectedItem:
-		#	self.selectedItem.friction = fval
-		#self.gameref.reindexEnt(self.selectedEntity)
 		for ent in self.selectedEntitys:
 			for shape in ent.physics.shapes:
 				shape.friction = fval
@@ -740,9 +740,6 @@ class MainTools(FloatLayout):
 		if self.selectedEntity:
 			for shape in self.selectedEntity.physics.shapes:
 				shape.elasticity = fval
-			#self.gameref.reindexEnt(self.selectedEntity)
-		elif self.selectedItem:
-			self.selectedItem.elasticity = fval
 
 		self.gameref.reindexEnt(self.selectedEntity)
 		for ent in self.selectedEntitys:
@@ -790,13 +787,6 @@ class MainTools(FloatLayout):
 		self.inputPreview.text = instance.text
 		space = self.gameref.space
 		newrad = float(value)
-		#if self.selectedItem and self.selectedEntity:
-		#self.selectedItem.width = (newrad)
-		#self.selectedEntity.renderer.width = newrad
-		#space.reindex_shape(self.selectedItem)
-		#print dir(self.selectedEntity)
-		#print dir(self.selectedEntity.physics)
-		#print self.selectedItem.cache_bb()
 		shape = self.selectedItem
 		if shape and self.selectedEntity:
 			newshape = cy.BoxShape(shape.body, newrad, shape.height)
@@ -851,6 +841,7 @@ class MainTools(FloatLayout):
 																texture='plank')
 					self.cpointids.append(pid)
 	def setEnts(self, sents):
+		if sents==None:sents=[]
 		self.selectedEntitys = sents
 		entnum = len(sents)
 		if sents:
@@ -966,9 +957,6 @@ class MainTools(FloatLayout):
 		if self.selectedEntity and self.gameref:
 			self.gameref.delObj(self.selectedEntity.entity_id)
 			self.setEnt(None)
-		#if self.selectedItem and self.gameref:
-		#	self.gameref.delObj(self.selectedItem.body.data)
-		#	self.setShape(None)
 	def sensorPressed(self, instance):
 		if self.selectedItem and self.gameref:
 			newval = not self.selectedItem.sensor
