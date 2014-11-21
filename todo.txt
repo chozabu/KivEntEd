@@ -41,6 +41,7 @@ Games:
 For Later:
 
 -fix wheelz export
+--new_rendering
 --export joints better
 --current triangle winding check could be better
 
