@@ -137,7 +137,7 @@ class uploads(BoxLayout):
 		#Clock.schedule_once(self.initUI)
 	def initUI(self, dt=0):
 		self.nameLabel.text = self.mtref.nameBox.text
-		self.screenShot.source = self.nameLabel.text+".png"
+		self.screenShot.source = self.mtref.gameref.dataDir+"thumbs/"+self.nameLabel.text+".png"
 		self.screenShot.reload()
 		#descLabel: descLabel
 		#self.gameref.export_to_png(filename=self.nameBox.text+".png")
