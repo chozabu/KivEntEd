@@ -571,6 +571,11 @@ class MainTools(FloatLayout):
 	def clearPressed(self, instance):
 		self.gameref.clearAll()
 
+	def newPressed(self, instance=None):
+		self.gameref.clearAll()
+		from random import randint
+		self.nameBox.text = "newfile%i" %randint(0,9999)
+		self.saveAsPressed(instance)
 	def setTool(self, tool):
 		if self.currentTool not in self.toolSettings:
 			self.toolSettings[self.currentTool] = {}
