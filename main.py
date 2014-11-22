@@ -1,3 +1,6 @@
+import os
+os.environ['KIVY_IMAGE'] = 'pil'
+
 from random import randint
 from random import random
 from math import radians
@@ -5,7 +8,6 @@ import json
 import os
 import cymunk as cy
 from math import *
-import os
 import PolyGen
 import Spline
 
