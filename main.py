@@ -1,5 +1,5 @@
-import os
-os.environ['KIVY_IMAGE'] = 'pil'
+#import os
+#os.environ['KIVY_IMAGE'] = 'pil'
 
 from random import randint
 from random import random
