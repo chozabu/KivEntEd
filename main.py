@@ -1,5 +1,4 @@
-#import os
-#os.environ['KIVY_IMAGE'] = 'pil'
+__author__ = 'chozabu'
 
 from random import randint
 from random import random
