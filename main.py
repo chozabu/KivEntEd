@@ -1,5 +1,9 @@
 __author__ = 'chozabu'
 
+
+from kivy import config
+config.Config.set('input', 'mouse', 'mouse,disable_multitouch')
+
 from random import randint
 from random import random
 from math import radians
@@ -1048,6 +1052,7 @@ class TestGame(Widget):
 		print "TOUCHDOWN\n"
 		#print dir(touch)
 		if hasattr(touch, 'button'):
+			print touch.button
 			if touch.button == 'scrollup':
 				self.zoomcam(1.02, (touch.x,touch.y))
 				return
@@ -1070,8 +1075,13 @@ class TestGame(Widget):
 		#self.selectedShape = shape
 		#print "touched shape:", shape
 		#print "touched shapes:", shapes
+
+		currentTool = self.mainTools.currentTool
+		if hasattr(touch, 'button'):
+			if touch.button == 'right':
+				currentTool = 'camera'
 		self.touches[touch.id] = {"active": False, "pos": pos, "newpos": pos, "screenpos": (touch.x, touch.y),
-								  "tool": self.mainTools.currentTool, "onmenu": False, "touching": shape,
+								  "tool": currentTool, "onmenu": False, "touching": shape,
 								  "touchingnow": shape, "ownbody": cy.Body()}
 		ctouch = self.touches[touch.id]
 		if self.mainTools.on_touch_down(touch):  #True:#touch.x < self.width*.1:
@@ -1080,7 +1090,6 @@ class TestGame(Widget):
 			#print "clicked in menu"
 			return
 		#print "not in menu"
-		currentTool = self.mainTools.currentTool
 		#print "Tool is: " + currentTool
 		ctouch['active'] = True
 
