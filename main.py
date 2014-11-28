@@ -1252,6 +1252,7 @@ class TestGame(Widget):
 			self.mainTools.setEnt(ent)
 
 		canselect = currentTool in ['camera', 'drag','rotate', 'delete']
+		if currentTool == 'splineed' and self.mainTools.selectedEntity == None:canselect=True
 		if canselect:
 			if shape:
 				self.mainTools.setShape(shape)
