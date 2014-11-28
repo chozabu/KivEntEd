@@ -188,14 +188,21 @@ class TestGame(Widget):
 
 	def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
 		space = self.space
+		kkstr =  keycode[1]
 		if keycode[1] == 'up':
 			space.gravity = space.gravity.x, space.gravity.y + 10
 		if keycode[1] == 'down':
 			space.gravity = space.gravity.x, space.gravity.y - 10
 		if keycode[1] == 'left':
 			space.gravity = space.gravity.x - 10, space.gravity.y
-		if keycode[1] == 'right':
+		if kkstr == 'right':
 			space.gravity = space.gravity.x + 10, space.gravity.y
+		elif kkstr == 'delete':
+			for ent in self.mainTools.selectedEntitys:
+				self.delObj(ent.entity_id)
+			self.mainTools.setEnts([])
+		elif kkstr == 'escape':
+			self.mainTools.setEnts([])
 		self.mainTools.inputPreview.text = str(self.space.gravity)
 		return True
 
