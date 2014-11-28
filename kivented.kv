@@ -592,14 +592,8 @@ TestGame:
                 height: self.font_size+6
                 text_size: (self.width, self.height)
             Button:
-                text: 'Sprite'
+                text: 'Object'
                 on_press: root.changel2menu(root.createMenu)
-            Button:
-                text: 'Polygon'
-                on_press: root.changel2menu(root.polyMenu)
-            Button:
-                text: 'Spline'
-                on_press: root.changel2menu(root.splineMenu)
             Button:
                 text: 'Start/End'
                 on_press: root.changel2menu(root.entityMenu)
@@ -699,7 +693,6 @@ TestGame:
             brushSizeSlider: brushSizeSlider
             polyMergeButton: polyMergeButton
             polySimpleButton: polySimpleButton
-            polyPhysButton: polyPhysButton
             minlenslider: minlenslider
             ToggleButton:
                 group: 'ToolGroup'
@@ -717,11 +710,6 @@ TestGame:
                 id: polyMergeButton
                 text: 'Merge Start'
                 state: 'down'
-                height: self.font_size+6
-            ToggleButton:
-                id: polyPhysButton
-                text: 'NoPhysics'
-                #state: 'down'
                 height: self.font_size+6
             ToggleButton:
                 id: polySimpleButton
@@ -778,11 +766,6 @@ TestGame:
                 on_press: root.setTool("splinesub")
             Label:
                 text: 'Settings:'
-            ToggleButton:
-                id: splinePhysButton
-                text: 'NoPhysics'
-                #state: 'down'
-                height: self.font_size+6
             BoxLayout:
                 orientation: 'horizontal'
                 Label:
@@ -827,6 +810,12 @@ TestGame:
                 id: plankButton
                 text: 'Plank'
                 on_press: root.setTool("plank")
+            Button:
+                text: 'Polygon'
+                on_press: root.changel3menu(root.polyMenu)
+            Button:
+                text: 'Spline'
+                on_press: root.changel3menu(root.splineMenu)
             Label:
                 size_hint: (1,0.2)
                 text: "Settings"

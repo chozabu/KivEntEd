@@ -586,6 +586,7 @@ class TestGame(Widget):
 
 		if pg==None:pg = p.polyshape
 		if color!=None:pg.color=color
+		#if not hasattr(p, 'physics'):return p.entity_id
 
 
 		#notes for changing center of mass
@@ -602,9 +603,17 @@ class TestGame(Widget):
 			for pindex in range(len(cps)):
 				cp = cps[pindex]
 				cps[pindex]=(cp[0]+shifter[0], cp[1]+shifter[1])
-		bp=p.physics.body.position
-		npos = (bp[0]-shifter[0], bp[1]-shifter[1])
-		p.physics.body.position=newc#npos'''
+
+		if hasattr(p, 'physics'):
+			#bp=p.physics.body.position
+			#npos = (bp[0]-shifter[0], bp[1]-shifter[1])
+			p.physics.body.position=newc#npos'''
+		else:
+			#bp=p.position
+			#print bp
+			#npos = (bp.x-shifter[0], bp.y-shifter[1])
+			p.position.x=newc[0]#npos'
+			p.position.y=newc[1]#npos'
 
 
 		create_dict = pg.draw_from_Polygon()
@@ -696,14 +705,20 @@ class TestGame(Widget):
 		if hasattr(ent, "physics"):
 			lpos = ent.physics.body.world_to_local(position)
 			return(lpos['x'],lpos['y'])
-		print "non-physics local not implemented"
+		position=position-cy.Vec2d(ent.position.x,ent.position.y)
+		position.rotate(ent.rotate.r)
+		print "non-physics local testing"
+		return (position.x,position.y)
 		return pos
 	def bworld(self, pos,ent):
 		position = cy.Vec2d(pos[0], pos[1])
 		if hasattr(ent, "physics"):
 			lpos = ent.physics.body.local_to_world(position)
 			return(lpos['x'],lpos['y'])
-		print "non-physics local not implemented"
+		position.rotate(-ent.rotate.r)
+		position=position+cy.Vec2d(ent.position.x,ent.position.y)
+		print "non-physics global testing"
+		return (position.x,position.y)
 		return pos
 	def on_touch_move(self, touch):
 		if touch.id not in self.touches: return
@@ -777,7 +792,8 @@ class TestGame(Widget):
 						print "spline_ent_id=",spline_ent_id
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
-						shape = spline_ent.physics.shapes[0]
+						if hasattr(spline_ent, 'physics'):
+							shape = spline_ent.physics.shapes[0]
 						self.mainTools.setEnt(spline_ent)
 
 		if currentTool == "camera":
@@ -844,15 +860,19 @@ class TestGame(Widget):
 			viewport = self.gameworld.systems['gameview']
 			dx = touch.dx*viewport.camera_scale
 			dy = touch.dy*viewport.camera_scale
-			if shape and (shape.body.is_static or self.mainTools.paused):
+			'''if shape and (shape.body.is_static or self.mainTools.paused):
 				shape.body.position = (shape.body.position.x + dx, shape.body.position.y + dy)
 				self.reindexEntID(shape.body.data)
 				if self.mainTools.paused:
 					(self.gameworld.systems['physics'].update(0.00000001))
 					(self.gameworld.systems['renderer'].update(0.00000001))
-					#space.reindex_shape(shape)
+					#space.reindex_shape(shape)'''
 			for e in self.mainTools.selectedEntitys:
-				e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
+				if hasattr(e, 'physics'):
+					e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
+				else:
+					e.position.x = e.position.x + dx
+					e.position.y = e.position.y + dy
 				self.reindexEnt(e)
 			#else:
 			#	ent = self.mainTools.selectedEntity#TODO alter position component here
@@ -1065,20 +1085,22 @@ class TestGame(Widget):
 
 
 		if currentTool == 'spline':
+			do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 			newspline = Spline.Spline(stepsize=1./self.mainTools.splineMenu.smoothnessSlider.value)
 			newspline.add_or_select((0-150, 0), 2)
 			newspline.add_or_select((0, 0+170), 2)
 			newspline.add_or_select((0+150, 0), 2)
 			newspline.DrawCurve()
 			mass = self.mainTools.massSlider.value
-			spline_ent_id = self.create_spline(pos,newspline,selectNow=True,mass=mass)
+			spline_ent_id = self.create_spline(pos,newspline,selectNow=True,mass=mass, do_physics=do_physics)
 			#pg = PolyGen.PolyGen()
 			#pg.from_spline(newspline.subpoints)
 			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
 			#spline_ent_id =  self.create_poly(pg,pos,selectNow=True)#, do_physics=do_physics)
 			spline_ent = self.getEntFromID(spline_ent_id)
 			#self.mainTools.setEnt(spline_ent_id)
-			shape = spline_ent.physics.shapes[0]
+			if hasattr(spline_ent, 'physics'):
+				shape = spline_ent.physics.shapes[0]
 			#ctouch['polygen'] = pg
 			self.mainTools.setTool('splineed')
 			self.mainTools.splineMenu.splineButton.state = 'normal'
@@ -1114,7 +1136,8 @@ class TestGame(Widget):
 					spline_ent_id = self.update_poly(ent)
 					spline_ent = self.getEntFromID(spline_ent_id)
 					spline_ent.splineshape = ss
-					shape = spline_ent.physics.shapes[0]
+					if hasattr(spline_ent, 'physics'):
+						shape = spline_ent.physics.shapes[0]
 					#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == 'splinesub':
@@ -1166,8 +1189,8 @@ class TestGame(Widget):
 				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
 				                     minlinelen=polyMenu.minlenslider.value)
 			pg.draw_circle_polygon(lpos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-			do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-
+			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
+			do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 			if lastpolyid != None:
 				ctouch['lastpolyid'] = self.update_poly(e)
 			else:
