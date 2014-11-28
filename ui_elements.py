@@ -13,9 +13,10 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.colorpicker import ColorPicker
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
 #if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
@@ -43,6 +44,30 @@ class PlainButton(Button):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
 		return sres
+class colpicker(Label):
+	col = ListProperty([1,1,1,1])
+	def __init__(self, **kwargs):
+		super(colpicker, self).__init__()
+		self.cpicker = ColorPicker()
+		self.cpup = Popup(title="Pick Color Tint",
+			  content=self.cpicker,
+			  size_hint=(0.8, 0.8),
+			  on_dismiss=self.picker_closed)
+
+	def on_touch_down(self, touch):
+		self.cpicker.color=self.col
+		self.cpup.open()
+	def picker_closed(self,instance):
+		gameref =  self.get_root_window().children[-1]
+		self.col = newcol = instance.content.color
+		for ent in gameref.mainTools.selectedEntitys:
+			ent.color.r = newcol[0]
+			ent.color.g = newcol[1]
+			ent.color.b = newcol[2]
+			ent.color.a = newcol[3]
+	def set_from_ent(self,ent):
+		ec = ent.color
+		self.col = [ec.r,ec.g,ec.b,ec.a]
 
 class entDataItem(BoxLayout):
 	def __init__(self,iname,prnt):
@@ -943,10 +968,11 @@ class MainTools(FloatLayout):
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
 				self.selectedMenu.shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
-				self.selectedMenu.redLabel.text = "%0.2f" % (ent.color.r)
-				self.selectedMenu.greenLabel.text = "%0.2f" % (ent.color.g)
-				self.selectedMenu.blueLabel.text = "%0.2f" % (ent.color.b)
-				self.selectedMenu.opacityLabel.text = "%0.2f" % (ent.color.a)
+				self.selectedMenu.cpicker.set_from_ent(ent)
+				#self.selectedMenu.redLabel.text = "%0.2f" % (ent.color.r)
+				#self.selectedMenu.greenLabel.text = "%0.2f" % (ent.color.g)
+				#self.selectedMenu.blueLabel.text = "%0.2f" % (ent.color.b)
+				#self.selectedMenu.opacityLabel.text = "%0.2f" % (ent.color.a)
 			#if hasattr(ent,"renderer"):# and hasattr(ent, 'physics'):
 				'''if fshape:
 					shape=fshape

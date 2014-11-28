@@ -65,6 +65,23 @@ TestGame:
     MainScreen:
         id: main_screen
 
+
+<colpicker>
+    #pup:pup
+    #on_touch_down:pup.open()
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            # self here refers to the widget i.e BoxLayout
+            pos: self.pos
+            size: self.size
+    #Popup:
+    #    id:pup
+    #    ColorPicker:
+    #        id:cpr
+
+
 <FloatInput@TextInput>
     multiline: False
 <tbox@TextInput>
@@ -394,16 +411,13 @@ TestGame:
                 row_force_default: False
                 id: selectedMenu
                 selectedLabel: selectedLabel
+                cpicker:cpicker
                 xposLabel: xposLabel
                 yposLabel: yposLabel
                 xvelLabel: xvelLabel
                 yvelLabel: yvelLabel
                 angleLabel: angleLabel
                 shapeInfo: shapeInfo
-                redLabel: redLabel
-                greenLabel: greenLabel
-                blueLabel: blueLabel
-                opacityLabel: opacityLabel
                 height: self.minimum_height
                 frictionLabel: frictionLabel
                 massLabel: massLabel
@@ -474,41 +488,11 @@ TestGame:
                             id: imgHeightLabel
                             text: '1'
                             on_text_validate: if root.fireText: root.imgHeightChanged(self.text)
-                BoxLayout:
-                    size_hint_y: None
-                    height: 60
-                    BoxLayout:
-                        orientation: 'vertical'
-                        Label:
-                            text: 'R'
-                        FloatInput:
-                            id: redLabel
-                            text: '1'
-                            on_text_validate: if root.fireText: root.redChanged(self.text)
-                    BoxLayout:
-                        orientation: 'vertical'
-                        Label:
-                            text: 'G'
-                        FloatInput:
-                            id: greenLabel
-                            text: '1'
-                            on_text_validate: if root.fireText: root.greenChanged(self.text)
-                    BoxLayout:
-                        orientation: 'vertical'
-                        Label:
-                            text: 'B'
-                        FloatInput:
-                            id: blueLabel
-                            text: '1'
-                            on_text_validate: if root.fireText: root.blueChanged(self.text)
-                    BoxLayout:
-                        orientation: 'vertical'
-                        Label:
-                            text: 'O'
-                        FloatInput:
-                            id: opacityLabel
-                            text: '1'
-                            on_text_validate: if root.fireText: root.opacityChanged(self.text)
+
+                colpicker:
+                    id:cpicker
+                    text:"Color Tint"
+                    color: (.5,.5,.5,1)
                 BoxLayout:
                     Label:
                         text: "Mass:"
