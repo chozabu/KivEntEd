@@ -835,7 +835,7 @@ TestGame:
             padding: 4
             height: root.height
             massSlider: massSlider
-            massLabel: massLabel
+            massSliderLabel: massSliderLabel
             enablePhysics: enablePhysics
             enableDynamic:enableDynamic
             ToggleButton:
@@ -883,7 +883,7 @@ TestGame:
                     massSlider.disabled = not self.active
                     print self.active
             Label:
-                id: massLabel
+                id: massSliderLabel
                 size_hint: (1,0.2)
                 text: "Mass 100"
             Slider:
@@ -893,7 +893,7 @@ TestGame:
                 min:0.01
                 max:400
                 value:100
-                on_value: massLabel.text = "Mass: %.2f" % self.value
+                on_value: massSliderLabel.text = "Mass: %.2f" % self.value
             #BoxLayout:
             #    orientation: 'horizontal'
             #    Button:
