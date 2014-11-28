@@ -934,8 +934,8 @@ class MainTools(FloatLayout):
 
 			if hasattr(ent, 'renderer'):
 				self.selectedMenu.texLabel.text = ent.renderer.texture_key
-				self.selectedMenu.imgWidthLabel.text = str(ent.renderer.width)
-				self.selectedMenu.imgHeightLabel.text = str(ent.renderer.height)
+				self.selectedMenu.imgWidthLabel.text = "%0.2f" % (ent.renderer.width)
+				self.selectedMenu.imgHeightLabel.text = "%0.2f" % (ent.renderer.height)
 				print "width=",ent.renderer.width
 			if hasattr(ent, 'polyshape'):
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
@@ -943,10 +943,10 @@ class MainTools(FloatLayout):
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
 				self.selectedMenu.shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
-				self.selectedMenu.redLabel.text = str(ent.color.r)
-				self.selectedMenu.greenLabel.text = str(ent.color.g)
-				self.selectedMenu.blueLabel.text = str(ent.color.b)
-				self.selectedMenu.opacityLabel.text = str(ent.color.a)
+				self.selectedMenu.redLabel.text = "%0.2f" % (ent.color.r)
+				self.selectedMenu.greenLabel.text = "%0.2f" % (ent.color.g)
+				self.selectedMenu.blueLabel.text = "%0.2f" % (ent.color.b)
+				self.selectedMenu.opacityLabel.text = "%0.2f" % (ent.color.a)
 			#if hasattr(ent,"renderer"):# and hasattr(ent, 'physics'):
 				'''if fshape:
 					shape=fshape
