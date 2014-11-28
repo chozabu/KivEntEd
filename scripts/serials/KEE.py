@@ -154,11 +154,19 @@ class Serials():
 			gr = self.gameref.space.gravity
 		gt = (gr.x,gr.y)
 
+		viewport = self.gameref.gameworld.systems['gameview']
+		camDict = {
+		'x':viewport.camera_pos[0],
+		'y':viewport.camera_pos[1],
+		'scale':viewport.camera_scale}
+
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": gt,
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID,
-								  "killMomem":self.gameref.mainTools.killMomem, "paused": self.gameref.mainTools.paused}}
+								  "killMomem":self.gameref.mainTools.killMomem, "paused": self.gameref.mainTools.paused,
+								  'camera':camDict},
+					 }
 		return worlddict
 	def getConstraintsFromEnts(self, ents):
 		gameworld = self.gameref.gameworld
@@ -421,4 +429,10 @@ class Serials():
 			if "paused" in settings:
 				pm = settings['paused']
 				if not self.gameref.mainTools.paused: self.gameref.mainTools.paused = pm
-		return [selfgameworldentities[v] for v in idConvDict.itervalues()]
+			if "camera" in settings:
+				cm = settings['camera']
+				viewport = self.gameref.gameworld.systems['gameview']
+				viewport.camera_pos[0]=cm['x']
+				viewport.camera_pos[1]=cm['y']
+				viewport.camera_scale=cm['scale']
+			return [selfgameworldentities[v] for v in idConvDict.itervalues()]

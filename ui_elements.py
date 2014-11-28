@@ -550,7 +550,7 @@ class MainTools(FloatLayout):
 	#def examplesPressed(self, instance):
 
 
-	def loadPressed(self, instance):
+	def loadPressed(self, instance=None):
 		self.gameref.clearAll()
 		self.gameref.serials.loadJSON(self.nameBox.text+".json")
 		#self.gameref.loadFromDict(self.testsave)
