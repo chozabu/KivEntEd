@@ -144,7 +144,7 @@ class PolyGen():
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
 
-		left=99999
+		'''left=99999
 		right=-99999
 		top=-99999
 		bottom=99999
@@ -156,14 +156,15 @@ class PolyGen():
 			top=max(y,bottom)
 			left=min(x,left)
 			right=max(x,right)
-		self.bbox = (left,right,top,bottom)
+		self.bbox = (left,right,top,bottom)'''
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
 	def get_bbox(self):
-		if not hasattr(self, 'bbox'):
-			self.draw_from_Polygon()
-		return self.bbox
+		#if not hasattr(self, 'bbox'):
+		#	self.draw_from_Polygon()
+		#return self.bbox
+		return self.poly.boundingBox()
 	def remove_short_lines(self, minlen = 1):
 		minlen*=minlen
 		newp = Polygon()
