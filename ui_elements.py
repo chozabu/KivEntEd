@@ -895,10 +895,16 @@ class MainTools(FloatLayout):
 			#self.gameref.selectedShapeID = None
 		self.selectedEntitysBoxes = []
 		for ent in sents:
-			if hasattr(ent,"renderer") and hasattr(ent, 'physics'):
-				shape = ent.physics.shapes[0]
-				entID = self.gameref.create_decoration(pos=(shape.body.position.x, shape.body.position.y),
-				                                                 width=ent.renderer.width*1.1+10, height=ent.renderer.height*1.1+10,
+			if hasattr(ent,"renderer"):
+				pos = ent.position
+				width = ent.renderer.width
+				height = ent.renderer.height
+				if hasattr(ent,'polyshape'):
+					bbox = ent.polyshape.get_bbox()
+					width = bbox[1]-bbox[0]
+					height = bbox[2]-bbox[3]
+				entID = self.gameref.create_decoration(pos=(pos.x, pos.y),
+				                                                 width=width*1.1+10, height=height*1.1+10,
 																texture='emptybox',angle=ent.rotate.r)
 				self.selectedEntitysBoxes.append(self.gameref.gameworld.entities[entID])
 	def setEnt(self, ent, fshape=None):

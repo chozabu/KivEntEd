@@ -52,9 +52,10 @@ def col_shapes_from_tris(triangles, verts,submass,elasticity,collision_type,fric
 				remlist.append(tindex)
 		return col_shapes, remlist
 
-def tristripToKDict(ts, color):
+def tristripToKDict(ts, color, texscale=.01):
 	tri_verts = []
 	new_triangles = []
+	vert_ap = tri_verts.append
 	tri_ap = new_triangles.append
 	vindex = 0
 	tri_count = 0
@@ -66,7 +67,7 @@ def tristripToKDict(ts, color):
 			if sindex < striplen:
 				tri_ap((vindex,vindex+1,vindex+2))
 				tri_count += 1
-			tri_verts.append(vert)
+			vert_ap(vert)
 			vindex+=1
 			sindex+=1
 
@@ -74,7 +75,9 @@ def tristripToKDict(ts, color):
 	nv_ap = new_vertices.append
 	vert_count = 0
 	for tvert in tri_verts:
-		nv_ap([tvert[0], tvert[1], tvert[0]*0.01, tvert[1]*0.01, color[0], color[1], color[2], color[3]])
+		x=tvert[0]
+		y=tvert[1]
+		nv_ap([x, y, x*texscale, y*texscale, color[0], color[1], color[2], color[3]])
 		vert_count += 1
 	return new_triangles, new_vertices,  tri_count, vert_count
 
@@ -140,9 +143,27 @@ class PolyGen():
 		pts = self.poly[0]
 		#writeSVG('Operations.svg', [self.poly], width=800)
 		new_triangles, new_vertices,  tri_count, vert_count =self.pts_to_tristrip(pts)
+
+		left=99999
+		right=-99999
+		top=-99999
+		bottom=99999
+
+		for tvert in new_vertices:
+			x=tvert[0]
+			y=tvert[1]
+			bottom=min(y,bottom)
+			top=max(y,bottom)
+			left=min(x,left)
+			right=max(x,right)
+		self.bbox = (left,right,top,bottom)
 		return {'triangles': new_triangles, 'vertices': new_vertices,
 			'vert_count': vert_count, 'tri_count': tri_count,
 			'vert_data_count': 5}
+	def get_bbox(self):
+		if not hasattr(self, 'bbox'):
+			self.draw_from_Polygon()
+		return self.bbox
 	def remove_short_lines(self, minlen = 1):
 		minlen*=minlen
 		newp = Polygon()

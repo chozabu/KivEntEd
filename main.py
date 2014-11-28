@@ -858,9 +858,9 @@ class TestGame(Widget):
 		shape = ctouch['touching']
 		if currentTool == 'rotate' and shape:
 			cpos = (shape.body.position.x,shape.body.position.y)
-			if shape.__class__.__name__ == 'Poly':
-				bb = self.getEntFromID(shape.body.data).polyshape.poly.boundingBox()
-				cpos = ((bb[0]+bb[1])/2,(bb[2]+bb[3])/2)
+			#if shape.__class__.__name__ == 'Poly':
+			#	bb = self.getEntFromID(shape.body.data).polyshape.poly.boundingBox()
+			#	cpos = ((bb[0]+bb[1])/2,(bb[2]+bb[3])/2)
 			xd = cpos[0] - pos[0]
 			yd = cpos[1] - pos[1]
 			angle = atan2(yd, xd)
