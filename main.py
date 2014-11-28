@@ -39,7 +39,8 @@ texnames = []
 import glob
 for fn in glob.glob('./sprites/*.png'):
 	texture_manager.load_image(fn)
-	texnames.append(fn.split('/')[-1][:-4])
+	#texnames.append(fn.split('/')[-1][:-4])
+	texnames.append(os.path.split(fn)[-1][:-4])
 
 from kivy.graphics import *
 from kivy.atlas import Atlas
