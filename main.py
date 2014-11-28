@@ -813,6 +813,7 @@ class TestGame(Widget):
 			if currentTool in ["box", 'select-box']:
 				self.setEntIDPosSizeRot(psid, midx,midy,xd,yd)
 			if currentTool == "circle":
+				if dist<4:dist=32
 				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
 			if currentTool == "square":
 				self.setEntIDPosSizeRot(psid, spos[0],spos[1],dist*2,dist*2,angle)
@@ -984,7 +985,7 @@ class TestGame(Widget):
 				self.reindexEnt(ent)
 
 		if currentTool == "circle":
-			if dist < 4: dist = 8
+			if dist < 4: dist = 32
 			#self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
 			#                   angle=angle, do_physics=do_physics)
 			self.create_sprite(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
