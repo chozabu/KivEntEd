@@ -1251,7 +1251,7 @@ class TestGame(Widget):
 				ep.x,ep.y=pos
 			self.mainTools.setEnt(ent)
 
-		canselect = currentTool in ['camera', 'drag', 'vortex','rotate', 'delete']
+		canselect = currentTool in ['camera', 'drag','rotate', 'delete']
 		if canselect:
 			if shape:
 				self.mainTools.setShape(shape)
