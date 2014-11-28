@@ -419,33 +419,33 @@ TestGame:
                     FloatInput:
                         id: xposLabel
                         text: "position"
-                        on_text: if root.fireText: root.xposChanged(self)
+                        on_text_validate: if root.fireText: root.xposChanged(self)
                 BoxLayout:
                     Label:
                         text: "y:"
                     FloatInput:
                         id: yposLabel
                         text: "position"
-                        on_text: if root.fireText: root.yposChanged(self)
+                        on_text_validate: if root.fireText: root.yposChanged(self)
                 BoxLayout:
                     Label:
                         text: "xvel:"
                     FloatInput:
                         id: xvelLabel
-                        on_text: if root.fireText: root.xvelChanged(self)
+                        on_text_validate: if root.fireText: root.xvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "yvel:"
                     FloatInput:
                         id: yvelLabel
-                        on_text: if root.fireText: root.yvelChanged(self)
+                        on_text_validate: if root.fireText: root.yvelChanged(self)
                 BoxLayout:
                     Label:
                         text: "angle:"
                     FloatInput:
                         id: angleLabel
                         text: "angle"
-                        on_text: if root.fireText: root.angleChanged(self)
+                        on_text_validate: if root.fireText: root.angleChanged(self)
                 Spinner:
                     id: texLabel
                     text: "texture"
@@ -461,7 +461,7 @@ TestGame:
                         FloatInput:
                             id: imgWidthLabel
                             text: '1'
-                            on_text: if root.fireText: root.imgWidthChanged(self.text)
+                            on_text_validate: if root.fireText: root.imgWidthChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -469,7 +469,7 @@ TestGame:
                         FloatInput:
                             id: imgHeightLabel
                             text: '1'
-                            on_text: if root.fireText: root.imgHeightChanged(self.text)
+                            on_text_validate: if root.fireText: root.imgHeightChanged(self.text)
                 BoxLayout:
                     size_hint_y: None
                     height: 60
@@ -480,7 +480,7 @@ TestGame:
                         FloatInput:
                             id: redLabel
                             text: '1'
-                            on_text: if root.fireText: root.redChanged(self.text)
+                            on_text_validate: if root.fireText: root.redChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -488,7 +488,7 @@ TestGame:
                         FloatInput:
                             id: greenLabel
                             text: '1'
-                            on_text: if root.fireText: root.greenChanged(self.text)
+                            on_text_validate: if root.fireText: root.greenChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -496,7 +496,7 @@ TestGame:
                         FloatInput:
                             id: blueLabel
                             text: '1'
-                            on_text: if root.fireText: root.blueChanged(self.text)
+                            on_text_validate: if root.fireText: root.blueChanged(self.text)
                     BoxLayout:
                         orientation: 'vertical'
                         Label:
@@ -504,28 +504,28 @@ TestGame:
                         FloatInput:
                             id: opacityLabel
                             text: '1'
-                            on_text: if root.fireText: root.opacityChanged(self.text)
+                            on_text_validate: if root.fireText: root.opacityChanged(self.text)
                 BoxLayout:
                     Label:
                         text: "Mass:"
                     FloatInput:
                         id: massLabel
                         text: "Mass"
-                        on_text: if root.fireText: root.massChanged(self)
+                        on_text_validate: if root.fireText: root.massChanged(self)
                 BoxLayout:
                     Label:
                         text: "Friction:"
                     FloatInput:
                         id: frictionLabel
                         text: "Friction"
-                        on_text: if root.fireText: root.frictionChanged(self)
+                        on_text_validate: if root.fireText: root.frictionChanged(self)
                 BoxLayout:
                     Label:
                         text: "Elasticity:"
                     FloatInput:
                         id: elasLabel
                         text: "Elasticity"
-                        on_text: if root.fireText: root.elasChanged(self)
+                        on_text_validate: if root.fireText: root.elasChanged(self)
                 #ToggleButton:
                 #    id: sensorButton
                 #    text:"Sensor"
