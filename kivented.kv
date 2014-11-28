@@ -342,6 +342,7 @@ TestGame:
     leftMenu: leftMenu
     rightMenu: rightMenu
     createMenu: createMenu.__self__
+    primMenu: primMenu.__self__
     polyMenu: polyMenu.__self__
     splineMenu: splineMenu.__self__
     rootMenu: rootMenu
@@ -779,12 +780,11 @@ TestGame:
                     value:4
                     #on_value: root.brush_size_changed(self.value)
         BoxLayout:
-            id: createMenu
+            id: primMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-            spritePhysButton: spritePhysButton
             ToggleButton:
                 group: 'ToolGroup'
                 id: circleButton
@@ -810,6 +810,20 @@ TestGame:
                 id: plankButton
                 text: 'Plank'
                 on_press: root.setTool("plank")
+        BoxLayout:
+            id: createMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+            massSlider: massSlider
+            massLabel: massLabel
+            enablePhysics: enablePhysics
+            enableDynamic:enableDynamic
+            ToggleButton:
+                id: primButton
+                text: 'Primitive'
+                on_press: root.changel3menu(root.primMenu)
             Button:
                 text: 'Polygon'
                 on_press: root.changel3menu(root.polyMenu)
@@ -819,11 +833,6 @@ TestGame:
             Label:
                 size_hint: (1,0.2)
                 text: "Settings"
-            ToggleButton:
-                id: spritePhysButton
-                text: 'NoPhysics'
-                #state: 'down'
-                height: self.font_size+6
             Label:
                 size_hint: (1,0.2)
                 text: "  Image:"
@@ -834,17 +843,50 @@ TestGame:
             Image:
                 id: spritePreview
                 source: 'atlas://assets/myatlas/sheep'
-            BoxLayout:
-                orientation: 'horizontal'
-                Button:
-                    text: "Mass"
-                    on_press: root.massPressed(self)
-                Slider:
-                    id: massSlider
-                    orientation: "vertical"
-                    min:0
-                    max:100
-                    value:10
+            Label:
+                size_hint: (1,0.2)
+                text: "Physics"
+            Switch:
+                id: enablePhysics
+                disabled: False
+                active: True
+                on_active:
+                    enableDynamic.disabled = not self.active
+                    massSlider.disabled = not enableDynamic.active or not self.active
+                    print self.active
+            Label:
+                size_hint: (1,0.2)
+                text: "Dynamic"
+            Switch:
+                id: enableDynamic
+                disabled: False
+                active: True
+                on_active:
+                    massSlider.disabled = not self.active
+                    print self.active
+            Label:
+                id: massLabel
+                size_hint: (1,0.2)
+                text: "Mass 100"
+            Slider:
+                id: massSlider
+                orientation: "horizontal"
+                size_hint_x: 1.5
+                min:0.01
+                max:400
+                value:100
+                on_value: massLabel.text = "Mass: %.2f" % self.value
+            #BoxLayout:
+            #    orientation: 'horizontal'
+            #    Button:
+            #        text: "Mass"
+            #        on_press: root.massPressed(self)
+            #    Slider:
+            #        id: massSlider
+            #        orientation: "vertical"
+            #        min:0
+            #        max:100
+            #        value:10
             ToggleButton:
                 id: cloneSpriteButton
                 text: 'clone mode'

@@ -395,7 +395,6 @@ class TestGame(Widget):
 		pg = PolyGen.PolyGen()
 		spline.DrawCurve()
 		pg.from_spline(spline.subpoints)
-		#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
 		spline_ent_id = self.create_poly(pg,pos,lastpolyid=lastpolyid, mass=mass, friction=friction,
 		                        elasticity=elasticity, angle=angle, x_vel=x_vel, y_vel=y_vel,
 		                        angular_velocity=angular_velocity, texture=texture, selectNow=selectNow,
@@ -838,8 +837,10 @@ class TestGame(Widget):
 			if currentTool == "draw":
 				self.setEntIDPosSizeRot(psid, midx,midy,dist,10, angle)
 				if dist > 10:
-					mass = self.mainTools.massSlider.value
-					do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
+					createMenu = self.mainTools.createMenu
+					mass = createMenu.massSlider.value
+					do_physics = createMenu.enablePhysics.active
+					if not createMenu.enableDynamic.active:mass=0
 					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
 									texture=self.mainTools.spriteSpinner.text, selectNow=False,
 									do_physics=do_physics)
@@ -945,7 +946,6 @@ class TestGame(Widget):
 		yd = spos[1] - pos[1]
 		midx = (spos[0] + pos[0]) / 2.0
 		midy = (spos[1] + pos[1]) / 2.0
-		mass = self.mainTools.massSlider.value
 		angle = atan2(yd, xd)
 		dist = sqrt(xd ** 2 + yd ** 2)
 
@@ -976,7 +976,10 @@ class TestGame(Widget):
 			self.mainTools.setEnts(sents)
 
 
-		do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
+		createMenu = self.mainTools.createMenu
+		mass = createMenu.massSlider.value
+		do_physics = createMenu.enablePhysics.active
+		if not createMenu.enableDynamic.active:mass=0
 		last_obj = None
 		#print "lastobj=",last_obj
 		if self.mainTools.selectedEntity and self.mainTools.cloneSpriteButton.state == 'down':
@@ -1085,18 +1088,16 @@ class TestGame(Widget):
 
 
 		if currentTool == 'spline':
-			do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
+			createMenu = self.mainTools.createMenu
+			mass = createMenu.massSlider.value
+			do_physics = createMenu.enablePhysics.active
+			if not createMenu.enableDynamic.active:mass=0
 			newspline = Spline.Spline(stepsize=1./self.mainTools.splineMenu.smoothnessSlider.value)
 			newspline.add_or_select((0-150, 0), 2)
 			newspline.add_or_select((0, 0+170), 2)
 			newspline.add_or_select((0+150, 0), 2)
 			newspline.DrawCurve()
-			mass = self.mainTools.massSlider.value
 			spline_ent_id = self.create_spline(pos,newspline,selectNow=True,mass=mass, do_physics=do_physics)
-			#pg = PolyGen.PolyGen()
-			#pg.from_spline(newspline.subpoints)
-			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			#spline_ent_id =  self.create_poly(pg,pos,selectNow=True)#, do_physics=do_physics)
 			spline_ent = self.getEntFromID(spline_ent_id)
 			#self.mainTools.setEnt(spline_ent_id)
 			if hasattr(spline_ent, 'physics'):
@@ -1189,12 +1190,13 @@ class TestGame(Widget):
 				pg = PolyGen.PolyGen(keepsimple=polyMenu.polySimpleButton.state != 'normal',
 				                     minlinelen=polyMenu.minlenslider.value)
 			pg.draw_circle_polygon(lpos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
-			#do_physics = self.mainTools.polyMenu.polyPhysButton.state != 'down'
-			do_physics = self.mainTools.createMenu.spritePhysButton.state != 'down'
 			if lastpolyid != None:
 				ctouch['lastpolyid'] = self.update_poly(e)
 			else:
-				mass = self.mainTools.massSlider.value
+				createMenu = self.mainTools.createMenu
+				mass = createMenu.massSlider.value
+				do_physics = createMenu.enablePhysics.active
+				if not createMenu.enableDynamic.active:mass=0
 				ctouch['lastpolyid'] = self.create_poly(pg, npos, lastpolyid=lastpolyid, do_physics=do_physics,mass=mass)
 			ctouch['polygen'] = pg
 
