@@ -148,6 +148,7 @@ class PolyGen():
 		newp = Polygon()
 		c=-1
 		for cont in self.poly:
+			if len(cont)<10:return
 			c+=1
 			#cont=self.poly[0]
 			keeplist = []

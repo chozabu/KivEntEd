@@ -583,6 +583,7 @@ class TestGame(Widget):
 		#notes for changing center of mass
 		po = pg.poly
 		poc = po.center()
+		print poc
 		newc = self.bworld(poc,p)
 		oldc = self.blocal((p.position.x,p.position.y),p)
 		shifter = (oldc[0] - poc[0], oldc[1] - poc[1])
@@ -599,11 +600,15 @@ class TestGame(Widget):
 
 
 		create_dict = pg.draw_from_Polygon()
-		if create_dict == False:return
+		if create_dict == False:
+			print "creating poly failed", create_dict, po
+			return
 
 		triangles = create_dict['triangles']
 		tricount = len(triangles)
-		if tricount < 1: return
+		if tricount < 1:
+			print "creating poly failed - no triangles", create_dict, po
+			return
 
 
 		all_verts = create_dict['vertices']
@@ -761,7 +766,7 @@ class TestGame(Widget):
 
 					if ent.polyshape.poly.area()>10:
 						spline_ent_id = self.update_poly(ent)
-						#print "spline_ent_id=",spline_ent_id
+						print "spline_ent_id=",spline_ent_id
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
 						shape = spline_ent.physics.shapes[0]
