@@ -545,18 +545,18 @@ TestGame:
                     id: delButton
                     text: 'delete'
                     on_press: root.delSelPressed(self)
-                Button:
-                    id: copyButton
-                    text: 'copy'
-                    on_press: root.copy_pressed(self)
+                #Button:
+                #    id: copyButton
+                #    text: 'copy'
+                #    on_press: root.copy_pressed(self)
                 Button:
                     text: 'Variables'
                     on_press: root.varsPressed(self)
                 Button:
-                    text: 'Copy Group'
+                    text: 'Copy Selected'
                     on_press: root.copy_group_pressed(self)
                 Button:
-                    text: 'Export Group'
+                    text: 'Export Prefab'
                     on_press: root.export_pressed(self)
         
     BoxLayout:
@@ -602,20 +602,20 @@ TestGame:
                 id: joinButton
                 text: 'Joint'
                 on_press: root.changel2menu(root.joinMenu)
-            ToggleButton:
-                group: 'ToolGroup'
-                id: pasteButton
-                text: 'Paste'
-                on_press: root.setTool("paste")
+            #ToggleButton:
+            #    group: 'ToolGroup'
+            #    id: pasteButton
+            #    text: 'Paste'
+            #    on_press: root.setTool("paste")
             ToggleButton:
                 group: 'ToolGroup'
                 id: pasteGButton
-                text: 'Paste group'
+                text: 'Paste'
                 on_press: root.setTool("paste-group")
             ToggleButton:
                 group: 'ToolGroup'
                 id: importGButton
-                text: 'Import group'
+                text: 'Import Prefab'
                 on_press: root.customgroupPressed()
             Label:
                 text: 'Interact:'
