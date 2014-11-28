@@ -193,6 +193,7 @@ class TestGame(Widget):
 	def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
 		space = self.space
 		kkstr =  keycode[1]
+		print kkstr
 		if keycode[1] == 'up':
 			space.gravity = space.gravity.x, space.gravity.y + 10
 		if keycode[1] == 'down':
@@ -207,6 +208,10 @@ class TestGame(Widget):
 			self.mainTools.setEnts([])
 		elif kkstr == 'escape':
 			self.mainTools.setEnts([])
+		elif kkstr == 'f5':
+			self.mainTools.savePressed()
+		elif kkstr == 'f7':
+			self.mainTools.loadPressed()
 		self.mainTools.inputPreview.text = str(self.space.gravity)
 		return True
 
