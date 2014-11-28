@@ -198,6 +198,10 @@ class Serials():
 		fileNamePath=dataDir + 'groups/' + fileName
 		with open(fileNamePath, 'r') as fo:
 				return fo.read()
+	def readExampleSerialisedData(self, fileName):
+		fileNamePath='prefabs/' + fileName
+		with open(fileNamePath, 'r') as fo:
+				return fo.read()
 	def exportJSON(self, fileName="defaultlevel.json"):
 		dataDir = self.dataDir
 		worlddict = self.exportDict()

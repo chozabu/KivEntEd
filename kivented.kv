@@ -345,6 +345,9 @@ TestGame:
     primMenu: primMenu.__self__
     polyMenu: polyMenu.__self__
     splineMenu: splineMenu.__self__
+    prefabMenu: prefabMenu.__self__
+    examplePrefabsMenu: examplePrefabsMenu.__self__
+    customPrefabsMenu: customPrefabsMenu.__self__
     rootMenu: rootMenu
     joinMenu: joinMenu.__self__
     entityMenu: entityMenu.__self__
@@ -360,7 +363,7 @@ TestGame:
     settingsMenu: settingsMenu.__self__
     examplesMenu: examplesMenu.__self__
     levelsMenu: levelsMenu.__self__
-    groupsMenu: groupsMenu.__self__
+    #groupsMenu: groupsMenu.__self__
     inputPreview: inputPreview
     cloneSpriteButton: cloneSpriteButton
 
@@ -615,8 +618,8 @@ TestGame:
             ToggleButton:
                 group: 'ToolGroup'
                 id: importGButton
-                text: 'Import Prefab'
-                on_press: root.customgroupPressed()
+                text: 'Prefab'
+                on_press: root.changel3menu(root.prefabMenu)
             Label:
                 text: 'Interact:'
                 size_hint_y: None
@@ -811,6 +814,21 @@ TestGame:
                 text: 'Plank'
                 on_press: root.setTool("plank")
         BoxLayout:
+            id: prefabMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+            Button:
+                id: circleButton
+                text: 'Examples'
+                on_press: root.changel3menu(root.examplePrefabsMenu)
+            Button:
+                text: 'Custom'
+                on_press: root.customgroupPressed()
+            #Button:
+            #    text: 'Export Prefab'
+        BoxLayout:
             id: createMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
@@ -932,7 +950,13 @@ TestGame:
             padding: 4
             height: root.height
         BoxLayout:
-            id: groupsMenu
+            id: customPrefabsMenu
+            orientation: 'vertical'
+            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            padding: 4
+            height: root.height
+        BoxLayout:
+            id: examplePrefabsMenu
             orientation: 'vertical'
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4

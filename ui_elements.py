@@ -447,6 +447,10 @@ class MainTools(FloatLayout):
 		newname = instance.text
 		self.entscpy = self.gameref.serials.jsonserials.readSerialisedData(newname+'.json')
 		self.setTool('paste-group')
+	def loadExamplePrefab(self, instance):
+		newname = instance.text
+		self.entscpy = self.gameref.serials.jsonserials.readExampleSerialisedData(newname+'.json')
+		self.setTool('paste-group')
 	def customlvlPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
 		self.levelsMenu.clear_widgets()
@@ -457,18 +461,19 @@ class MainTools(FloatLayout):
 		self.changel3menu(self.levelsMenu)
 	def customgroupPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"groups/*.json")]
-		self.groupsMenu.clear_widgets()
+		self.customPrefabsMenu.clear_widgets()
 		for levelname in levels:
 			newb = Button(text=levelname, font_size=14)
 			newb.bind(on_press=self.loadCustomGroup)
-			self.groupsMenu.add_widget(newb)
-		self.changel3menu(self.groupsMenu)
+			self.customPrefabsMenu.add_widget(newb)
+		self.changel3menu(self.customPrefabsMenu)
 
 
 	def init_tools(self, dt):
 		self.l2menus = [self.settingsMenu, self.joinMenu, self.createMenu, self.entityMenu,
-		                self.fileMenu, self.groupsMenu]
-		self.l3menus = [self.examplesMenu,self.levelsMenu, self.polyMenu, self.splineMenu, self.primMenu]
+		                self.fileMenu, self.prefabMenu]
+		self.l3menus = [self.examplesMenu,self.levelsMenu, self.polyMenu, self.splineMenu, self.primMenu,
+		                self.examplePrefabsMenu, self.customPrefabsMenu]
 		#self.leftMenu.remove_widget(self.joinMenu)
 		#self.spriteSpinner.text="square"
 		self.rightMenu.remove_widget(self.selectedMenuView)
@@ -498,6 +503,11 @@ class MainTools(FloatLayout):
 			newb = Button(text=levelname, font_size=14)
 			newb.bind(on_press=self.loadExample)
 			self.examplesMenu.add_widget(newb)
+		examplePrefabs = [ os.path.basename(f)[:-5] for f in glob.glob(os.path.dirname(__file__)+"/prefabs/*.json")]
+		for prefabName in examplePrefabs:
+			newb = Button(text=prefabName, font_size=14)
+			newb.bind(on_press=self.loadExamplePrefab)
+			self.examplePrefabsMenu.add_widget(newb)
 		#self.spriteSpinner.values = os.listdir("./sprites")
 
 	def update(self, dt):
