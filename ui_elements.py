@@ -17,6 +17,7 @@ from kivy.uix.colorpicker import ColorPicker
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.uix.slider import Slider
 from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
@@ -687,6 +688,19 @@ class MainTools(FloatLayout):
 		print sidelen
 
 
+	def smoothness_changed(self, instance, a=None,b=None):
+		ent = self.selectedEntity
+		if hasattr(ent, 'splineshape'):
+			#ent.polyshape.remove_short_lines()
+			stepsizediff = 1./ent.splineshape.stepsize - instance.value
+			if abs(stepsizediff) < .1:return
+			ent.splineshape.stepsize = 1./instance.value
+			print 'stepsize=',1./ent.splineshape.stepsize
+			ent.splineshape.DrawCurve()
+			ent.polyshape.from_spline(ent.splineshape.subpoints)
+			self.gameref.update_poly(ent)
+			self.gameref.reindexEnt(ent)
+			#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
 	def simplifyPolyPressed(self, instance):
 		ent = self.selectedEntity
 		if hasattr(ent, 'renderer'):
@@ -969,7 +983,14 @@ class MainTools(FloatLayout):
 				self.selectedMenu.imgWidthLabel.text = "%0.2f" % (ent.renderer.width)
 				self.selectedMenu.imgHeightLabel.text = "%0.2f" % (ent.renderer.height)
 				print "width=",ent.renderer.width
-			if hasattr(ent, 'polyshape'):
+			if hasattr(ent, 'splineshape'):
+				#texname = ent.renderer.texture.split('/')[-1][:-4]
+				#self.selectedMenu.texLabel.text = texname
+				ps = Label(text="Smoothness")
+				self.selectedMenu.shapeInfo.add_widget(ps)
+				ps = Slider(value = 1./ent.splineshape.stepsize, min=1.,max=10.,on_touch_up=self.smoothness_changed, step=1.)
+				self.selectedMenu.shapeInfo.add_widget(ps)
+			elif hasattr(ent, 'polyshape'):
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
 				#self.selectedMenu.texLabel.text = texname
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
