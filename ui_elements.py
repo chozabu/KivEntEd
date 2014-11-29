@@ -539,35 +539,24 @@ class MainTools(FloatLayout):
 
 	def update(self, dt):
 		self.fireText = False
-		shape = self.selectedItem
 		ent = self.selectedEntity
-		#self.selectedMenu.selectedLabel.text = str(shape)
-		#self.selectedMenu.xposLabel.text = ""
-		#self.selectedMenu.yposLabel.text = ""
-		if shape:
-			if not self.selectedMenu.xvelLabel.focus:
-				self.selectedMenu.xvelLabel.text = "%0.2f" % shape.body.velocity.x
-			if not self.selectedMenu.yvelLabel.focus:
-				self.selectedMenu.yvelLabel.text = "%0.2f" % shape.body.velocity.y
-			if not self.selectedMenu.xposLabel.focus:
-				self.selectedMenu.xposLabel.text = "%0.2f" % shape.body.position.x
-			if not self.selectedMenu.yposLabel.focus:
-				ypostr = "%0.2f" % shape.body.position.y
-				self.selectedMenu.yposLabel.text = ypostr
-			if not self.selectedMenu.angleLabel.focus:
-				tv = "%0.2f" % shape.body.angle
-				self.selectedMenu.angleLabel.text = tv
-		elif ent:
-			if not self.selectedMenu.xvelLabel.focus:
-				self.selectedMenu.xvelLabel.text = "0"
-			if not self.selectedMenu.yvelLabel.focus:
-				self.selectedMenu.yvelLabel.text = "0"
+		if ent:
+			if hasattr(ent, 'physics'):
+				body = ent.physics.body
+				if not self.selectedMenu.xvelLabel.focus:
+					self.selectedMenu.xvelLabel.text = "%0.2f" % body.velocity.x
+				if not self.selectedMenu.yvelLabel.focus:
+					self.selectedMenu.yvelLabel.text = "%0.2f" % body.velocity.y
+			else:
+				if not self.selectedMenu.xvelLabel.focus:
+					self.selectedMenu.xvelLabel.text = "0"
+				if not self.selectedMenu.yvelLabel.focus:
+					self.selectedMenu.yvelLabel.text = "0"
 			if hasattr(ent, 'position'):
-				#if not self.selectedMenu.xposLabel.focus:
-				self.selectedMenu.xposLabel.text = "%0.2f" % ent.position.x
-				#if not self.selectedMenu.yposLabel.focus:
-				ypostr = "%0.2f" % ent.position.y
-				self.selectedMenu.yposLabel.text = ypostr
+				if not self.selectedMenu.xposLabel.focus:
+					self.selectedMenu.xposLabel.text = "%0.2f" % ent.position.x
+				if not self.selectedMenu.yposLabel.focus:
+					self.selectedMenu.yposLabel.text = "%0.2f" % ent.position.y
 			if hasattr(ent, 'rotate'):
 				#if not self.selectedMenu.angleLabel.focus:
 				tv = "%0.2f" % ent.rotate.r
