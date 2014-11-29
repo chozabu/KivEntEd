@@ -1239,9 +1239,10 @@ class TestGame(Widget):
 		if currentTool == "paste-group" and self.mainTools.entscpy:
 			print self.mainTools.entscpy
 			entsdict = json.loads(self.mainTools.entscpy)
-			print entsdict
+			#print entsdict
 			newsel = self.serials.jsonserials.loadFromDict(entsdict)
-			print newsel
+			if newsel == None:
+				print "Failed to load level:", entsdict
 			ent=newsel[0]
 			pdiff=(0,0)
 			if hasattr(ent, 'physics'):

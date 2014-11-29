@@ -177,7 +177,7 @@ class Serials():
 		gameref = self.gameref
 		getJointsOnBody = gameref.getJointsOnBody
 		entslist = self.exportEntsToDicts(ents)
-		print entslist
+		#print entslist
 		entiddict={}
 		for e in entslist:entiddict[e['orig_id']]=True
 		jdict = {}
@@ -300,8 +300,8 @@ class Serials():
 		index_count = len(triangles)
 		vert_mesh =  VertMesh(render_system.attribute_count,
 			vert_count, index_count)
-		print triangles
-		print all_verts
+		#print triangles
+		#print all_verts
 		vert_mesh.indices = triangles
 		for i in range(vert_count):
 			vert_mesh[i] = all_verts[i]
@@ -357,6 +357,7 @@ class Serials():
 		entID =  self.gameref.create_ent_from_dict(create_dict, load_order, selectNow=False)
 		if entID != None:
 			if idConvDict!=None: idConvDict[e['orig_id']] = entID
+			#print 'loaded ent', idConvDict
 			newent = self.gameref.getEntFromID(entID)
 			if 'datadict' in e:
 				newent.datadict = e['datadict']
@@ -367,13 +368,15 @@ class Serials():
 				pg = PolyGen.PolyGen(pg)
 				newent.polyshape = pg
 			if 'splineshape' in e:
-				print "LOADING SPLINE"
+				#print "LOADING SPLINE"
 				ss = e['splineshape']
 				points = ss['ControlPoints']
 				newspline = Spline.Spline(stepsize=e['splineshape']['stepsize'])
 				newspline.ControlPoints = points
 				newspline.DrawCurve()
 				newent.splineshape = newspline
+		else:
+			print 'failed to load ent'
 		return entID
 	def loadFromDict(self, data):
 		print "LOADING"
@@ -383,7 +386,9 @@ class Serials():
 		ents = data['ents']
 		idConvDict = {}
 		for e in ents:
+			#print 'attempting to load', e
 			self.loadEntFromDict(e, idConvDict=idConvDict)
+		#print idConvDict
 		selfgameworldentities = self.gameworld.entities
 		if "jointslist" in data:
 			jointslist = data['jointslist']
@@ -435,4 +440,4 @@ class Serials():
 				viewport.camera_pos[0]=cm['x']
 				viewport.camera_pos[1]=cm['y']
 				viewport.camera_scale=cm['scale']
-			return [selfgameworldentities[v] for v in idConvDict.itervalues()]
+		return [selfgameworldentities[v] for v in idConvDict.itervalues()]
