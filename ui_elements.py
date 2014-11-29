@@ -14,6 +14,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.colorpicker import ColorPicker
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
@@ -44,7 +45,7 @@ class PlainButton(Button):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
 		return sres
-class colpicker(Label):
+class colpicker(Label, ButtonBehavior):
 	col = ListProperty([1,1,1,1])
 	def __init__(self, **kwargs):
 		super(colpicker, self).__init__()
@@ -54,7 +55,7 @@ class colpicker(Label):
 			  size_hint=(0.8, 0.8),
 			  on_dismiss=self.picker_closed)
 
-	def on_touch_down(self, touch):
+	def on_press(self, touch):
 		self.cpicker.color=self.col
 		self.cpup.open()
 	def picker_closed(self,instance):
