@@ -766,22 +766,69 @@ class MainTools(FloatLayout):
 				shape.friction = fval
 			self.gameref.reindexEnt(ent)
 
+	def hard_mass_change(self, ent, newmass):
+		if ent:
+			space = self.gameref.space
+			physics = ent.physics
+			body = physics.body
+			print "newmass=",newmass
+			if newmass == float('inf') or newmass <=0:
+				newmass=0
+				newBody = cy.Body()
+			else:
+				newBody = cy.Body(newmass, body.moment)
+
+			newBody.moment = body.moment
+			newBody.position = body.position
+			newBody.data = body.data
+			newBody.angle = body.angle
+			newshapes = []
+			for s in physics.shapes:
+				newshape = cy.Circle(newBody, s.radius)
+				newshape.friction = s.friction
+				newshape.elasticity = s.elasticity
+				newshape.group = s.group
+				newshape.collision_type = s.collision_type
+				newshape.layers = s.layers
+				newshapes.append(newshape)
+				space.remove(s)
+				space.add_shape(newshape)
+				#todo - recalc moment
+			print body
+			if newBody.mass != float('inf'):
+				space.add(newBody)
+			if body.mass != float('inf'):
+				space.remove(body)
+			physics.body = newBody
+			physics.shapes=newshapes
 	def massChanged(self, instance):
 		self.inputPreview.text = instance.text
 		fval = float(instance.text)
-		if fval <= 0:
-			fval = 0.1
-			instance.text = "%0.2f" % fval
-		shape = self.selectedItem
-		if shape:
-			shape.body.mass = fval
+		#if fval <= 0:
+		#	fval = 0.1
+		#	instance.text = "%0.2f" % fval
+		if fval<=0:fval=float('inf')
+		ent = self.selectedEntity
+		if ent:
+			physics = ent.physics
+			body = physics.body
+			bmass = body.mass
+			print "shape.body.mass=",physics.body.mass
+			bisinf=bmass==float('inf')
+			fisinf=fval==float('inf')
+			if bisinf!=fisinf:
+				self.hard_mass_change(self.selectedEntity, fval)
+				print "did hard mass change"
+				return
+			body.mass = fval
 			self.gameref.reindexEnt(self.selectedEntity)
 
+			shape = physics.shapes[0]
+
 			if shape.__class__.__name__ == "BoxShape":
-				self.selectedItem.body.moment = cy.moment_for_box(self.selectedItem.body.mass, self.selectedItem.width, self.selectedItem.height)
+				shape.body.moment = cy.moment_for_box(fval, shape.width, shape.height)
 			if shape.__class__.__name__ == "Circle":
-				self.selectedItem.body.moment = cy.moment_for_circle(self.selectedItem.body.mass,
-																 self.selectedItem.radius,0)  #seems ineffective?
+				shape.body.moment = cy.moment_for_circle(fval,shape.radius,0)
 
 		for ent in self.selectedEntitys:
 			if hasattr(ent, 'physics'):
