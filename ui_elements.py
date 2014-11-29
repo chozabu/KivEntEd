@@ -784,7 +784,14 @@ class MainTools(FloatLayout):
 			newBody.angle = body.angle
 			newshapes = []
 			for s in physics.shapes:
-				newshape = cy.Circle(newBody, s.radius)
+				classname = s.__class__.__name__
+				if classname == "BoxShape":
+					newshape = cy.BoxShape(newBody, s.width,s.height)
+				if classname == "Circle":
+					newshape = cy.Circle(newBody, s.radius, s.offset)
+				elif classname == 'Poly':
+					newshape = cy.Poly(newBody, s.get_local_vertices())
+
 				newshape.friction = s.friction
 				newshape.elasticity = s.elasticity
 				newshape.group = s.group
