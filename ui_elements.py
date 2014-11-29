@@ -569,13 +569,19 @@ class MainTools(FloatLayout):
 		for ent in sents:
 			cent = sboxes[seid]
 			if hasattr(ent,"renderer"):
-				cent.position = ent.position
 				width = ent.renderer.width
 				height = ent.renderer.height
 				if hasattr(ent,'polyshape'):
 					bbox = ent.polyshape.get_bbox()
 					width = bbox[1]-bbox[0]
 					height = bbox[2]-bbox[3]
+					xp = (bbox[1]+bbox[0])/2
+					yp = (bbox[2]+bbox[3])/2
+					np = self.gameref.bworld((xp,yp),ent)
+					cent.position.x=np[0]
+					cent.position.y=np[1]
+				else:
+					cent.position = ent.position
 				cent.width = width
 				cent.height = height
 				cent.rotate = ent.rotate
