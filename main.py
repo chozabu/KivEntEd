@@ -1313,13 +1313,13 @@ class TestGame(Widget):
 		for aid in self.entIDs:
 			entity = self.gameworld.entities[aid]
 			if not hasattr(entity, 'physics'):
-				if hasattr(entity, 'polyshape'):
-					isin = entity.polyshape.poly.isInside(pos[0],pos[1])
-					if isin:ents.append(entity)
-				else:
-					isin = self.get_point_in_renderer(pos,entity)
-					#isin = entity.polyshape.poly.isInside(pos[0],pos[1])
-					if isin:ents.append(entity)
+				#if hasattr(entity, 'polyshape'):
+				#	isin = entity.polyshape.poly.isInside(pos[0],pos[1])
+				#	if isin:ents.append(entity)
+				#else:
+				isin = self.get_point_in_renderer(pos,entity)
+				if isin:ents.append(entity)
+		print ents
 		return ents
 	def get_point_in_renderer(self, point, ent):
 		if hasattr(ent, 'renderer'):
@@ -1333,7 +1333,10 @@ class TestGame(Widget):
 			(x * cos(angle)) - (y * sin(angle)),
 			(y * cos(angle)) + (x * sin(angle))]
 			r = ent.renderer
+			if hasattr(ent, 'polyshape'):
+				return ent.polyshape.poly.isInside(transp[0],transp[1])
 			#print transp, r.width/2., r.height/2.
+
 			if abs(transp[0]) < abs(r.width/2.) and abs(transp[1]) < abs(r.height/2.):
 				return True
 		return False
