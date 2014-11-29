@@ -563,6 +563,23 @@ class MainTools(FloatLayout):
 				self.selectedMenu.angleLabel.text = tv
 
 		self.fireText = True
+		seid = 0
+		sents = self.selectedEntitys
+		sboxes =  self.selectedEntitysBoxes
+		for ent in sents:
+			cent = sboxes[seid]
+			if hasattr(ent,"renderer"):
+				cent.position = ent.position
+				width = ent.renderer.width
+				height = ent.renderer.height
+				if hasattr(ent,'polyshape'):
+					bbox = ent.polyshape.get_bbox()
+					width = bbox[1]-bbox[0]
+					height = bbox[2]-bbox[3]
+				cent.width = width
+				cent.height = height
+				cent.rotate = ent.rotate
+			seid+=1
 	#def examplesPressed(self, instance):
 
 
