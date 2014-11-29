@@ -1107,9 +1107,9 @@ class TestGame(Widget):
 			do_physics = createMenu.enablePhysics.active
 			if not createMenu.enableDynamic.active:mass=0
 			newspline = Spline.Spline(stepsize=1./self.mainTools.splineMenu.smoothnessSlider.value)
-			newspline.add_or_select((0-150, 0), 2)
-			newspline.add_or_select((0, 0+170), 2)
-			newspline.add_or_select((0+150, 0), 2)
+			newspline.add_or_select((0-150, -70), 2)
+			newspline.add_or_select((0, 0+100), 2)
+			newspline.add_or_select((0+150, -70), 2)
 			newspline.DrawCurve()
 			spline_ent_id = self.create_spline(pos,newspline,selectNow=True,mass=mass, do_physics=do_physics)
 			spline_ent = self.getEntFromID(spline_ent_id)
