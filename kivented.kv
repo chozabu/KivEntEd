@@ -13,6 +13,9 @@
 
 TestGame:
 
+<Button>:
+    background_color: 1., 1., 1., .8
+
 <TestGame>:
     gameworld: gameworld
     GameWorld:
@@ -82,11 +85,11 @@ TestGame:
     #        id:cpr
 
 
-<FloatInput@TextInput>
+<FloatInput>
     multiline: False
-<tbox@TextInput>
+<tbox>
     multiline: False
-<CircleSettings@BoxLayout>
+<CircleSettings>
     radiusLabel:radiusLabel
     size_hint_y:None
     height:30
@@ -97,7 +100,7 @@ TestGame:
             id: radiusLabel
             multiline: False
             text: "radius"
-<BoxSettings@BoxLayout>
+<BoxSettings>
     orientation: 'vertical'
     widthLabel:widthLabel
     heightLabel:heightLabel
@@ -119,7 +122,7 @@ TestGame:
             id: heightLabel
             multiline: False
             text: "height"
-<entDataItem@BoxLayout>
+<entDataItem>
     size_hint_y: None
     height: 30
     keyLabel: keyLabel
@@ -138,7 +141,7 @@ TestGame:
         multiline: False
         text: ""
         on_text: root.valueChanged(self)
-<entDataBox@BoxLayout>
+<entDataBox>
     orientation: 'vertical'
     dataItems: dataItems
     BoxLayout:
@@ -149,7 +152,7 @@ TestGame:
         text: "Add Item"
         on_press: root.newItem()#dataItems.add_widget(entDataItem())
 
-<levelItem@BoxLayout>
+<levelItem>
     orientation: 'horizontal'
     nameLabel: nameLabel
     authorLabel: authorLabel
@@ -181,7 +184,7 @@ TestGame:
         id: downloadsLabel
         text: "Downloads"
 
-<downloads@BoxLayout>
+<downloads>
     orientation: 'vertical'
     levelBox: levelBox
     sortSpinner: sortSpinner
@@ -238,7 +241,7 @@ TestGame:
             text: "next"
             on_press: root.nextPage()
 
-<saveas@BoxLayout>
+<saveas>
     orientation: 'vertical'
 
     nameLabel: nameLabel
@@ -257,7 +260,7 @@ TestGame:
     Button:
         text:"Save"
         on_press: root.savePressed(self)
-<uploads@BoxLayout>
+<uploads>
     orientation: 'vertical'
     userName: userName
     password: password
@@ -295,7 +298,7 @@ TestGame:
         text:"UpLoad!"
         on_press: root.uploadPressed(self)
 
-<callbacks@BoxLayout>
+<callbacks>
     orientation: 'vertical'
     colTypeASpinner: colTypeASpinner
     colTypeBSpinner: colTypeBSpinner
@@ -354,7 +357,7 @@ TestGame:
             on_text: root.calleeChanged(self, "separate")
 
 
-<MainTools@FloatLayout>
+<MainTools>
     id:mtid
     leftMenu: leftMenu
     rightMenu: rightMenu
@@ -396,8 +399,17 @@ TestGame:
             size_hint: (1., .4)
             orientation: 'lr-tb'
             Button:
-                text:""
+                text:"spline"
                 size_hint_x:.2
+                on_press: root.setToolFromButton(self)
+            Button:
+                text:"camera"
+                size_hint_x:.2
+                on_press: root.setToolFromButton(self)
+            Button:
+                text:"drag"
+                size_hint_x:.2
+                on_press: root.setToolFromButton(self)
         Label:
             id: inputPreview
             pos_hint: {'x':.2, 'y':.4}
@@ -1022,7 +1034,7 @@ TestGame:
                     value:0
                     on_value: root.setxgrav(self.value)
         
-<PlainButton@Button>:
+<PlainButton>:
     
                 
 <MainScreen@GameScreen>:
