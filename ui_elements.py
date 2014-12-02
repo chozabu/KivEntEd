@@ -648,9 +648,11 @@ class MainTools(FloatLayout):
 	def setygrav(self, value):
 		space = self.gameref.space
 		space.gravity = space.gravity.x, value
+		self.inputPreview.text = "gravity= %s" % str(space.gravity)
 	def setxgrav(self, value):
 		space = self.gameref.space
 		space.gravity = value, space.gravity.y
+		self.inputPreview.text = "gravity= %s" % str(space.gravity)
 
 	def xvelChanged(self, instance):
 		self.inputPreview.text = instance.text
@@ -1223,5 +1225,5 @@ class MainTools(FloatLayout):
 			for aid in self.gameref.entIDs:
 				entity = self.gameref.gameworld.entities[aid]
 				if hasattr(entity, 'physics') and entity.physics.body.is_static == 0:
-					cy.Body().activate()
+					entity.physics.body.activate()
 		#instance.text = "Resume" if self.paused else "Pause"
