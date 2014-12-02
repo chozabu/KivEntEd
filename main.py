@@ -212,7 +212,8 @@ class TestGame(Widget):
 			self.mainTools.savePressed()
 		elif kkstr == 'f7':
 			self.mainTools.loadPressed()
-		self.mainTools.inputPreview.text = str(self.space.gravity)
+		if self.space:
+			self.mainTools.inputPreview.text = str(self.space.gravity)
 		return True
 
 	def setGrav(self, g):

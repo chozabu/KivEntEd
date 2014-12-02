@@ -1090,6 +1090,11 @@ class MainTools(FloatLayout):
 		else:
 			self.setEnt(None)
 
+	def timed_clear_inputPreview(self, instance):
+		Clock.unschedule(self.clear_inputPreview, True)
+		Clock.schedule_once(self.clear_inputPreview,5)
+	def clear_inputPreview(self, dt):
+		self.inputPreview.text=""
 	def delSelPressed(self, instance):
 		if self.selectedEntity and self.gameref:
 			self.gameref.delObj(self.selectedEntity.entity_id)
