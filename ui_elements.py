@@ -1216,6 +1216,12 @@ class MainTools(FloatLayout):
 	def momemPressed(self, instance=None):
 		self.grav_backup, self.gameref.space.gravity = self.gameref.space.gravity, self.grav_backup
 		self.killMomem = not self.killMomem
-		if self.killMomem:self.leftMenu.momemButton.state = 'down'
-		else: self.leftMenu.momemButton.state = 'normal'
+		if self.killMomem:
+			self.leftMenu.momemButton.state = 'down'
+		else:
+			self.leftMenu.momemButton.state = 'normal'
+			for aid in self.gameref.entIDs:
+				entity = self.gameref.gameworld.entities[aid]
+				if hasattr(entity, 'physics') and entity.physics.body.is_static == 0:
+					cy.Body().activate()
 		#instance.text = "Resume" if self.paused else "Pause"

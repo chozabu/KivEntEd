@@ -1459,6 +1459,7 @@ class TestGame(Widget):
 			self.setEntIDPosSizeRot(je.entity_id, midx,midy,dist,10, angle)
 			#self.setEntIDPosSizeRot(je.entity_id, midx,midy,xd,yd)
 		if self.mainTools.killMomem:
+			self.space.gravity = (0,0)
 			for aid in self.entIDs:
 				entity = self.gameworld.entities[aid]
 				if hasattr(entity, 'physics') and entity.physics.body.is_static == 0:
