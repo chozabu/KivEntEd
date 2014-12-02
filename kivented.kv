@@ -383,12 +383,21 @@ TestGame:
     #groupsMenu: groupsMenu.__self__
     inputPreview: inputPreview
     cloneSpriteButton: cloneSpriteButton
+    historyBar: historyBar
 
     FloatLayout:
         id: topMenu
         size_hint: (.6, .2)
         orientation: 'horizontal'
         pos_hint: {'x':.2, 'y':.8}
+        StackLayout:
+            id: historyBar
+            pos_hint: {'x':.0, 'y':.6}
+            size_hint: (1., .4)
+            orientation: 'lr-tb'
+            Button:
+                text:""
+                size_hint_x:.2
         Label:
             id: inputPreview
             pos_hint: {'x':.2, 'y':.4}

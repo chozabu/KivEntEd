@@ -625,7 +625,7 @@ class MainTools(FloatLayout):
 		from random import randint
 		self.nameBox.text = "newfile%i" %randint(0,9999)
 		self.saveAsPressed(instance)
-	def setTool(self, tool):
+	def setTool(self, tool, instance=None):
 		if self.currentTool not in self.toolSettings:
 			self.toolSettings[self.currentTool] = {}
 		lts = self.toolSettings[self.currentTool]
@@ -639,6 +639,11 @@ class MainTools(FloatLayout):
 				self.spriteSpinner.text = cts["texture"]
 			if "mass" in cts:
 				self.massSlider.value = cts["mass"]
+		from functools import partial
+		ntool = Button(text=tool, on_press=partial(self.setTool, tool),size_hint_x=.2)
+		self.historyBar.add_widget(ntool)
+		if len(self.historyBar.children)>5:
+			self.historyBar.remove_widget(self.historyBar.children[-1])
 		print "Tool is now: %s" % tool
 
 	def setRef(self, ref):
