@@ -1168,7 +1168,8 @@ class MainTools(FloatLayout):
 		if self.selectedEntity == None:return
 		self.makeEntDataDict(self.selectedEntity)
 		scripty = self.gameref.scripty
-		colfuncs = scripty.getHandlersForType(self.selectedItem.collision_type)
+		s0 = self.selectedEntity.physics.shapes[0]
+		colfuncs = scripty.getHandlersForType(s0.collision_type)
 		print "defaults=",scripty.defaults
 		print "colfuncs=",colfuncs
 		for cf in colfuncs:
