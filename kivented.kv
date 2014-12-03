@@ -402,14 +402,17 @@ TestGame:
                 text:"spline"
                 size_hint_x:.2
                 on_press: root.setToolFromButton(self)
+                group: 'ToolGroup'
             Button:
                 text:"camera"
                 size_hint_x:.2
                 on_press: root.setToolFromButton(self)
+                group: 'ToolGroup'
             Button:
                 text:"drag"
                 size_hint_x:.2
                 on_press: root.setToolFromButton(self)
+                group: 'ToolGroup'
         Label:
             id: inputPreview
             pos_hint: {'x':.2, 'y':.4}

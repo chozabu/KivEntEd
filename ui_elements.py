@@ -642,10 +642,13 @@ class MainTools(FloatLayout):
 			if "mass" in cts:
 				self.massSlider.value = cts["mass"]
 		from functools import partial
-		ntool = Button(text=tool, on_press=self.setToolFromButton,size_hint_x=.2)
+		from kivy.uix.togglebutton import ToggleButton
+		ntool = ToggleButton(text=tool, on_press=self.setToolFromButton,size_hint_x=.2,group='ToolGroup',state='down')
 		for child in list(self.historyBar.children):
 			if child.text==tool:
 				self.historyBar.remove_widget(child)
+			else:
+				child.state='normal'
 		self.historyBar.add_widget(ntool)
 		if len(self.historyBar.children)>5:
 			self.historyBar.remove_widget(self.historyBar.children[-1])
