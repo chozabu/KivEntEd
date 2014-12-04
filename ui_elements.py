@@ -885,9 +885,9 @@ class MainTools(FloatLayout):
 					shape.elasticity = fval
 				self.gameref.reindexEnt(ent)
 
-	def on_rad_change(self, instance, value):
+	def on_rad_change(self, instance, value=None):
+		newrad = max(float(instance.text),.1)
 		self.inputPreview.text = instance.text
-		newrad = float(value)
 		print "rad change", newrad
 		if self.selectedItem and self.selectedEntity:
 			self.selectedItem.radius = newrad
@@ -920,10 +920,10 @@ class MainTools(FloatLayout):
 		for ent in self.selectedEntitys:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.height = newval
-	def on_width_change(self, instance, value):
+	def on_width_change(self, instance, value=None):
+		newrad = max(float(instance.text),.1)
 		self.inputPreview.text = instance.text
 		space = self.gameref.space
-		newrad = float(value)
 		shape = self.selectedItem
 		if shape and self.selectedEntity:
 			newshape = cy.BoxShape(shape.body, newrad, shape.height)
@@ -938,10 +938,10 @@ class MainTools(FloatLayout):
 			self.selectedItem = newshape
 			self.selectedEntity.renderer.width = newrad
 
-	def on_height_change(self, instance, value):
+	def on_height_change(self, instance, value=None):
+		newrad = max(float(instance.text),.1)
 		self.inputPreview.text = instance.text
 		space = self.gameref.space
-		newrad = float(value)
 		shape = self.selectedItem
 		if shape and self.selectedEntity:
 			newshape = cy.BoxShape(shape.body, shape.width, newrad)
@@ -1049,14 +1049,14 @@ class MainTools(FloatLayout):
 				if shape.__class__.__name__ == "Circle":
 					cs = CircleSettings()
 					cs.radiusLabel.text = "%0.2f" % shape.radius
-					cs.radiusLabel.bind(text=self.on_rad_change)
+					cs.radiusLabel.bind(on_text_validate=self.on_rad_change)
 					self.selectedMenu.shapeInfo.add_widget(cs)
 				elif shape.__class__.__name__ == "BoxShape":
 					bs = BoxSettings()
 					bs.widthLabel.text = "%0.2f" % shape.width
 					bs.heightLabel.text = "%0.2f" % shape.height
-					bs.widthLabel.bind(text=self.on_width_change)
-					bs.heightLabel.bind(text=self.on_height_change)
+					bs.widthLabel.bind(on_text_validate=self.on_width_change)
+					bs.heightLabel.bind(on_text_validate=self.on_height_change)
 					self.selectedMenu.shapeInfo.add_widget(bs)
 				#elif shape.__class__.__name__ == "Poly":
 
