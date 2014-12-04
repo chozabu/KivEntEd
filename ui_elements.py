@@ -46,17 +46,18 @@ class PlainButton(Button):
 		sres = super(PlainButton, self).on_touch_down(touch)
 		print "pb=", sres
 		return sres
-class colpicker(Label, ButtonBehavior):
-	col = ListProperty([1,1,1,1])
+class colpicker(Button):
+	col = ListProperty([1,0,1,1])
 	def __init__(self, **kwargs):
 		super(colpicker, self).__init__()
+		self.background_normal = ""
 		self.cpicker = ColorPicker()
 		self.cpup = Popup(title="Pick Color Tint",
 			  content=self.cpicker,
 			  size_hint=(0.8, 0.8),
 			  on_dismiss=self.picker_closed)
 
-	def on_press(self, touch):
+	def on_press(self):
 		self.cpicker.color=self.col
 		self.cpup.open()
 	def picker_closed(self,instance):

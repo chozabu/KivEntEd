@@ -72,13 +72,14 @@ TestGame:
 <colpicker>
     #pup:pup
     #on_touch_down:pup.open()
-    canvas.before:
-        Color:
-            rgba: self.col
-        Rectangle:
-            # self here refers to the widget i.e BoxLayout
-            pos: self.pos
-            size: self.size
+#    canvas.before:
+#        Color:
+#            rgba: self.col
+#        Rectangle:
+#            # self here refers to the widget i.e BoxLayout
+#            pos: self.pos
+#            size: self.size
+    background_color: self.col
     #Popup:
     #    id:pup
     #    ColorPicker:
