@@ -24,14 +24,14 @@ serverURL = 'http://www.kiventedserve.chozabu.net'
 #if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 class FloatInput(TextInput):
-	def delete_selection(self, from_undo=False):
+	'''def delete_selection(self, from_undo=False):
 		if self.selection_text == self.text:
 			self.text = '0'
 		else: super(FloatInput, self).delete_selection(from_undo=from_undo)
 	def do_backspace(self, from_undo=False, mode='bkspc'):
 		if len(self.text)<2:
 			self.text = '0'
-		else: super(FloatInput, self).do_backspace(from_undo=from_undo, mode=mode)
+		else: super(FloatInput, self).do_backspace(from_undo=from_undo, mode=mode)'''
 
 
 	def insert_text(self, substring, from_undo=False):
