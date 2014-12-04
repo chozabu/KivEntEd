@@ -199,7 +199,7 @@ class uploads(BoxLayout):
 		params = urllib.urlencode({
 		'author':self.userName.text, 'passHash': self.password.text,
 		'name':lname,"levelData":json.dumps(updata),
-		"sshot":base64.b64encode(open(lname+".png", 'r').read())
+		"sshot":base64.b64encode(open(self.screenShot.source, 'r').read())
 		})
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
