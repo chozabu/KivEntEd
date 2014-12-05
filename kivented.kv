@@ -585,11 +585,11 @@ TestGame:
                 size_hint_y: None
                 row_default_height: '30sp'
                 row_force_default: False
-                id: rootMenu
                 orientation: 'vertical'
                 padding: 4
                 #height: root.height
                 height: self.minimum_height
+                id: rootMenu
                 Button:
                     text: 'File'
                     on_press: root.changel2menu(root.fileMenu)
@@ -684,27 +684,33 @@ TestGame:
                     id: Button
                     text: 'scripts'
                     on_press: root.scriptsPressed(self)
-        BoxLayout:
+        ScrollView:
             id: entityMenu
-            orientation: 'vertical'
-            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
-            padding: 4
-            height: root.height
-            ToggleButton:
-                group: 'ToolGroup'
-                id: startButton
-                text: 'Start'
-                on_press: root.setTool("start")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: endButton
-                text: 'End'
-                on_press: root.setTool("end")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: blankButton
-                text: 'Blank'
-                on_press: root.setTool("blank")
+            GridLayout:
+                cols: 1
+                spacing: 4
+                size_hint_y: None
+                row_default_height: '30sp'
+                row_force_default: False
+                orientation: 'vertical'
+                padding: 4
+                #height: root.height
+                height: self.minimum_height
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: startButton
+                    text: 'Start'
+                    on_press: root.setTool("start")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: endButton
+                    text: 'End'
+                    on_press: root.setTool("end")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: blankButton
+                    text: 'Blank'
+                    on_press: root.setTool("blank")
         BoxLayout:
             id: polyMenu
             orientation: 'vertical'
@@ -800,37 +806,45 @@ TestGame:
                     value:4
                     step:1.
                     #on_value: root.brush_size_changed(self.value)
-        BoxLayout:
+        ScrollView:
             id: primMenu
-            orientation: 'vertical'
-            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
-            padding: 4
-            height: root.height
-            ToggleButton:
-                group: 'ToolGroup'
-                id: circleButton
-                text: 'Circle'
-                on_press: root.setTool("circle")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: squareButton
-                text: 'Square'
-                on_press: root.setTool("square")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: boxButton
-                text: 'Box'
-                on_press: root.setTool("box")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: linesButton
-                text: 'Lines'
-                on_press: root.setTool("draw")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: plankButton
-                text: 'Plank'
-                on_press: root.setTool("plank")
+            GridLayout:
+                cols: 1
+                spacing: 4
+                size_hint_y: None
+                row_default_height: '30sp'
+                row_force_default: False
+                orientation: 'vertical'
+                padding: 4
+                #height: root.height
+                height: self.minimum_height
+                Widget:
+                Widget:
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: circleButton
+                    text: 'Circle'
+                    on_press: root.setTool("circle")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: squareButton
+                    text: 'Square'
+                    on_press: root.setTool("square")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: boxButton
+                    text: 'Box'
+                    on_press: root.setTool("box")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: linesButton
+                    text: 'Lines'
+                    on_press: root.setTool("draw")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: plankButton
+                    text: 'Plank'
+                    on_press: root.setTool("plank")
         BoxLayout:
             id: prefabMenu
             orientation: 'vertical'
@@ -961,12 +975,24 @@ TestGame:
             pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
             padding: 4
             height: root.height
-        BoxLayout:
+        ScrollView:
             id: levelsMenu
-            orientation: 'vertical'
-            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
-            padding: 4
-            height: root.height
+            lmcontent: lmcontent
+            GridLayout:
+                id: lmcontent
+                cols: 1
+                spacing: 4
+                size_hint_y: None
+                row_default_height: '30sp'
+                row_force_default: False
+                orientation: 'vertical'
+                padding: 4
+                #height: root.height
+                height: self.minimum_height
+            #orientation: 'vertical'
+            #pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
+            #padding: 4
+            #height: root.height
         BoxLayout:
             id: customPrefabsMenu
             orientation: 'vertical'

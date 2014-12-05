@@ -481,11 +481,11 @@ class MainTools(FloatLayout):
 		self.setTool('paste-group')
 	def customlvlPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
-		self.levelsMenu.clear_widgets()
+		self.levelsMenu.lmcontent.clear_widgets()
 		for levelname in levels:
 			newb = Button(text=levelname, font_size=14)
 			newb.bind(on_press=self.loadCustom)
-			self.levelsMenu.add_widget(newb)
+			self.levelsMenu.lmcontent.add_widget(newb)
 		self.changel3menu(self.levelsMenu)
 	def customgroupPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"groups/*.json")]
