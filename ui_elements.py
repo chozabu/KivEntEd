@@ -426,7 +426,8 @@ class MainTools(FloatLayout):
 		self.currentTool = ""
 		self.testsave = []
 		self.gameref = None
-		self.entcpy = None #item on the clipboard
+		self.entcpy = None #item on the clipboard - removeme
+		self.entscpy = None #item on the clipboard
 		self.fireText = True
 		self.cpointids = []
 		#self.exampleLevels
