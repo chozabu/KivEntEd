@@ -575,7 +575,8 @@ TestGame:
     BoxLayout:
         id: leftMenu
         momemButton:momemButton
-        size_hint: (.15, 1)
+        size_hint: (None, 1)
+        width: '100sp'
         pos_hint: {'x': 0., 'y': .0}
         orientation: 'horizontal'
         ScrollView:
@@ -1032,7 +1033,7 @@ TestGame:
                 text: 'Save As...'
                 on_press: root.saveAsPressed(self)
             Button:
-                text: 'Export Wheelz'
+                text: 'Export\nWheelz'
                 on_press: root.wheelzPressed(self)
             Button:
                 text: 'Download'

@@ -1212,20 +1212,26 @@ class MainTools(FloatLayout):
 	def changel2menu(self, newMenu):
 		if newMenu in self.leftMenu.children:
 			self.clearl2()
-			self.leftMenu.size_hint_x = .1
+			self.leftMenu.size_hint_x = None
+			self.leftMenu.width = '100sp'
 		else:
 			self.clearl2()
 			self.leftMenu.add_widget(newMenu)
-			self.leftMenu.size_hint_x = .2
+			self.leftMenu.size_hint_x = None
+			self.leftMenu.width = '200sp'
 
 	def changel3menu(self, newMenu):
 		if newMenu in self.leftMenu.children:
 			self.clearl3()
-			self.leftMenu.size_hint_x = .2
+			#self.leftMenu.size_hint_x = .2
+			self.leftMenu.size_hint_x = None
+			self.leftMenu.width = '200sp'
 		else:
 			self.clearl3()
 			self.leftMenu.add_widget(newMenu)
-			self.leftMenu.size_hint_x = .3
+			#self.leftMenu.size_hint_x = .3
+			self.leftMenu.size_hint_x = None
+			self.leftMenu.width = '300sp'
 
 
 	def massPressed(self, instance):
