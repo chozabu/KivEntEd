@@ -299,14 +299,14 @@ class downloads(BoxLayout):
 		print "wait over"
 	def got_level(self, info, result):
 		print "got level"
-		print "info=",info
-		print "result=",result
+		#print "info=",info
+		#print "result=",result
 		rd = json.loads(result)
 		dd = json.loads(rd['data'])
 		print "--------------"
-		print dd
-		for i in dd:
-			print i, dd[i]
+		#print dd
+		#for i in dd:
+		#	print i, dd[i]
 		self.mtref.gameref.clearAll()
 		self.mtref.gameref.serials.loadFromDict(dd)
 		self.mtref.nameBox.text = info.levelname
