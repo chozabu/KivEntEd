@@ -436,6 +436,7 @@ TestGame:
                 row_default_height: '30sp'
                 row_force_default: False
                 id: selectedMenu
+                height: self.minimum_height
                 selectedLabel: selectedLabel
                 cpicker:cpicker
                 xposLabel: xposLabel
@@ -444,7 +445,6 @@ TestGame:
                 yvelLabel: yvelLabel
                 angleLabel: angleLabel
                 shapeInfo: shapeInfo
-                height: self.minimum_height
                 frictionLabel: frictionLabel
                 massLabel: massLabel
                 elasLabel: elasLabel
@@ -576,107 +576,114 @@ TestGame:
         id: leftMenu
         momemButton:momemButton
         size_hint: (.15, 1)
+        pos_hint: {'x': 0., 'y': .0}
         orientation: 'horizontal'
-        BoxLayout:
-            id: rootMenu
-            orientation: 'vertical'
-            pos_hint: {'x': 0., 'y': 1.0 - self.size_hint[1]}
-            padding: 4
-            height: root.height
-            Button:
-                text: 'File'
-                on_press: root.changel2menu(root.fileMenu)
-            Button:
-                text: 'Settings'
-                on_press: root.changel2menu(root.settingsMenu)
-            Label:
-                text: 'Quick'
+        ScrollView:
+            GridLayout:
+                cols: 1
+                spacing: 4
                 size_hint_y: None
-                height: self.font_size+6
-                text_size: (self.width, self.height)
-            Button:
-                text: 'Quick Load'
-                on_press: root.loadPressed(self)
-            Button:
-                text: 'Quick Save'
-                on_press: root.savePressed(self)
-            Label:
-                text: 'Create'
-                size_hint_y: None
-                height: self.font_size+6
-                text_size: (self.width, self.height)
-            Button:
-                text: 'Object'
-                on_press: root.changel2menu(root.createMenu)
-            Button:
-                text: 'Start/End'
-                on_press: root.changel2menu(root.entityMenu)
-            Button:
-                id: joinButton
-                text: 'Joint'
-                on_press: root.changel2menu(root.joinMenu)
-            #ToggleButton:
-            #    group: 'ToolGroup'
-            #    id: pasteButton
-            #    text: 'Paste'
-            #    on_press: root.setTool("paste")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: pasteGButton
-                text: 'Paste'
-                on_press: root.setTool("paste-group")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: importGButton
-                text: 'Prefab'
-                on_press: root.changel2menu(root.prefabMenu)
-            Label:
-                text: 'Interact:'
-                size_hint_y: None
-                height: self.font_size+6
-                text_size: (self.width, self.height)
-            ToggleButton:
-                group: 'ToolGroup'
-                id: camButton
-                text: 'Cam/Select'
-                on_press: root.setTool("camera")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: sboxButton
-                text: 'Select Box'
-                on_press: root.setTool("select-box")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: vortexButton
-                text: 'Vortex'
-                on_press: root.setTool("vortex")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: dragButton
-                text: 'Drag'
-                on_press: root.setTool("drag")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: rotateButton
-                text: 'Rotate'
-                on_press: root.setTool("rotate")
-            ToggleButton:
-                group: 'ToolGroup'
-                id: deleteButton
-                text: 'Delete'
-                on_press: root.setTool("del")
-            ToggleButton:
-                id: playButton
-                text: 'Pause'
-                on_press: root.playPressed(self)
-            ToggleButton:
-                id: momemButton
-                text: 'NoMomentum'
-                on_press: root.momemPressed(self)
-            Button:
-                id: Button
-                text: 'scripts'
-                on_press: root.scriptsPressed(self)
+                row_default_height: '30sp'
+                row_force_default: False
+                id: rootMenu
+                orientation: 'vertical'
+                padding: 4
+                #height: root.height
+                height: self.minimum_height
+                Button:
+                    text: 'File'
+                    on_press: root.changel2menu(root.fileMenu)
+                Button:
+                    text: 'Settings'
+                    on_press: root.changel2menu(root.settingsMenu)
+                Label:
+                    text: 'Quick'
+                    size_hint_y: None
+                    height: self.font_size+6
+                    text_size: (self.width, self.height)
+                Button:
+                    text: 'Quick Load'
+                    on_press: root.loadPressed(self)
+                Button:
+                    text: 'Quick Save'
+                    on_press: root.savePressed(self)
+                Label:
+                    text: 'Create'
+                    size_hint_y: None
+                    height: self.font_size+6
+                    text_size: (self.width, self.height)
+                Button:
+                    text: 'Object'
+                    on_press: root.changel2menu(root.createMenu)
+                Button:
+                    text: 'Start/End'
+                    on_press: root.changel2menu(root.entityMenu)
+                Button:
+                    id: joinButton
+                    text: 'Joint'
+                    on_press: root.changel2menu(root.joinMenu)
+                #ToggleButton:
+                #    group: 'ToolGroup'
+                #    id: pasteButton
+                #    text: 'Paste'
+                #    on_press: root.setTool("paste")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: pasteGButton
+                    text: 'Paste'
+                    on_press: root.setTool("paste-group")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: importGButton
+                    text: 'Prefab'
+                    on_press: root.changel2menu(root.prefabMenu)
+                Label:
+                    text: 'Interact:'
+                    size_hint_y: None
+                    height: self.font_size+6
+                    text_size: (self.width, self.height)
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: camButton
+                    text: 'Cam/Select'
+                    on_press: root.setTool("camera")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: sboxButton
+                    text: 'Select Box'
+                    on_press: root.setTool("select-box")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: vortexButton
+                    text: 'Vortex'
+                    on_press: root.setTool("vortex")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: dragButton
+                    text: 'Drag'
+                    on_press: root.setTool("drag")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: rotateButton
+                    text: 'Rotate'
+                    on_press: root.setTool("rotate")
+                ToggleButton:
+                    group: 'ToolGroup'
+                    id: deleteButton
+                    text: 'Delete'
+                    on_press: root.setTool("del")
+                ToggleButton:
+                    id: playButton
+                    text: 'Pause'
+                    on_press: root.playPressed(self)
+                ToggleButton:
+                    id: momemButton
+                    text: 'NoMomentum'
+                    on_press: root.momemPressed(self)
+                Button:
+                    id: Button
+                    text: 'scripts'
+                    on_press: root.scriptsPressed(self)
         BoxLayout:
             id: entityMenu
             orientation: 'vertical'
