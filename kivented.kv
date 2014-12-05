@@ -582,12 +582,12 @@ TestGame:
         ScrollView:
             GridLayout:
                 cols: 1
-                spacing: 4
+                spacing: 1
                 size_hint_y: None
                 row_default_height: '30sp'
                 row_force_default: False
                 orientation: 'vertical'
-                padding: 4
+                padding: 1
                 #height: root.height
                 height: self.minimum_height
                 id: rootMenu
@@ -605,6 +605,9 @@ TestGame:
                 Button:
                     text: 'Quick Load'
                     on_press: root.loadPressed(self)
+                Widget:
+                    size_hint_y: .001
+                    height: 1
                 Button:
                     text: 'Quick Save'
                     on_press: root.savePressed(self)
