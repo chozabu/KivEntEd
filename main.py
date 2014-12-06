@@ -1004,14 +1004,16 @@ class TestGame(Widget):
 
 		if currentTool == "start":
 			if self.startID < 0:
-				self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb")
+				stype = self.scripty.add_col_type('start')
+				self.startID = self.create_circle(pos, mass=0, radius=30, texture="orb", collision_type=stype)
 			else:
 				ent = self.gameworld.entities[self.startID]
 				ent.physics.body.position = pos
 				self.reindexEnt(ent)
 		if currentTool == "end":
 			if self.finishID < 0:
-				self.finishID = self.create_circle(pos, mass=0, radius=30, texture="checksphere")
+				stype = self.scripty.add_col_type('finish')
+				self.finishID = self.create_circle(pos, mass=0, radius=30, texture="checksphere", collision_type=stype)
 			else:
 				ent = self.gameworld.entities[self.finishID]
 				ent.physics.body.position = pos

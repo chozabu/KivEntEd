@@ -46,6 +46,8 @@ class ObjScripts():
 		self.add_col_type('default')
 		self.add_col_type('vortex')
 		self.add_col_type('physzone')
+		self.add_col_type('start')
+		self.add_col_type('finish')
 		self.collision_handlers = {
 			'vortex':{
 				'default':{'pre_solve':'grav2first'},
@@ -54,9 +56,19 @@ class ObjScripts():
 			},
 			'physzone':{
 				'default':{'pre_solve':'physicsZone'}
+			},
+			'start':{
+				'default':{'pre_solve':'startScript'}
+			},
+			'finish':{
+				'default':{'pre_solve':'endScript'}
 			}
 		}
 		self.loadHandlersFromDict(self.collision_handlers)
+	def startScript(self, space, arbiter):
+		return False
+	def endScript(self, space, arbiter):
+		return False
 	def getHandlersForType(self, ctype):
 		ctype = self.collision_types[ctype]
 		results = []
