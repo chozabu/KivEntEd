@@ -837,7 +837,7 @@ class TestGame(Widget):
 				camera_pos = viewport.camera_pos
 				mod=-.00001
 				camera_pos = (camera_pos[0]*mod,camera_pos[1]*mod)
-				tex_coords=self.calcuv(camera_pos[0],camera_pos[1])
+				tex_coords=self.calcuv(camera_pos[0],-camera_pos[1])
 				self.bgrect.tex_coords = tex_coords
 			else:
 				screen_mid = (viewport.size[0]*0.5,viewport.size[1]*0.5)
