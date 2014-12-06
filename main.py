@@ -98,10 +98,27 @@ class TestGame(Widget):
 		size = Window.size
 		with self.canvas.before:
 			#Color(0.5, 0.65, 0.95)
-			self.bgrect = Rectangle(source='sprites/bgm.jpg', size=size)
+			#amesh = Mesh(vertices=self.calcPoints(size), mode='triangle_strip')
+			self.bgrect = Rectangle(source='sprites/bgm.jpg', size=size, tex_coords=self.calcuv(0.8,0.8))
+			self.bgrect.texture.wrap = 'repeat'
 		Window.bind(on_resize=self.redogb)
+	def calcPoints(self, s):
+		return [
+			0,0,0,0,
+		    10,0,1,0,
+		    10,10,1,1,
+		    0,10,0,1
+		]
+	def calcuv(self,xo,yo):
+
+		return [0+xo,.5+yo,
+		        .5+xo,.5+yo,
+		        .5+xo,.0+yo,
+		        0+xo,.0+yo
+		]
 	def redogb(self, a,b,c):
 		size = Window.size
+		#self.bgrect.vertices = self.calcPoints(size)
 		self.bgrect.size =Window.size
 
 	def init_game(self, dt):
@@ -817,6 +834,11 @@ class TestGame(Widget):
 				#super(TestGame, self).on_touch_move(touch)
 				viewport.camera_pos[0]-=xd
 				viewport.camera_pos[1]-=yd
+				camera_pos = viewport.camera_pos
+				mod=-.00001
+				camera_pos = (camera_pos[0]*mod,camera_pos[1]*mod)
+				tex_coords=self.calcuv(camera_pos[0],camera_pos[1])
+				self.bgrect.tex_coords = tex_coords
 			else:
 				screen_mid = (viewport.size[0]*0.5,viewport.size[1]*0.5)
 				#screen_mid = ctouch['screenpos']
@@ -1177,7 +1199,8 @@ class TestGame(Widget):
 						spline_ent_id = self.update_poly(ent)
 						spline_ent = self.getEntFromID(spline_ent_id)
 						spline_ent.splineshape = ss
-						shape = spline_ent.physics.shapes[0]
+						if hasattr(ent, 'physics'):
+							shape = spline_ent.physics.shapes[0]
 					#self.create_poly((0,0),pg,ent.entity_id)
 
 		if currentTool == 'polysub':
