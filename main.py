@@ -1317,6 +1317,13 @@ class TestGame(Widget):
 				ep.x,ep.y=pos
 			self.mainTools.setEnt(ent)
 
+
+
+		if touch.is_double_tap and currentTool=='camera':
+			ent = self.mainTools.selectedEntity
+			if ent and hasattr(ent, 'splineshape'):
+				self.mainTools.setTool("splineed")
+
 		canselect = currentTool in ['camera', 'drag','rotate', 'delete']
 		if currentTool == 'splineed' and self.mainTools.selectedEntity == None:canselect=True
 		if canselect:
