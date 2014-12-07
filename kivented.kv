@@ -90,6 +90,15 @@ TestGame:
     multiline: False
 <tbox>
     multiline: False
+<LevelList>
+    lmcontent: lmcontent
+    ScrollView:
+        StackLayout:
+            id: lmcontent
+            padding: 10
+            spacing: 5
+            size_hint: 1, None
+            height: self.minimum_height
 <CircleSettings>
     radiusLabel:radiusLabel
     size_hint_y:None
@@ -1031,7 +1040,7 @@ TestGame:
                 on_press: root.customlvlPressed()
             Button:
                 text: 'Examples'
-                on_press: root.changel3menu(root.examplesMenu)
+                on_press: root.examplelvlPressed()
             Button:
                 text: 'Save As...'
                 on_press: root.saveAsPressed(self)

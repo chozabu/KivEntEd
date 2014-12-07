@@ -40,6 +40,68 @@ class FloatInput(TextInput):
 		except ValueError:
 			if substring != '-':substring=""
 		return super(FloatInput, self).insert_text(substring, from_undo=from_undo)
+class LevelList(BoxLayout):
+	def __init__(self, mtref, leveldir, ssdir, **kwargs):
+		super(LevelList, self).__init__(**kwargs)
+		self.mtref = mtref
+		self.gameref = mtref.gameref
+		self.leveldir = leveldir
+		self.ssdir = ssdir
+		self.listlvls()
+	def export_pressed(self, instance):
+		if not self.selectedEntitys:return
+		entscpy = self.gameref.serials.jsonserials.exportCustomDict(self.selectedEntitys)
+		self.entscpy = json.dumps(entscpy)
+
+		ti=TextInput(text="",multiline=False)
+		popup = Popup(content=ti,
+		              size_hint=(0.3, 0.2),title='Enter Entity Name')
+		popup.bind(on_dismiss=self.on_got_export_name)
+		popup.open()
+	def on_got_export_name(self, instance):
+		gameref = self.gameref
+		newname = instance.content.text
+		self.gameref.serials.jsonserials.writeSerialisedData(self.entscpy, newname+'.json')
+	def loadExample(self, instance):
+		filename = os.path.dirname(__file__)+"/examples/"+instance.text+".json"
+		self.gameref.clearAll()
+		self.gameref.serials.loadExtJSON(filename)
+		self.mtref.nameBox.text = instance.text
+	def loadCustom(self, instance):
+		self.gameref.clearAll()
+		self.gameref.serials.loadJSON(instance.text+".json")
+		self.mtref.nameBox.text = instance.text
+	def loadCustomGroup(self, instance):
+		newname = instance.text
+		self.entscpy = self.gameref.serials.jsonserials.readSerialisedData(newname+'.json')
+		self.setTool('paste-group')
+	def loadExamplePrefab(self, instance):
+		newname = instance.text
+		self.entscpy = self.gameref.serials.jsonserials.readExampleSerialisedData(newname+'.json')
+		self.setTool('paste-group')
+	def listlvls(self):
+		#levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
+		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.leveldir+"*.json")]
+		#self.lmcontent.clear_widgets()
+		if 'example' in self.leveldir:
+			loadfunc = self.loadExample
+		else:
+			loadfunc = self.loadCustom
+		print levels
+		for levelname in levels:
+			bg = self.ssdir+levelname+".png"
+			print bg
+			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112, size_hint=(None,None))
+			newb.bind(on_press=loadfunc)
+			self.lmcontent.add_widget(newb)
+	def customgroupPressed(self):
+		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"groups/*.json")]
+		self.customPrefabsMenu.clear_widgets()
+		for levelname in levels:
+			newb = Button(text=levelname, font_size=14)
+			newb.bind(on_press=self.loadCustomGroup)
+			self.customPrefabsMenu.add_widget(newb)
+		self.changel3menu(self.customPrefabsMenu)
 
 class PlainButton(Button):
 	def on_touch_down(self, touch):
@@ -480,14 +542,24 @@ class MainTools(FloatLayout):
 		newname = instance.text
 		self.entscpy = self.gameref.serials.jsonserials.readExampleSerialisedData(newname+'.json')
 		self.setTool('paste-group')
+	def examplelvlPressed(self):
+		Popup(title="Pick Level",
+			  content=LevelList(self,os.path.dirname(__file__)+"/examples/", os.path.dirname(__file__)+"/thumbs/"),
+			  size_hint=(0.8, 0.8)).open()
 	def customlvlPressed(self):
+		Popup(title="Pick Level",
+			  content=LevelList(self,self.gameref.dataDir+"levels/", self.gameref.dataDir+"thumbs/"),
+			  size_hint=(0.8, 0.8)).open()
+		'''
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
 		self.levelsMenu.lmcontent.clear_widgets()
 		for levelname in levels:
-			newb = Button(text=levelname, font_size=14)
+			bg = self.gameref.dataDir+"thumbs/"+levelname+".png"
+			print bg
+			newb = Button(text=levelname, background_normal=bg, font_size=14)
 			newb.bind(on_press=self.loadCustom)
 			self.levelsMenu.lmcontent.add_widget(newb)
-		self.changel3menu(self.levelsMenu)
+		self.changel3menu(self.levelsMenu)'''
 	def customgroupPressed(self):
 		levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"groups/*.json")]
 		self.customPrefabsMenu.clear_widgets()
@@ -598,6 +670,7 @@ class MainTools(FloatLayout):
 
 	def savePressed(self, instance=None):
 		self.testsave = self.gameref.serials.exportJSON(self.nameBox.text+".json")
+		self.saveThumb()
 
 	def wheelzPressed(self, instance):
 		from kivy.utils import platform
