@@ -94,7 +94,7 @@ class Serials():
 				prd = {"texture": e.renderer.texture_key}
 			ed["renderer"] = prd
 		if hasattr(e, "position"):
-			pd = {"x": e.position.x, "y": e.position.y}
+			pd = {"x": e.position.x, "y": e.position.y, "z": e.position.z}
 			ed["position"] = pd
 		if hasattr(e, "rotate"):
 			rd = {"r": e.rotate.r}
@@ -242,6 +242,8 @@ class Serials():
 	def loadColors(self, s, e):
 		return tuple(s)
 	def loadPosition(self, s, e):
+		if 'z' in s:
+			return (s['x'],s['y'], s['z'])
 		return (s['x'],s['y'])
 	def loadRotate(self, s, e):
 		return s['r']

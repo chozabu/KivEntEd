@@ -10,7 +10,7 @@ varying vec2 tex_coord0;
 /* vertex attributes */
 attribute vec2     vPosition;
 attribute vec2     vTexCoords0;
-attribute vec2     vCenter;
+attribute vec3     vCenter;
 attribute float    vRotation;
 attribute vec4     vColor;
 attribute float    vScale;
@@ -32,9 +32,9 @@ void main (void) {
                     0.0, 0.0, 0.0, 1.0 );
   mat4 trans_mat = mat4(1.0, 0.0, 0.0, vCenter.x,
               0.0, 1.0, 0.0, vCenter.y,
-              0.0, 0.0, 1.0, 0.0,
+              0.0, 0.0, 1.0, -vCenter.z*.1-1.5,
               0.0, 0.0, 0.0, 1.0);
-  vec4 pos = vec4(vPosition.xy*vScale, 0.0, 1.0);
+  vec4 pos = vec4(vPosition.xy*vScale, 1.0, 1.0);
   vec4 trans_pos = pos * rot_mat * trans_mat;
   gl_Position = projection_mat * modelview_mat * trans_pos;
 

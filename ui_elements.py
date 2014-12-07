@@ -631,6 +631,8 @@ class MainTools(FloatLayout):
 					self.selectedMenu.xposLabel.text = "%0.2f" % ent.position.x
 				if not self.selectedMenu.yposLabel.focus:
 					self.selectedMenu.yposLabel.text = "%0.2f" % ent.position.y
+				if not self.selectedMenu.zposLabel.focus:
+					self.selectedMenu.zposLabel.text = "%0.2f" % ent.position.z
 			if hasattr(ent, 'rotate'):
 				#if not self.selectedMenu.angleLabel.focus:
 				tv = "%0.2f" % ent.rotate.r
@@ -776,6 +778,13 @@ class MainTools(FloatLayout):
 			shape.body.position = (shape.body.position.x, fval)
 			self.gameref.reindexEnt(self.selectedEntity)
 
+	def zposChanged(self, instance):
+		self.inputPreview.text = instance.text
+		fval = float(instance.text)
+		ent = self.selectedEntity
+		if ent:
+			ent.position.z = fval
+			self.gameref.reindexEnt(self.selectedEntity)
 	def angleChanged(self, instance):
 		self.inputPreview.text = instance.text
 		fval = float(instance.text)

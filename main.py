@@ -68,6 +68,10 @@ def cross3d(a, b):
 		 a[0]*b[1] - a[1]*b[0]]
 	return c
 
+from kivy.graphics.opengl import (glEnable, glBlendFunc, GL_SRC_ALPHA, GL_ONE,
+    GL_ZERO, GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA,
+    GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_DST_COLOR, GL_ONE_MINUS_DST_COLOR,
+    glDisable, GL_DEPTH_TEST)
 class TestGame(Widget):
 	def __init__(self, **kwargs):
 		self.dataDir = ""
@@ -99,9 +103,19 @@ class TestGame(Widget):
 		with self.canvas.before:
 			#Color(0.5, 0.65, 0.95)
 			#amesh = Mesh(vertices=self.calcPoints(size), mode='triangle_strip')
+			#glEnable(GL_DEPTH_TEST)
 			self.bgrect = Rectangle(source='sprites/bgm.jpg', size=size, tex_coords=self.calcuv(0.8,0.8))
 			self.bgrect.texture.wrap = 'repeat'
+		#	self.cb = Callback(self.setup_gl_context)
+		#with self.canvas.after:
+		#	self.cb = Callback(self.reset_gl_context)
+		#with self.canvas.after:
+			#glDisable(GL_DEPTH_TEST)
 		Window.bind(on_resize=self.redogb)
+	def setup_gl_context(self, *args):
+		glEnable(GL_DEPTH_TEST)
+	def reset_gl_context(self, *args):
+		glDisable(GL_DEPTH_TEST)
 	def calcPoints(self, s):
 		return [
 			0,0,0,0,
@@ -382,7 +396,7 @@ class TestGame(Widget):
 		print color
 		if texture == None: texture = "snow"
 		if do_physics == None: do_physics = True
-		pos = (pos[0],pos[1],random())
+		pos = (pos[0],pos[1],random()*10.)
 
 		if shape_type == 'box':
 			shape_dict = {
@@ -1465,8 +1479,8 @@ class TestGame(Widget):
 		return self.getWorldPosFromTuple((touch.x,touch.y))
 
 	def getWorldPosFromTuple(self, tup):
-
 		viewport = self.gameworld.systems['gameview']
+		tup=(tup[0]-viewport.size[0]/2.,tup[1]-viewport.size[1]/2.)
 		return tup[0]*viewport.camera_scale - viewport.camera_pos[0], tup[1]*viewport.camera_scale - viewport.camera_pos[1]
 
 	def update(self, dt):

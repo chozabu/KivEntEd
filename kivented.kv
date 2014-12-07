@@ -42,7 +42,9 @@ TestGame:
             do_scroll: True
             do_scroll_lock: False
             size: root.size
+            do_perspective: True
             #camera_scale: 2.0
+            camera_z: 0.5
         GameMap:
             system_id: 'map'
             map_size: root.size
@@ -450,6 +452,7 @@ TestGame:
                 cpicker:cpicker
                 xposLabel: xposLabel
                 yposLabel: yposLabel
+                zposLabel: zposLabel
                 xvelLabel: xvelLabel
                 yvelLabel: yvelLabel
                 angleLabel: angleLabel
@@ -480,6 +483,13 @@ TestGame:
                         id: yposLabel
                         text: "position"
                         on_text_validate: if root.fireText: root.yposChanged(self)
+                BoxLayout:
+                    Label:
+                        text: "z:"
+                    FloatInput:
+                        id: zposLabel
+                        text: "position"
+                        on_text_validate: if root.fireText: root.zposChanged(self)
                 BoxLayout:
                     Label:
                         text: "xvel:"
