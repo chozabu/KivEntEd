@@ -1219,6 +1219,8 @@ class MainTools(FloatLayout):
 		# Resize it.
 		img = img.resize((baseWidth, height), Image.BILINEAR)
 
+		img = img.transpose(Image.FLIP_TOP_BOTTOM)
+
 		# Save it back to disk.
 		img.save(filename)
 
