@@ -28,9 +28,9 @@ def collision_func(space, arbiter):
 	invrad = min(sqrt(invrad)*second_body.mass, 1000)
 
 	e1 = scripty.gameref.getEntFromID(first_body.data)
-	#if hasattr(e1, 'datadict'):
-	#	if 'forcemul' in e1.datadict:
-	invrad*=float(e1.datadict['forcemul'])/len(e1.physics.shapes)
+	if hasattr(e1, 'datadict'):
+		if 'forcemul' in e1.datadict:
+			invrad*=float(e1.datadict['forcemul'])/len(e1.physics.shapes)
 	second_body.apply_impulse(cy.Vec2d(uv.x*invrad, uv.y*invrad))
 	return False
 
