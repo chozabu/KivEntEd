@@ -900,13 +900,18 @@ class TestGame(Widget):
 					(self.gameworld.systems['physics'].update(0.00000001))
 					(self.gameworld.systems['renderer'].update(0.00000001))
 					#space.reindex_shape(shape)'''
-			for e in self.mainTools.selectedEntitys:
-				if hasattr(e, 'physics'):
-					e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
-				else:
-					e.position.x = e.position.x + dx
-					e.position.y = e.position.y + dy
-				self.reindexEnt(e)
+			ents = self.mainTools.selectedEntitys
+
+			if  not self.mainTools.paused and len(ents)==1:
+				pass
+			else:
+				for e in ents:
+					if hasattr(e, 'physics'):
+						e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
+					else:
+						e.position.x = e.position.x + dx
+						e.position.y = e.position.y + dy
+					self.reindexEnt(e)
 			#else:
 			#	ent = self.mainTools.selectedEntity#TODO alter position component here
 
@@ -1326,6 +1331,7 @@ class TestGame(Widget):
 
 		canselect = currentTool in ['camera', 'drag','rotate', 'delete']
 		if currentTool == 'splineed' and self.mainTools.selectedEntity == None:canselect=True
+		if currentTool == 'drag' and len(self.mainTools.selectedEntitys):canselect=False
 		if canselect:
 			if shape:
 				self.mainTools.setShape(shape)
