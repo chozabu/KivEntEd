@@ -396,7 +396,7 @@ class TestGame(Widget):
 		print color
 		if texture == None: texture = "snow"
 		if do_physics == None: do_physics = True
-		pos = (pos[0],pos[1],random()*10.)
+		#pos = (pos[0],pos[1],random()*10.)
 
 		if shape_type == 'box':
 			shape_dict = {
