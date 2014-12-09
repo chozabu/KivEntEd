@@ -259,6 +259,63 @@ class TestGame(Widget):
 		component_order = ['color', 'position', 'rotate', 'renderer', 'scale']
 		entityID = self.gameworld.init_entity(create_component_dict, component_order)
 		return entityID
+	def create_sel_box(self, pos=(0, 0), width=40, height=40, angle=0, texture="sheep", color=(1,1,1,.5)):
+		w2=width*.5
+		h2=height*.5
+		w2a=width*.52
+		h2a=height*.52
+		#0--1
+		#
+		#3--2
+		all_verts = [
+			[-w2, -h2, 0, 0, color[0], color[1], color[2], color[3]],#0
+			[w2, -h2, 1, 0, color[0], color[1], color[2], color[3]],
+			[w2, h2, 1, 1, color[0], color[1], color[2], color[3]],
+			[-w2, h2, 0, 1, color[0], color[1], color[2], color[3]],
+
+			[-w2a, -h2a, 0, 0, color[0], color[1], color[2], color[3]],#4
+			[w2a, -h2a, 1, 0, color[0], color[1], color[2], color[3]],
+			[w2a, h2a, 1, 1, color[0], color[1], color[2], color[3]],
+			[-w2a, h2a, 0, 1, color[0], color[1], color[2], color[3]],
+		]
+		ot = [
+			[0,1,4],
+		    [4,1,5],
+
+		    [1,2,5],
+		    [5,2,6],
+
+		    [2,3,6],
+		    [6,3,7],
+
+		    [3,0,7],
+		    [7,0,4],
+		]
+
+		vert_count=len(ot)
+		triangles=[]
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		render_system = self.gameworld.systems['renderer']
+		vert_mesh =  VertMesh(render_system.attribute_count,
+			vert_count, index_count)
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+
+
+		rdict = {#'texture': texture,
+			'vert_mesh': vert_mesh,
+			#'size': (64, 64),
+			'render': True}
+
+		create_component_dict = {
+			'renderer': rdict,
+			'position': pos, 'rotate': angle ,'color':color, 'scale':1.}
+		component_order = ['color', 'position', 'rotate', 'renderer', 'scale']
+		entityID = self.gameworld.init_entity(create_component_dict, component_order)
+		return entityID
 
 	def create_circle(self, pos, radius=6., mass=10., friction=1.0, elasticity=.5, angle=.0, x_vel=.0, y_vel=.0,
 					  angular_velocity=0., texture="sheep", selectNow=True, sensor = False, collision_type = 0,

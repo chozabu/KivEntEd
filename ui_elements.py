@@ -1083,7 +1083,7 @@ class MainTools(FloatLayout):
 					bbox = ent.polyshape.get_bbox()
 					width = bbox[1]-bbox[0]
 					height = bbox[2]-bbox[3]
-				entID = self.gameref.create_decoration(pos=(pos.x, pos.y),
+				entID = self.gameref.create_sel_box(pos=(pos.x, pos.y),
 				                                                 width=width*1.1+10, height=height*1.1+10,
 																texture='emptybox',angle=ent.rotate.r)
 				self.selectedEntitysBoxes.append(self.gameref.gameworld.entities[entID])
