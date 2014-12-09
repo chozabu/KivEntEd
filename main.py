@@ -965,17 +965,23 @@ class TestGame(Widget):
 			viewport = self.gameworld.systems['gameview']
 			dx = touch.dx*viewport.camera_scale
 			dy = touch.dy*viewport.camera_scale
-			'''if shape and (shape.body.is_static or self.mainTools.paused):
-				shape.body.position = (shape.body.position.x + dx, shape.body.position.y + dy)
-				self.reindexEntID(shape.body.data)
-				if self.mainTools.paused:
-					(self.gameworld.systems['physics'].update(0.00000001))
-					(self.gameworld.systems['renderer'].update(0.00000001))
-					#space.reindex_shape(shape)'''
 			ents = self.mainTools.selectedEntitys
 
-			if  not self.mainTools.paused and len(ents)==1:
+			if  not self.mainTools.paused and len(ents)==1 and (hasattr(ents[0], 'physics') and not ents[0].physics.body.is_static):
 				pass
+				'''e=ents[0]
+				if hasattr(e, 'physics'):
+					e.physics.body.position = (e.physics.body.position.x + dx, e.physics.body.position.y + dy)
+				else:
+					e.position.x = e.position.x + dx
+					e.position.y = e.position.y + dy
+				if shape and (shape.body.is_static or self.mainTools.paused):
+					shape.body.position = (shape.body.position.x + dx, shape.body.position.y + dy)
+					self.reindexEntID(shape.body.data)
+					if self.mainTools.paused:
+						(self.gameworld.systems['physics'].update(0.00000001))
+						(self.gameworld.systems['renderer'].update(0.00000001))
+						#space.reindex_shape(shape)'''
 			else:
 				for e in ents:
 					if hasattr(e, 'physics'):
