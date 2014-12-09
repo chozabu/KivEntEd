@@ -1192,9 +1192,10 @@ class MainTools(FloatLayout):
 		Clock.schedule_once(self.clear_inputPreview,5)
 	def clear_inputPreview(self, dt):
 		self.inputPreview.text=""
-	def delSelPressed(self, instance):
-		if self.selectedEntity and self.gameref:
-			self.gameref.delObj(self.selectedEntity.entity_id)
+	def delSelPressed(self, instance=None):
+		if self.gameref:
+			for e in self.selectedEntitys:
+				self.gameref.delObj(e.entity_id)
 			self.setEnt(None)
 	def sensorPressed(self, instance):
 		if self.selectedItem and self.gameref:
