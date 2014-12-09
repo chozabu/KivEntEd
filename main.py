@@ -1611,9 +1611,9 @@ class TestGame(Widget):
 
 	def setup_states(self):
 		self.gameworld.add_state(state_name='main',
-								 systems_added=['color', 'rotate', 'renderer', 'renderer', 'scale'],
+								 systems_added=['color', 'rotate', 'renderer', 'scale'],
 								 systems_removed=[], systems_paused=[],
-								 systems_unpaused=['color', 'rotate', 'renderer', 'renderer', 'scale'],
+								 systems_unpaused=['color', 'rotate', 'renderer', 'scale'],
 								 screenmanager_screen='main')
 
 	def set_state(self):
