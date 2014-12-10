@@ -518,11 +518,17 @@ TestGame:
                         id: angleLabel
                         text: "angle"
                         on_text_validate: if root.fireText: root.angleChanged(self)
-                Spinner:
+                Button:
                     id: texLabel
-                    text: "texture"
-                    on_text: if root.fireText: root.textureChanged(self)
-                    values: root.sprite_list
+                    text: 'texture'
+                    #background_normal: 'atlas://assets/myatlas/sheep'
+                    border: (0,0,0,0)
+                    on_press: root.sel_texture_pressed()
+#                Spinner:
+#                    id: texLabel
+#                    text: "texture"
+#                    on_text: if root.fireText: root.textureChanged(self)
+#                    values: root.sprite_list
                 BoxLayout:
                     size_hint_y: None
                     height: 60

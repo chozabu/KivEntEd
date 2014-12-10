@@ -576,6 +576,10 @@ class MainTools(FloatLayout):
 		Popup(title="Pick Texture",
 			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.tex_clicked),
 			  size_hint=(0.8, 0.8)).open()
+	def sel_texture_pressed(self):
+		Popup(title="Pick Texture",
+			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.textureChanged),
+			  size_hint=(0.8, 0.8)).open()
 	def bg_clicked(self, instance):
 		levelname = instance.text
 		bg = instance.background_normal
@@ -600,15 +604,23 @@ class MainTools(FloatLayout):
 			if hasattr(x, 'dismiss'):
 				break
 		x.dismiss()
-	'''def textureChanged(self, instance):
+	def textureChanged(self, instance):
 		ent = self.selectedEntity
-		if hasattr(ent, 'renderer'):
-			ent.renderer.texture_key = instance.text
-			self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		#if hasattr(ent, 'renderer'):
+		#	ent.renderer.texture_key = instance.text
+		#	self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		self.selectedMenu.texLabel.text = instance.text
+		#self.selectedMenu.texLabel.background_normal = instance.background_normal
 		for ent in self.selectedEntitys:
 			if hasattr(ent, 'renderer'):
 				ent.renderer.texture_key = instance.text
-				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)'''
+				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		x=instance
+		for i in range(8):
+			x=x.parent
+			if hasattr(x, 'dismiss'):
+				break
+		x.dismiss()
 	def customlvlPressed(self):
 		Popup(title="Pick Level",
 			  content=LevelList(self,self.gameref.dataDir+"levels/", self.gameref.dataDir+"thumbs/"),
@@ -884,15 +896,6 @@ class MainTools(FloatLayout):
 			self.gameref.update_poly(ent)
 			#self.gameref.create_poly((0,0),ent.polyshape,ent.entity_id)
 
-	def textureChanged(self, instance):
-		ent = self.selectedEntity
-		if hasattr(ent, 'renderer'):
-			ent.renderer.texture_key = instance.text
-			self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
-		for ent in self.selectedEntitys:
-			if hasattr(ent, 'renderer'):
-				ent.renderer.texture_key = instance.text
-				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
 
 	def redChanged(self, strval):
 		self.inputPreview.text = strval
