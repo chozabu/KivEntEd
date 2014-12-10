@@ -40,6 +40,33 @@ class FloatInput(TextInput):
 		except ValueError:
 			if substring != '-':substring=""
 		return super(FloatInput, self).insert_text(substring, from_undo=from_undo)
+class BGList(BoxLayout):
+	def __init__(self, mtref, ssdir, **kwargs):
+		super(BGList, self).__init__(**kwargs)
+		self.mtref = mtref
+		self.gameref = mtref.gameref
+		self.ssdir = ssdir
+		self.listlvls()
+	def listlvls(self):
+		#levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
+		levels = [ os.path.basename(f)[:-4] for f in glob.glob(self.ssdir+"*.png")]
+		#self.lmcontent.clear_widgets()
+		loadfunc = self.setBG
+		print levels
+		for levelname in levels:
+			bg = self.ssdir+levelname+".png"
+			print bg
+			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112, size_hint=(None,None))
+			newb.bind(on_press=loadfunc)
+			self.lmcontent.add_widget(newb)
+	def setBG(self, instance):
+		levelname = instance.text
+		bg = self.ssdir+levelname+".png"
+		print bg
+		self.gameref.bgrect.source = bg
+		self.gameref.bgrect.texture.wrap = 'repeat'
+		#self.gameref.serials.loadJSON(instance.text+".json")
+		#self.mtref.nameBox.text = instance.text
 class LevelList(BoxLayout):
 	def __init__(self, mtref, leveldir, ssdir, **kwargs):
 		super(LevelList, self).__init__(**kwargs)
@@ -545,6 +572,10 @@ class MainTools(FloatLayout):
 	def examplelvlPressed(self):
 		Popup(title="Pick Level",
 			  content=LevelList(self,os.path.dirname(__file__)+"/examples/", os.path.dirname(__file__)+"/thumbs/"),
+			  size_hint=(0.8, 0.8)).open()
+	def setBGPressed(self):
+		Popup(title="Pick BackGround",
+			  content=BGList(self,os.path.dirname(__file__)+"/sprites/"),
 			  size_hint=(0.8, 0.8)).open()
 	def customlvlPressed(self):
 		Popup(title="Pick Level",

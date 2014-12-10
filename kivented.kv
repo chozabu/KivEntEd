@@ -101,6 +101,15 @@ TestGame:
             spacing: 5
             size_hint: 1, None
             height: self.minimum_height
+<BGList>
+    lmcontent: lmcontent
+    ScrollView:
+        StackLayout:
+            id: lmcontent
+            padding: 10
+            spacing: 5
+            size_hint: 1, None
+            height: self.minimum_height
 <CircleSettings>
     radiusLabel:radiusLabel
     size_hint_y:None
@@ -1075,6 +1084,10 @@ TestGame:
                 #    text: 'Perspective'
                 #    size_hint: (1, .2)
                 #    on_press: root.toggle_perspective()
+                Button:
+                    text: 'background'
+                    size_hint: (1, .2)
+                    on_press: root.setBGPressed()
                 Label:
                     text: "Gravity"
                     size_hint: (1, .2)
