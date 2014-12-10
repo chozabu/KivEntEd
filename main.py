@@ -1198,6 +1198,7 @@ class TestGame(Widget):
 		self.lastlist = shapes
 
 
+		ent_cand = None
 		nopap = self.getNonPhysAtPoint(pos)
 		if len(nopap) >0: ent_cand = nopap[0]
 		if nopap==self.lastelist and nopap != []:
