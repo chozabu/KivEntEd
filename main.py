@@ -814,9 +814,9 @@ class TestGame(Widget):
 			return(lpos['x'],lpos['y'])
 		position=position-cy.Vec2d(ent.position.x,ent.position.y)
 		position.rotate(ent.rotate.r)
-		print "non-physics local testing"
+		#print "non-physics local testing"
 		return (position.x,position.y)
-		return pos
+		#return pos
 	def bworld(self, pos,ent):
 		position = cy.Vec2d(pos[0], pos[1])
 		if hasattr(ent, "physics"):
@@ -824,9 +824,9 @@ class TestGame(Widget):
 			return(lpos['x'],lpos['y'])
 		position.rotate(-ent.rotate.r)
 		position=position+cy.Vec2d(ent.position.x,ent.position.y)
-		print "non-physics global testing"
+		#print "non-physics global testing"
 		return (position.x,position.y)
-		return pos
+		#return pos
 	def on_touch_move(self, touch):
 		if touch.id not in self.touches: return
 		self.mainTools.on_touch_move(touch)
