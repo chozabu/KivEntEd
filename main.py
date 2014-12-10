@@ -1164,6 +1164,7 @@ class TestGame(Widget):
 		viewport = self.gameworld.systems['gameview']
 		camera_scale = viewport.camera_scale*sf
 		camera_scale = max(0.2, min(100, camera_scale))
+		print camera_scale
 		viewport.camera_scale=camera_scale
 		pap = self.getWorldPosFromTuple(pos)
 		diff = (pap[0]-pwp[0], pap[1]-pwp[1])
