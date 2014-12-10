@@ -40,33 +40,27 @@ class FloatInput(TextInput):
 		except ValueError:
 			if substring != '-':substring=""
 		return super(FloatInput, self).insert_text(substring, from_undo=from_undo)
-class BGList(BoxLayout):
-	def __init__(self, mtref, ssdir, **kwargs):
-		super(BGList, self).__init__(**kwargs)
+class ImageFolderList(BoxLayout):
+	def __init__(self, mtref, ssdir, click_func, **kwargs):
+		super(ImageFolderList, self).__init__(**kwargs)
 		self.mtref = mtref
 		self.gameref = mtref.gameref
 		self.ssdir = ssdir
+		self.click_func = click_func
 		self.listlvls()
 	def listlvls(self):
 		#levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
 		levels = [ os.path.basename(f)[:-4] for f in glob.glob(self.ssdir+"*.png")]
 		#self.lmcontent.clear_widgets()
-		loadfunc = self.setBG
+		loadfunc = self.click_func
 		print levels
 		for levelname in levels:
 			bg = self.ssdir+levelname+".png"
 			print bg
-			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112, size_hint=(None,None))
+			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112,
+			              size_hint=(None,None), border=(0,0,0,0))
 			newb.bind(on_press=loadfunc)
 			self.lmcontent.add_widget(newb)
-	def setBG(self, instance):
-		levelname = instance.text
-		bg = self.ssdir+levelname+".png"
-		print bg
-		self.gameref.bgrect.source = bg
-		self.gameref.bgrect.texture.wrap = 'repeat'
-		#self.gameref.serials.loadJSON(instance.text+".json")
-		#self.mtref.nameBox.text = instance.text
 class LevelList(BoxLayout):
 	def __init__(self, mtref, leveldir, ssdir, **kwargs):
 		super(LevelList, self).__init__(**kwargs)
@@ -118,7 +112,8 @@ class LevelList(BoxLayout):
 		for levelname in levels:
 			bg = self.ssdir+levelname+".png"
 			print bg
-			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112, size_hint=(None,None))
+			newb = Button(text=levelname, background_normal=bg, font_size=14, width=150,height=112,
+			              size_hint=(None,None), border=(0,0,0,0))
 			newb.bind(on_press=loadfunc)
 			self.lmcontent.add_widget(newb)
 	def customgroupPressed(self):
@@ -575,8 +570,45 @@ class MainTools(FloatLayout):
 			  size_hint=(0.8, 0.8)).open()
 	def setBGPressed(self):
 		Popup(title="Pick BackGround",
-			  content=BGList(self,os.path.dirname(__file__)+"/sprites/"),
+			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.bg_clicked),
 			  size_hint=(0.8, 0.8)).open()
+	def texture_pressed(self):
+		Popup(title="Pick Texture",
+			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.tex_clicked),
+			  size_hint=(0.8, 0.8)).open()
+	def bg_clicked(self, instance):
+		levelname = instance.text
+		bg = instance.background_normal
+		print bg
+		self.gameref.bgrect.source = bg
+		self.gameref.bgrect.texture.wrap = 'repeat'
+
+		x=instance
+		for i in range(8):
+			x=x.parent
+			if hasattr(x, 'dismiss'):
+				break
+		x.dismiss()
+		#self.gameref.serials.loadJSON(instance.text+".json")
+		#self.mtref.nameBox.text = instance.text
+	def tex_clicked(self, instance):
+		self.spritePreview.text = instance.text
+		self.spritePreview.background_normal = instance.background_normal
+		x=instance
+		for i in range(8):
+			x=x.parent
+			if hasattr(x, 'dismiss'):
+				break
+		x.dismiss()
+	'''def textureChanged(self, instance):
+		ent = self.selectedEntity
+		if hasattr(ent, 'renderer'):
+			ent.renderer.texture_key = instance.text
+			self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		for ent in self.selectedEntitys:
+			if hasattr(ent, 'renderer'):
+				ent.renderer.texture_key = instance.text
+				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)'''
 	def customlvlPressed(self):
 		Popup(title="Pick Level",
 			  content=LevelList(self,self.gameref.dataDir+"levels/", self.gameref.dataDir+"thumbs/"),
@@ -739,14 +771,14 @@ class MainTools(FloatLayout):
 		if self.currentTool not in self.toolSettings:
 			self.toolSettings[self.currentTool] = {}
 		lts = self.toolSettings[self.currentTool]
-		lts["texture"] = self.spriteSpinner.text
+		lts["texture"] = self.spritePreview.text
 		#self.spritePreview.source = 'atlas://assets/myatlas/'+ self.spriteSpinner.text
 		lts["mass"] = self.massSlider.value
 		self.currentTool = tool
 		if tool in self.toolSettings:
 			cts = self.toolSettings[tool]
 			if "texture" in cts:
-				self.spriteSpinner.text = cts["texture"]
+				self.spritePreview.text = cts["texture"]
 			if "mass" in cts:
 				self.massSlider.value = cts["mass"]
 		from functools import partial

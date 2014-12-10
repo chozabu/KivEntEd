@@ -101,7 +101,7 @@ TestGame:
             spacing: 5
             size_hint: 1, None
             height: self.minimum_height
-<BGList>
+<ImageFolderList>
     lmcontent: lmcontent
     ScrollView:
         StackLayout:
@@ -395,7 +395,7 @@ TestGame:
     massSlider: massSlider
     gravxSlider: gravxSlider
     gravySlider: gravySlider
-    spriteSpinner: spriteSpinner
+    #spriteSpinner: spriteSpinner
     selectedMenu: selectedMenu
     spritePreview: spritePreview
     nameBox: nameBox
@@ -902,6 +902,7 @@ TestGame:
             massSliderLabel: massSliderLabel
             enablePhysics: enablePhysics
             enableDynamic:enableDynamic
+            texString: 'atlas://assets/myatlas/sheep'
             ToggleButton:
                 id: primButton
                 text: 'Primitive'
@@ -918,13 +919,16 @@ TestGame:
             Label:
                 size_hint: (1,0.2)
                 text: "  Image:"
-            Spinner:
-                id: spriteSpinner
-                values: root.sprite_list
-                on_text: root.spritePreview.source = 'atlas://assets/myatlas/'+self.text
-            Image:
+            #Spinner:
+            #    id: spriteSpinner
+            #    values: root.sprite_list
+            #    on_text: root.spritePreview.source = 'atlas://assets/myatlas/'+self.text
+            Button:
                 id: spritePreview
-                source: 'atlas://assets/myatlas/sheep'
+                text: 'sheep'
+                background_normal: 'atlas://assets/myatlas/sheep'
+                border: (0,0,0,0)
+                on_press: root.texture_pressed()
             Label:
                 size_hint: (1,0.2)
                 text: "Physics"

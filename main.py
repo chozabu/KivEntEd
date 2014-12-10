@@ -955,7 +955,7 @@ class TestGame(Widget):
 					do_physics = createMenu.enablePhysics.active
 					if not createMenu.enableDynamic.active:mass=0
 					self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-									texture=self.mainTools.spriteSpinner.text, selectNow=False,
+									texture=self.mainTools.spritePreview.text, selectNow=False,
 									do_physics=do_physics)
 					ctouch['pos'] = pos
 
@@ -1111,9 +1111,9 @@ class TestGame(Widget):
 		if (currentTool == "draw" or currentTool == "plank"):
 			if dist < 4: dist = 8
 			#self.create_box((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-			#				texture=self.mainTools.spriteSpinner.text, do_physics=do_physics)
+			#				texture=self.mainTools.spritePreview.text, do_physics=do_physics)
 			self.create_sprite((midx, midy), mass=mass, width=dist, height=10, angle=angle,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							texture=self.mainTools.spritePreview.text, do_physics=do_physics,
 							old_shape=last_obj)
 
 		if currentTool == "start":
@@ -1135,9 +1135,9 @@ class TestGame(Widget):
 
 		if currentTool == "circle":
 			if dist < 4: dist = 32
-			#self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
+			#self.create_circle(spos, mass=mass, radius=dist, texture=self.mainTools.spritePreview.text,
 			#                   angle=angle, do_physics=do_physics)
-			self.create_sprite(spos, mass=mass, radius=dist, texture=self.mainTools.spriteSpinner.text,
+			self.create_sprite(spos, mass=mass, radius=dist, texture=self.mainTools.spritePreview.text,
 			                   angle=angle, do_physics=do_physics, shape_type='circle',
 							old_shape=last_obj)
 		if currentTool == "box":
@@ -1146,12 +1146,12 @@ class TestGame(Widget):
 			if width< 4: width=8
 			if height< 4: height=8
 			self.create_sprite((midx, midy), mass=mass, width=width, height=height, angle=0,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							texture=self.mainTools.spritePreview.text, do_physics=do_physics,
 							old_shape=last_obj)
 		if currentTool == "square":
 			if dist < 4: dist = 8
 			self.create_sprite(spos, mass=mass, width=dist * 2, height=dist * 2, angle=angle,
-							texture=self.mainTools.spriteSpinner.text, do_physics=do_physics,
+							texture=self.mainTools.spritePreview.text, do_physics=do_physics,
 							old_shape=last_obj)
 		self.mainTools.redo_cpoints()
 		#self.touches[touch.id] = {"active": False, "newpos": pos, "screenpos": (touch.x, touch.y)}
@@ -1343,7 +1343,7 @@ class TestGame(Widget):
 				c = self.mainTools.selectedEntity.color
 				color = (c.r, c.g ,c.b ,c.a)
 			ctouch['previewShape'] = self.create_decoration(pos=(0, 0), width=40, height=40,
-															texture=self.mainTools.spriteSpinner.text,
+															texture=self.mainTools.spritePreview.text,
 															color=color)
 
 		if shape and currentTool == 'del':
