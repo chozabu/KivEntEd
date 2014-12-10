@@ -1044,6 +1044,9 @@ class MainTools(FloatLayout):
 			nsz = 25*math.sqrt(ns)
 			e.renderer.width=nsz
 			e.renderer.height=nsz
+	def toggle_perspective(self, instance=None):
+		viewport = self.gameref.gameworld.systems['gameview']
+		viewport.do_perspective = not viewport.do_perspective
 	def redo_cpoints(self):
 
 		for id in self.cpointids:
