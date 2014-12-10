@@ -1060,6 +1060,14 @@ class MainTools(FloatLayout):
 					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
 																texture='plank')
 					self.cpointids.append(pid)
+	def addSelEnt(self, sent):
+		if sent == None: return
+		ents = list(self.selectedEntitys)
+		if sent in ents:
+			ents.remove(sent)
+		else:
+			ents.append(sent)
+		self.setEnts(ents)
 	def setEnts(self, sents):
 		if sents==None:sents=[]
 		self.selectedEntitys = sents

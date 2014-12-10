@@ -91,11 +91,13 @@ class TestGame(Widget):
 		self.jointEnts = {}
 		self.selectedListIndex = 0
 		self.lastlist = None
+		self.keysPressed = {}
 		self.touches = {}#0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
 		try:
 			self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
 			self._keyboard.bind(on_key_down=self._on_keyboard_down)
+			self._keyboard.bind(on_key_up=self._on_keyboard_up)
 		except:
 			print 'Python python no keyboard'
 
@@ -217,14 +219,21 @@ class TestGame(Widget):
 	def _keyboard_closed(self):
 		try:
 			self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+			self._keyboard.unbind(on_key_up=self._on_keyboard_up)
 			self._keyboard = None
 		except:
 			print "still no keyboard!"
 
+	def _on_keyboard_up(self, keyboard, keycode):#, text, modifiers):
+
+		kkstr =  keycode[1]
+		self.keysPressed[kkstr]=False
+		print kkstr, 'released'
 	def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
 		space = self.space
 		kkstr =  keycode[1]
-		print kkstr
+		self.keysPressed[kkstr]=True
+		print kkstr, 'pressed'
 		if keycode[1] == 'up':
 			space.gravity = space.gravity.x, space.gravity.y + 10
 		if keycode[1] == 'down':
@@ -1412,12 +1421,19 @@ class TestGame(Widget):
 		if currentTool == 'drag' and len(self.mainTools.selectedEntitys):canselect=False
 		if canselect:
 			if shape:
-				self.mainTools.setShape(shape)
+				if self.keysPressed.get('ctrl', False):
+					ne = self.getEntFromID(shape.body.data)
+					self.mainTools.addSelEnt(ne)
+				else:
+					self.mainTools.setShape(shape)
 			else:
 				ents = self.getNonPhysAtPoint(pos)
 				ent = None
 				if len(ents):ent=ents[0]
-				self.mainTools.setEnt(ent)
+				if self.keysPressed.get('ctrl', False):
+					self.mainTools.addSelEnt(ent)
+				else:
+					self.mainTools.setEnt(ent)
 
 
 		if shape and not shape.body.is_static and (
