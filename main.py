@@ -89,8 +89,9 @@ class TestGame(Widget):
 		self.scripty = None
 		self.todelete = []
 		self.jointEnts = {}
-		self.selectedListIndex = 0
+		self.selectedEListIndex = 0
 		self.lastlist = None
+		self.lastelist = []
 		self.keysPressed = {}
 		self.touches = {}#0: {"active": False, "pos": (0, 0), "screenpos": (0, 0)}}
 		self.atlas = Atlas('assets/myatlas.atlas')
@@ -1195,6 +1196,16 @@ class TestGame(Widget):
 			shape=shapes[self.selectedListIndex]
 		else: self.selectedListIndex =0
 		self.lastlist = shapes
+
+
+		nopap = self.getNonPhysAtPoint(pos)
+		if len(nopap) >0: ent_cand = nopap[0]
+		if nopap==self.lastelist and nopap != []:
+			self.selectedEListIndex +=1
+			if self.selectedEListIndex == len(nopap):self.selectedEListIndex=0
+			ent_cand=nopap[self.selectedEListIndex]
+		else: self.selectedEListIndex =0
+		self.lastelist = nopap
 		#self.selectedShape = shape
 		#print "touched shape:", shape
 		#print "touched shapes:", shapes
@@ -1428,13 +1439,13 @@ class TestGame(Widget):
 				else:
 					self.mainTools.setShape(shape)
 			else:
-				ents = self.getNonPhysAtPoint(pos)
+				ents = nopap
 				ent = None
 				if len(ents):ent=ents[0]
 				if self.keysPressed.get('ctrl', False):
-					self.mainTools.addSelEnt(ent)
+					self.mainTools.addSelEnt(ent_cand)
 				else:
-					self.mainTools.setEnt(ent)
+					self.mainTools.setEnt(ent_cand)
 
 
 		if shape and not shape.body.is_static and (
