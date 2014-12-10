@@ -160,12 +160,14 @@ class Serials():
 		'y':viewport.camera_pos[1],
 		'scale':viewport.camera_scale}
 
+		bgimg = os.path.split(self.gameref.bgrect.source)[-1][:-4]
+
 		worlddict = {"ents": entslist, "jointslist": jointslist,
 					 "collision_typeslist": collision_typeslist, "collision_typesdict": collision_typesdict,
 					 "settings": {"gravity": gt,
 								  "startID":self.gameref.startID, "finishID": self.gameref.finishID,
 								  "killMomem":self.gameref.mainTools.killMomem, "paused": self.gameref.mainTools.paused,
-								  'camera':camDict},
+								  'camera':camDict, 'background':bgimg},
 					 }
 		return worlddict
 	def getConstraintsFromEnts(self, ents):
@@ -421,6 +423,10 @@ class Serials():
 			settings = data['settings']
 			self.gameref.setGrav(settings['gravity'])
 			#space.gravity = (g[0], g[1])
+			if "background" in settings:
+				bg = settings['background']
+				self.gameref.bgrect.source = "sprites/"+bg+".png"
+				self.gameref.bgrect.texture.wrap = 'repeat'
 			if "startID" in settings:
 				sid = settings['startID']
 				if sid != -1:
