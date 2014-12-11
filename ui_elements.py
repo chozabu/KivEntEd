@@ -51,6 +51,7 @@ class ImageFolderList(BoxLayout):
 	def listlvls(self):
 		#levels = [ os.path.basename(f)[:-5] for f in glob.glob(self.gameref.dataDir+"levels/*.json")]
 		levels = [ os.path.basename(f)[:-4] for f in glob.glob(self.ssdir+"*.png")]
+		print levels
 		#self.lmcontent.clear_widgets()
 		loadfunc = self.click_func
 		print levels
@@ -570,7 +571,7 @@ class MainTools(FloatLayout):
 			  size_hint=(0.8, 0.8)).open()
 	def setBGPressed(self):
 		Popup(title="Pick BackGround",
-			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.bg_clicked),
+			  content=ImageFolderList(self,os.path.dirname(__file__)+"/backgrounds/", self.bg_clicked),
 			  size_hint=(0.8, 0.8)).open()
 	def texture_pressed(self):
 		Popup(title="Pick Texture",

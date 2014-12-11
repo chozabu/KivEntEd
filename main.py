@@ -107,7 +107,7 @@ class TestGame(Widget):
 			#Color(0.5, 0.65, 0.95)
 			#amesh = Mesh(vertices=self.calcPoints(size), mode='triangle_strip')
 			#glEnable(GL_DEPTH_TEST)
-			self.bgrect = Rectangle(source='sprites/bgm.jpg', size=size, tex_coords=self.calcuv(0.8,0.8))
+			self.bgrect = Rectangle(source='backgrounds/basic.png', size=size, tex_coords=self.calcuv(0.8,0.8))
 			self.bgrect.texture.wrap = 'repeat'
 		#	self.cb = Callback(self.setup_gl_context)
 		#with self.canvas.after:

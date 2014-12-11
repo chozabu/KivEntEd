@@ -425,7 +425,7 @@ class Serials():
 			#space.gravity = (g[0], g[1])
 			if "background" in settings:
 				bg = settings['background']
-				self.gameref.bgrect.source = "sprites/"+bg+".png"
+				self.gameref.bgrect.source = "backgrounds/"+bg+".png"
 				self.gameref.bgrect.texture.wrap = 'repeat'
 			if "startID" in settings:
 				sid = settings['startID']
