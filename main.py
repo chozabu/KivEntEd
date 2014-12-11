@@ -1468,6 +1468,15 @@ class TestGame(Widget):
 				if isin:ents.append(entity)
 		print ents
 		return ents
+	def getRenderablesAtPoint(self, pos):
+		ents = []
+		for aid in self.entIDs:
+			entity = self.gameworld.entities[aid]
+			if hasattr(entity, 'renderer'):
+				isin = self.get_point_in_renderer(pos,entity)
+				if isin:ents.append(entity)
+		print ents
+		return ents
 	def get_point_in_renderer(self, point, ent):
 		if hasattr(ent, 'renderer'):
 			p = list(point)
