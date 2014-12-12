@@ -21,7 +21,7 @@ from kivy.uix.slider import Slider
 from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
-#if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
+if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 class FloatInput(TextInput):
 	'''def delete_selection(self, from_undo=False):
@@ -229,7 +229,7 @@ class levelItem(BoxLayout):
 		self.downloadsLabel.text = str(self.info['downloads'])[:10]
 		self.downloadButton.bind(on_press=self.callback)
 		self.downloadButton.info = self.info
-		self.screenShot.source = serverURL+"/downloadSS?fullname="+self.info['filename']+".png"
+		self.screenShot.source = serverURL+"/thumbs/"+self.info['filename']+".png"
 class saveas(BoxLayout):
 	def __init__(self, mtref):
 		self.mtref = mtref
@@ -258,17 +258,20 @@ class uploads(BoxLayout):
 	#wget -qO- --post-data "userName=alex&passHash=123&name=test2&creating=true" http://0.0.0.0:8080/createUser
 	def userPressed(self, instance):
 		params = urllib.urlencode({
-		'userName':self.userName.text, 'passHash': self.password.text, 'creating':"true"
+		'username':self.userName.text, 'password': self.password.text, 'creating':"true"
 		})
+		print params
 		headers = {'Content-type': 'application/x-www-form-urlencoded',
 	          'Accept': 'text/plain'}
-		req = UrlRequest(serverURL+'/createUser', on_success=self.user_posted, req_body=params,
+		req = UrlRequest(serverURL+'/new_user', on_success=self.user_posted, req_body=params,
 	        req_headers=headers)
 		req.wait()
 	def user_posted(self, info, result):
 		print "sent user"
 		print info
 		print result
+		if 'session' in result:
+			self.sessionID = result['session']
 		#self.mtref.ulpopup.dismiss()
 		Popup(title="Info",
 				content=Label(text=str(result)),
@@ -282,16 +285,22 @@ class uploads(BoxLayout):
 		updata = self.mtref.gameref.serials.exportDict()
 		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
 		import base64
-		params = urllib.urlencode({
-		'author':self.userName.text, 'passHash': self.password.text,
-		'name':lname,"levelData":json.dumps(updata),
-		"sshot":base64.b64encode(open(self.screenShot.source, 'r').read())
-		})
-		headers = {'Content-type': 'application/x-www-form-urlencoded',
-	          'Accept': 'text/plain'}
+		params = {
+		'author':self.userName.text,
+		'session':self.sessionID,
+		'name':lname,"leveldata":json.dumps(updata),
+		"sshot":open(self.screenShot.source, 'rb')
+		}
+
+		'''headers = {'Content-type': 'application/x-www-form-urlencoded',
+			'Accept': 'text/plain'}
 		req = UrlRequest(serverURL+'/uploadLevel', on_success=self.level_posted, req_body=params,
-	        req_headers=headers)
-		req.wait()
+			 req_headers=headers)
+		req.wait()'''
+		import requests
+		r = requests.post(serverURL+'/uploadLevel', files=params)
+		print r
+		print r.text
 	def level_posted(self, info, result):
 		print "sent level"
 		print info
@@ -334,10 +343,10 @@ class downloads(BoxLayout):
 
 		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 		if self.reverseButton.state == 'down':params['reverse']=True
-		print "requesting levels", serverURL+'/queryLevels',params
+		print "requesting levels", serverURL+'/query_levels',params
 		params = urllib.urlencode(params)
 		print self.reverseButton.state
-		req = UrlRequest(serverURL+'/queryLevels', on_success=self.got_levels,
+		req = UrlRequest(serverURL+'/query_levels', on_success=self.got_levels,
 	        req_headers=headers
 	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect,req_body=params)
 		print "waiting"
@@ -353,11 +362,12 @@ class downloads(BoxLayout):
 		print "got levels:"
 		print info
 		print result
-		data = json.loads(result)
-		print data
-		if data['result'] == "OK":
-			print "OK"
-			self.setChildren(data['data'])
+		print len(result)
+		#data = json.loads(result)
+		#print data
+		#if data['result'] == "OK":
+		#	print "OK"
+		self.setChildren(result)
 	def setChildren(self, data):
 		#data = json.loads(data)
 		print data
@@ -375,8 +385,10 @@ class downloads(BoxLayout):
 	def dllevel(self,instance):
 		print instance.info
 		print "making request"
-		params = urllib.urlencode({'fullname': instance.info['filename']})
+		'''params = urllib.urlencode({'fullname': instance.info['filename']})
 		req = UrlRequest(serverURL+'/downloadLevel', on_success=self.got_level, timeout=1000, req_body=params
+	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)'''
+		req = UrlRequest(serverURL+'/pplevels/'+instance.info['filename'], on_success=self.got_level, timeout=1000
 	        ,on_error=self.on_error,on_failure=self.on_failure, on_redirect=self.on_redirect)
 		req.levelname = instance.info['name']
 		print "made request"
@@ -387,7 +399,7 @@ class downloads(BoxLayout):
 		#print "info=",info
 		#print "result=",result
 		rd = json.loads(result)
-		dd = json.loads(rd['data'])
+		dd = rd#json.loads(rd['data'])
 		print "--------------"
 		#print dd
 		#for i in dd:
