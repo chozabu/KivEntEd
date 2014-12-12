@@ -21,7 +21,8 @@ from kivy.uix.slider import Slider
 from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
 
 serverURL = 'http://www.kiventedserve.chozabu.net'
-if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
+serverURL = 'http://kees.chozabu.net'
+#if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
 class FloatInput(TextInput):
 	'''def delete_selection(self, from_undo=False):
@@ -252,12 +253,15 @@ class uploads(BoxLayout):
 		self.nameLabel.text = self.mtref.nameBox.text
 		self.screenShot.source = self.mtref.gameref.dataDir+"thumbs/"+self.nameLabel.text+".png"
 		self.screenShot.reload()
+		if not hasattr(self.mtref, 'sessionID'):
+			result = self.loginAction()
+			self.user_posted(None, result)
 		#descLabel: descLabel
 		#self.gameref.export_to_png(filename=self.nameBox.text+".png")
 
 	#wget -qO- --post-data "userName=alex&passHash=123&name=test2&creating=true" http://0.0.0.0:8080/createUser
 	def userPressed(self, instance):
-		params = urllib.urlencode({
+		'''params = urllib.urlencode({
 		'username':self.userName.text, 'password': self.password.text, 'creating':"true"
 		})
 		print params
@@ -265,16 +269,33 @@ class uploads(BoxLayout):
 	          'Accept': 'text/plain'}
 		req = UrlRequest(serverURL+'/new_user', on_success=self.user_posted, req_body=params,
 	        req_headers=headers)
-		req.wait()
+		req.wait()'''
+		result = self.loginAction()
+		self.user_posted(None, result)
+	def loginAction(self):
+		params = {
+		'username':self.userName.text, 'password': self.password.text, 'creating':"true"
+		}
+		import requests
+		r = requests.post(serverURL+'/new_user', data=params)
+		print r
+		print r.text
+		result = r.json()
+		if 'session' in result:
+			self.mtref.sessionID = result['session']
+		return result
 	def user_posted(self, info, result):
 		print "sent user"
-		print info
+		#print info
 		print result
 		if 'session' in result:
-			self.sessionID = result['session']
+			self.mtref.sessionID = result['session']
+			text = "logged in"
+		else:
+			text ="login failed"
 		#self.mtref.ulpopup.dismiss()
 		Popup(title="Info",
-				content=Label(text=str(result)),
+				content=Label(text=text),
 				size_hint=(0.6, 0.4), size=(400, 400)).open()
 	#wget -qO- --post-data "author=alex&passHash=123&name=test2&levelData=asdagrdh" http://0.0.0.0:8080/uploadLevel
 	def uploadPressed(self, instance):
@@ -287,7 +308,7 @@ class uploads(BoxLayout):
 		import base64
 		params = {
 		'author':self.userName.text,
-		'session':self.sessionID,
+		'session':self.mtref.sessionID,
 		'name':lname,"leveldata":json.dumps(updata),
 		"sshot":open(self.screenShot.source, 'rb')
 		}
@@ -301,9 +322,9 @@ class uploads(BoxLayout):
 		r = requests.post(serverURL+'/uploadLevel', files=params)
 		print r
 		print r.text
-	def level_posted(self, info, result):
+		self.level_posted(r.json())
+	def level_posted(self, result):
 		print "sent level"
-		print info
 		print result
 		self.mtref.ulpopup.dismiss()
 		Popup(title="Uploaded",
