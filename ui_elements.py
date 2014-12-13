@@ -20,7 +20,7 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.properties import ListProperty, NumericProperty,BoundedNumericProperty
 
-serverURL = 'http://www.kiventedserve.chozabu.net'
+#serverURL = 'http://www.kiventedserve.chozabu.net'
 serverURL = 'http://kees.chozabu.net'
 #if 'chozabu' in os.getcwd():serverURL = 'http://0.0.0.0:8080'
 
@@ -281,14 +281,16 @@ class uploads(BoxLayout):
 		print r
 		print r.text
 		result = r.json()
-		if 'session' in result:
-			self.mtref.sessionID = result['session']
+		if result:
+			if 'session' in result:
+				self.mtref.sessionID = result['session']
 		return result
 	def user_posted(self, info, result):
 		print "sent user"
 		#print info
 		print result
-		if 'session' in result:
+
+		if result and 'session' in result:
 			self.mtref.sessionID = result['session']
 			text = "logged in"
 		else:
@@ -1214,7 +1216,7 @@ class MainTools(FloatLayout):
 		if ent:
 			if self.selectedMenuView not in self.rightMenu.children:
 				self.rightMenu.add_widget(self.selectedMenuView)
-			self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
+			#self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
 			#ent = self.selectedEntity
 			if hasattr(ent, 'splineshape'):
 
