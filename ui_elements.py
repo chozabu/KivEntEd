@@ -1162,8 +1162,13 @@ class MainTools(FloatLayout):
 				for p in ent.splineshape.ControlPoints:
 					ns = self.gameref.get_cam_scale()
 					nsz = 25*math.sqrt(ns)
-					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
+					wpos = self.gameref.bworld((p[0], p[1]), ent)
+					pos3d = (wpos[0], wpos[1], ent.position.z*.999)
+					pid = self.gameref.create_decoration(pos=wpos, width=nsz, height=nsz,
 																texture='plank')
+					self.cpointids.append(pid)
+					pid = self.gameref.create_decoration(pos=pos3d, width=nsz, height=nsz,
+																texture='plank', color=(.3,.3,.3,.8))
 					self.cpointids.append(pid)
 	def addSelEnt(self, sent):
 		if sent == None: return
@@ -1207,9 +1212,10 @@ class MainTools(FloatLayout):
 		self.selectedEntity = ent
 		self.inputPreview.text = ""
 		self.selectedMenu.shapeInfo.clear_widgets()
-		for id in self.cpointids:
-			self.gameref.delObj(id)
-		self.cpointids = []
+		#for id in self.cpointids:
+		#	self.gameref.delObj(id)
+		#self.cpointids = []
+		self.redo_cpoints()
 		#if self.gameref.selectedShapeID != None:
 		#	self.gameref.delObj(self.gameref.selectedShapeID)
 		#	self.gameref.selectedShapeID = None
@@ -1218,14 +1224,19 @@ class MainTools(FloatLayout):
 				self.rightMenu.add_widget(self.selectedMenuView)
 			#self.selectedEntity = ent#self.gameref.gameworld.entities[shape.body.data]
 			#ent = self.selectedEntity
-			if hasattr(ent, 'splineshape'):
+			'''if hasattr(ent, 'splineshape'):
 
 				for p in ent.splineshape.ControlPoints:
 					ns = self.gameref.get_cam_scale()
 					nsz = 25*math.sqrt(ns)
-					pid = self.gameref.create_decoration(pos=self.gameref.bworld((p[0], p[1]), ent), width=nsz, height=nsz,
+					wpos = self.gameref.bworld((p[0], p[1]), ent)
+					pos3d = (wpos[0], wpos[1], ent.position.z)
+					pid = self.gameref.create_decoration(pos=wpos, width=nsz, height=nsz,
 																texture='plank')
 					self.cpointids.append(pid)
+					pid = self.gameref.create_decoration(pos=pos3d, width=nsz, height=nsz,
+																texture='plank')
+					self.cpointids.append(pid)'''
 			#print dir(ent.physics)
 			if hasattr(ent, 'physics'):
 				if fshape:
