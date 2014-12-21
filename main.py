@@ -1636,6 +1636,10 @@ class TestGame(Widget):
 						if shape:
 							self.delObj(shape.body.data)
 							ctouch['touchingnow'] = None
+		else:
+			self.gameworld.systems['renderer'].update(dt)
+			self.gameworld.systems['gameview'].update(dt)
+			self.gameworld.systems['map'].update(dt)
 
 	def pull2point(self, pos):
 		for aid in self.entIDs:
