@@ -1450,7 +1450,13 @@ class MainTools(FloatLayout):
 
 	def playPressed(self, instance=None):
 		self.paused = not self.paused
-		if instance: instance.text = "Resume" if self.paused else "Pause"
+		instance = self.leftMenu.playButton
+		if instance:
+			instance.text = "Resume" if self.paused else "Pause"
+			if self.paused:
+				instance.state = 'down'
+			else:
+				instance.state = 'normal'
 	def momemPressed(self, instance=None):
 		self.grav_backup, self.gameref.space.gravity = self.gameref.space.gravity, self.grav_backup
 		self.killMomem = not self.killMomem

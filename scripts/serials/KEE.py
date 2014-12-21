@@ -441,7 +441,9 @@ class Serials():
 					self.gameref.mainTools.momemPressed()
 			if "paused" in settings:
 				pm = settings['paused']
-				if not self.gameref.mainTools.paused: self.gameref.mainTools.paused = pm
+				if not self.gameref.mainTools.paused:
+					self.gameref.mainTools.playPressed()
+					#self.gameref.mainTools.paused = pm
 			if "camera" in settings:
 				cm = settings['camera']
 				viewport = self.gameref.gameworld.systems['gameview']
