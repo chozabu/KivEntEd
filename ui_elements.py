@@ -1301,6 +1301,7 @@ class MainTools(FloatLayout):
 																texture='plank')
 					self.cpointids.append(pid)'''
 			#print dir(ent.physics)
+			shapeInfo = self.selectedMenu.shapeInfo
 			if hasattr(ent, 'physics'):
 				if fshape:
 					shape=fshape
@@ -1316,7 +1317,6 @@ class MainTools(FloatLayout):
 				#print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
 				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
 
-				shapeInfo = self.selectedMenu.shapeInfo
 				shapeInfo.height = 60
 				if shape.__class__.__name__ == "Circle":
 					cs = CircleSettings()
