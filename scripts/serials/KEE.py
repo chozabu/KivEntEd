@@ -343,48 +343,33 @@ class Serials():
 		attrib_num = render_system.attribute_count
 		raw_verts = s['verts']
 		triangles = s['indices']
-		all_verts = []
-		print 'raw_verts'
-		print raw_verts
+		#all_verts = []
+		#print 'raw_verts'
+		#print raw_verts
 		vnum = len(raw_verts)
 		vnum = vnum/attrib_num
-		for v in range(vnum):
+		'''for v in range(vnum):
 			vi = []
 			for a in range(attrib_num):
 				vi.append(raw_verts[v*attrib_num+a])
-			all_verts.append(vi)
-		vert_count = len(all_verts)
-		print 'all_verts'
-		print all_verts
-		print 'triangles'
-		print triangles
-		#ot=triangles
-		#ot=triangles
-		#triangles=[]
-		#for t in ot:
-		#	triangles.extend(list(t))
+			all_verts.append(vi)'''
+		vert_count = vnum
+
 		index_count = len(triangles)
 		vert_mesh =  VertMesh(attrib_num,
 			vert_count, index_count)
-		#print triangles
-		#print all_verts
+
 		vert_mesh.indices = triangles
-		for i in range(vert_count):
-			vert_mesh[i] = all_verts[i]
+		#for i in range(vert_count):
+		#	vert_mesh[i] = all_verts[i]
+		vert_mesh.data = raw_verts
 
 		texture = str(s['texture'])
 		if texture.endswith('.png'):
 			texture=texture.split('/')[-1][:-4]
 		rdict = {'texture': texture,
 			'vert_mesh': vert_mesh,
-			#'size': (64, 64),
 			'render': True}
-
-		'''cd = {'triangles': new_triangles, 'vertices': new_vertices,
-			'vert_count': vert_count, 'tri_count': tri_count,
-			'vert_data_count': 5,'texture': texture, 'do_texture':True}
-		'''#print cd
-		#print "polytex:",s['texture']
 		return rdict
 	def loadEntFromDict(self, e, idConvDict=None):
 		sysfuncs={
@@ -415,8 +400,8 @@ class Serials():
 			ns = system
 			if system=='renderer' and rname!= 'renderer':ns=rname
 			if system in sysfuncs:
-				print sysfuncs[ns]
-				print e[ns]
+				#print sysfuncs[ns]
+				#print e[ns]
 				create_dict[str(system)]=sysfuncs[ns](e[ns],e)
 			else:
 				print "unknown system:", system, e[system]
@@ -437,6 +422,10 @@ class Serials():
 				pg = pio.decodeBinary(pg)
 				pg = PolyGen.PolyGen(pg)
 				newent.polyshape = pg
+				if 'outlineinfo' in e:
+					ooi = e['outlineinfo']
+					pg.outlineup = ooi['up']
+					pg.outlinedown = ooi['down']
 			if 'splineshape' in e:
 				#print "LOADING SPLINE"
 				ss = e['splineshape']
