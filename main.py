@@ -511,6 +511,7 @@ class TestGame(Widget):
 
 		spline_ent = self.getEntFromID(spline_ent_id)
 		spline_ent.splineshape = spline
+		if selectNow: self.mainTools.setEnt(self.gameworld.entities[spline_ent_id])
 		print "made spline"
 		return spline_ent_id
 	def create_poly(self, polygon, pos=None, lastpolyid=None, mass=0., friction=None, elasticity=None, angle=.0, x_vel=.0, y_vel=.0,
@@ -547,10 +548,10 @@ class TestGame(Widget):
 
 
 		pg.color = color
+
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:return
 		create_dict['do_texture'] = True
-		#if texture[-4:] != '.png': texture = 'sprites/'+texture+'.png'
 		create_dict['texture'] = texture
 
 		triangles = create_dict['triangles']
@@ -595,38 +596,60 @@ class TestGame(Widget):
 			'vert_mesh': vert_mesh,
 			#'size': (64, 64),
 			'render': True}
+
+
+		'''create_dict = pg.draw_from_Polygon(outline=True)
+		if create_dict == False:return
+		create_dict['do_texture'] = True
+		create_dict['texture'] = texture
+		triangles = create_dict['triangles']
+		render_system = self.gameworld.systems['outline_renderer']
+		all_verts = create_dict['vertices']
+		vert_count = len(all_verts)
+		ot=triangles
+		triangles=[]
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		vert_mesh =  VertMesh(render_system.attribute_count,
+			vert_count, index_count)
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+
+		ordict = {'texture': 'sheep',
+			'vert_mesh': vert_mesh,
+			#'size': (64, 64),
+			'render': True}'''
+
+
 		#print pos
-		create_component_dict = {'color':color,
-						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.}
+		create_component_dict = {'color':color,#
+						 'position': pos, 'rotate': 0, 'renderer': rdict, 'scale':1.
+		                 #, 'outline_renderer': ordict
+		}
 		component_order = ['color', 'position', 'rotate', 'renderer', 'scale']
 		if do_physics:
 			create_component_dict['physics'] = physics_component
 			component_order = ['color', 'position', 'rotate', 'physics', 'renderer', 'scale']
 		#print create_component_dict
-		if lastpolyid and 0:
-			poly = self.getEntFromID(lastpolyid)
+		#print "col_shapes=",col_shapes
+		#print pos
+		newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
+		self.entIDs.append(newpolyID)
+		newpoly = self.getEntFromID(newpolyID)
+		newpoly.polyshape = pg
 
-			poly.renderer.vert_mesh.load_from_python(verts, triangles)#, create_dict['vert_count'], create_dict['tri_count'])
-			self.gameworld.systems['renderer'].redraw_entity(lastpolyid)
-			return lastpolyid
-		else:
-			#print "col_shapes=",col_shapes
-			#print pos
-			newpolyID = self.gameworld.init_entity(create_component_dict, component_order)
-			self.entIDs.append(newpolyID)
-			newpoly = self.getEntFromID(newpolyID)
-			newpoly.polyshape = pg
+		#print newpoly.renderer.texture
+		#if not do_physics:
+		#	newpoly.load_order.remove('physics')
+		#newpoly.load_order = ['color', 'position', 'rotate', 'renderer']
+		if selectNow: self.mainTools.setEnt(self.gameworld.entities[newpolyID])
 
-			#print newpoly.renderer.texture
-			#if not do_physics:
-			#	newpoly.load_order.remove('physics')
-			#newpoly.load_order = ['color', 'position', 'rotate', 'renderer']
-			if selectNow: self.mainTools.setEnt(self.gameworld.entities[newpolyID])
+		#newpoly.renderer.texture.wrap = 'repeat'
 
-			#newpoly.renderer.texture.wrap = 'repeat'
-
-			#print "poly has: " + str(len(triangles)) + " triangles"
-			return newpolyID
+		#print "poly has: " + str(len(triangles)) + " triangles"
+		return newpolyID
 	def setup_map(self):
 		gameworld = self.gameworld
 		gameworld.currentmap = gameworld.systems['map']
@@ -690,6 +713,31 @@ class TestGame(Widget):
 		#qj.entity_id = jrid
 		self.jointEnts[qj] = jrent
 
+	def update_mesh_renderer(self, create_dict, p, triangles, renderer='renderer'):
+		all_verts = create_dict['vertices']
+		vert_count = len(all_verts)
+		ot = triangles
+		triangles = []
+		for t in ot:
+			triangles.extend(list(t))
+		index_count = len(triangles)
+		rr = getattr(p,renderer)
+		vert_mesh = rr.vert_mesh
+		rebatch = False
+		if vert_mesh.index_count != index_count: rebatch = True
+		if vert_mesh.vertex_count != vert_count: rebatch = True
+		vert_mesh.index_count = index_count
+		vert_mesh.vertex_count = vert_count
+		# VertMesh(render_system.attribute_count,
+		#vert_count, index_count)
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+		if rebatch:
+			self.gameworld.systems[renderer].rebatch_entity(p.entity_id)
+			#self.gameworld.systems[renderer].update(.1)
+		return ot, triangles
+
 	def update_poly(self, p, pg=None, color=None):
 
 		if pg==None:pg = p.polyshape
@@ -724,6 +772,16 @@ class TestGame(Widget):
 			p.position.y=newc[1]#npos'
 
 
+		if hasattr(p,'outline_renderer'):
+			create_dict = pg.draw_from_Polygon(outline=True)
+			if create_dict != False:
+				triangles = create_dict['triangles']
+				tricount = len(triangles)
+				if tricount >0:
+					print "verts=",len(create_dict['vertices'])
+					self.update_mesh_renderer(create_dict, p, triangles, renderer='outline_renderer')
+
+
 		create_dict = pg.draw_from_Polygon()
 		if create_dict == False:
 			print "creating poly failed", create_dict, po
@@ -735,26 +793,7 @@ class TestGame(Widget):
 			print "creating poly failed - no triangles", create_dict, po
 			return
 
-
-		all_verts = create_dict['vertices']
-		vert_count = len(all_verts)
-		ot=triangles
-		triangles=[]
-		for t in ot:
-			triangles.extend(list(t))
-		index_count = len(triangles)
-		vert_mesh = p.renderer.vert_mesh
-		rebatch=False
-		if vert_mesh.index_count != index_count: rebatch=True
-		if vert_mesh.vertex_count != vert_count: rebatch=True
-		vert_mesh.index_count = index_count
-		vert_mesh.vertex_count = vert_count
-			#VertMesh(render_system.attribute_count,
-			#vert_count, index_count)
-		vert_mesh.indices = triangles
-		for i in range(vert_count):
-			vert_mesh[i] = all_verts[i]
-		if rebatch:self.gameworld.systems['renderer'].rebatch_entity(p.entity_id)
+		ot, triangles = self.update_mesh_renderer(create_dict, p, triangles)
 
 
 		if hasattr(p, 'physics'):
@@ -1653,9 +1692,9 @@ class TestGame(Widget):
 
 	def setup_states(self):
 		self.gameworld.add_state(state_name='main',
-								 systems_added=['color', 'rotate', 'renderer', 'scale'],
+								 systems_added=['color', 'rotate', 'renderer', 'outline_renderer', 'scale'],
 								 systems_removed=[], systems_paused=[],
-								 systems_unpaused=['color', 'rotate', 'renderer', 'scale'],
+								 systems_unpaused=['color', 'rotate', 'renderer', 'outline_renderer', 'scale'],
 								 screenmanager_screen='main')
 
 	def set_state(self):

@@ -53,6 +53,9 @@ class Serials():
 			polystr = base64.encodestring(pio.encodeBinary(poly))
 			ed["polyviewbinary"] = polystr
 			ed["polyviewtristrip"] = poly.triStrip()
+			ed['outlineinfo'] = {
+			       'up':e.polyshape.outlineup, 'down':e.polyshape.outlinedown
+			}
 
 			postr = []
 			index = 0
@@ -93,6 +96,15 @@ class Serials():
 			else:
 				prd = {"texture": e.renderer.texture_key}
 			ed["renderer"] = prd
+		if hasattr(e, "outline_renderer"):
+			#print dir(e.renderer)
+			#print e.renderer.texture_key
+			print dir(e.outline_renderer.vert_mesh)
+			prd = {"texture": e.outline_renderer.texture_key,
+				"verts":e.outline_renderer.vert_mesh.data,
+			    "indices":e.outline_renderer.vert_mesh.indices
+			}
+			ed["outline_renderer"] = prd
 		if hasattr(e, "position"):
 			pd = {"x": e.position.x, "y": e.position.y, "z": e.position.z}
 			ed["position"] = pd
@@ -323,6 +335,57 @@ class Serials():
 		'''#print cd
 		#print "polytex:",s['texture']
 		return rdict
+	def load_outline_renderer(self,s,e):
+
+		#triangles, all_verts,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
+
+		render_system = self.gameref.gameworld.systems['outline_renderer']
+		attrib_num = render_system.attribute_count
+		raw_verts = s['verts']
+		triangles = s['indices']
+		all_verts = []
+		print 'raw_verts'
+		print raw_verts
+		vnum = len(raw_verts)
+		vnum = vnum/attrib_num
+		for v in range(vnum):
+			vi = []
+			for a in range(attrib_num):
+				vi.append(raw_verts[v*attrib_num+a])
+			all_verts.append(vi)
+		vert_count = len(all_verts)
+		print 'all_verts'
+		print all_verts
+		print 'triangles'
+		print triangles
+		#ot=triangles
+		#ot=triangles
+		#triangles=[]
+		#for t in ot:
+		#	triangles.extend(list(t))
+		index_count = len(triangles)
+		vert_mesh =  VertMesh(attrib_num,
+			vert_count, index_count)
+		#print triangles
+		#print all_verts
+		vert_mesh.indices = triangles
+		for i in range(vert_count):
+			vert_mesh[i] = all_verts[i]
+
+		texture = str(s['texture'])
+		if texture.endswith('.png'):
+			texture=texture.split('/')[-1][:-4]
+		rdict = {'texture': texture,
+			'vert_mesh': vert_mesh,
+			#'size': (64, 64),
+			'render': True}
+
+		'''cd = {'triangles': new_triangles, 'vertices': new_vertices,
+			'vert_count': vert_count, 'tri_count': tri_count,
+			'vert_data_count': 5,'texture': texture, 'do_texture':True}
+		'''#print cd
+		#print "polytex:",s['texture']
+		return rdict
 	def loadEntFromDict(self, e, idConvDict=None):
 		sysfuncs={
 		'color':self.loadColors,
@@ -331,6 +394,7 @@ class Serials():
 		'physics':self.loadPhysics,
 		'renderer':self.loadPhysics_renderer,
 		'physics_renderer':self.loadPhysics_renderer,
+		'outline_renderer':self.load_outline_renderer,
 		'poly_renderer':self.loadPoly_renderer,
 		}
 		load_order = []#str(li) for li in e['load_order']]
@@ -351,6 +415,8 @@ class Serials():
 			ns = system
 			if system=='renderer' and rname!= 'renderer':ns=rname
 			if system in sysfuncs:
+				print sysfuncs[ns]
+				print e[ns]
 				create_dict[str(system)]=sysfuncs[ns](e[ns],e)
 			else:
 				print "unknown system:", system, e[system]

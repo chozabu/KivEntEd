@@ -45,12 +45,21 @@ TestGame:
             do_perspective: True
             #camera_scale: 2.0
             camera_z:1.85
+            render_system_order: ['outline_renderer', 'renderer']
             #m_cam_z:-800.85
             #near_plane: 1.0
         GameMap:
             system_id: 'map'
             map_size: root.size
             gameworld: gameworld
+        Renderer:
+            gameworld: gameworld
+            system_id: 'outline_renderer'
+            do_rotate: True
+            do_color: True
+            do_scale: True
+            shader_source: 'assets/glsl/positioncolorrotatescaleshader.glsl'
+            gameview: 'gameview'
         Renderer:
             gameworld: gameworld
             system_id: 'renderer'

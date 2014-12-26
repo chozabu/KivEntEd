@@ -616,6 +616,10 @@ class MainTools(FloatLayout):
 		Popup(title="Pick Texture",
 			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.textureChanged),
 			  size_hint=(0.8, 0.8)).open()
+	def outline_pressed(self, instance=None):
+		Popup(title="Pick Texture",
+			  content=ImageFolderList(self,os.path.dirname(__file__)+"/sprites/", self.outlineTextureChanged),
+			  size_hint=(0.8, 0.8)).open()
 	def bg_clicked(self, instance):
 		levelname = instance.text
 		bg = instance.background_normal
@@ -651,6 +655,53 @@ class MainTools(FloatLayout):
 			if hasattr(ent, 'renderer'):
 				ent.renderer.texture_key = instance.text
 				self.gameref.gameworld.systems['renderer'].rebatch_entity(ent.entity_id)
+		x=instance
+		for i in range(8):
+			x=x.parent
+			if hasattr(x, 'dismiss'):
+				break
+		x.dismiss()
+	def outlineTextureChanged(self, instance):
+		#self.selectedMenu.texLabel.text = instance.text
+		for ent in self.selectedEntitys:
+			if hasattr(ent, 'polyshape'):
+				polyshape = ent.polyshape
+				if not hasattr(ent, 'outline_renderer'):
+					systems = self.gameref.gameworld.systems
+					outline_renderer = systems['outline_renderer']
+
+					pg = ent.polyshape
+					create_dict = pg.draw_from_Polygon(outline=True)
+					if create_dict == False:return
+					create_dict['do_texture'] = True
+					create_dict['texture'] = instance.text
+					triangles = create_dict['triangles']
+					render_system = self.gameref.gameworld.systems['outline_renderer']
+					all_verts = create_dict['vertices']
+					vert_count = len(all_verts)
+					ot=triangles
+					triangles=[]
+					for t in ot:
+						triangles.extend(list(t))
+					index_count = len(triangles)
+					from kivent_core.renderers import VertMesh
+					vert_mesh =  VertMesh(render_system.attribute_count,
+						vert_count, index_count)
+					vert_mesh.indices = triangles
+					for i in range(vert_count):
+						vert_mesh[i] = all_verts[i]
+
+					ordict = {'texture': 'sheep',
+						'vert_mesh': vert_mesh,
+						#'size': (64, 64),
+						'render': True}
+
+					outline_renderer.create_component(ent,ordict)
+					ent.load_order.append('outline_renderer')
+				if hasattr(ent, 'outline_renderer'):
+					ent.outline_renderer.texture_key = instance.text
+					self.gameref.gameworld.systems['outline_renderer'].rebatch_entity(ent.entity_id)
+				polyshape.outline_texture = instance.text
 		x=instance
 		for i in range(8):
 			x=x.parent
@@ -910,6 +961,18 @@ class MainTools(FloatLayout):
 		print sidelen
 
 
+	def oup_changed(self, instance, a=None,b=None):
+		ent = self.selectedEntity
+		if hasattr(ent, 'polyshape'):
+			ent.polyshape.outlineup = instance.value
+			self.gameref.update_poly(ent)
+			self.gameref.reindexEnt(ent)
+	def odown_changed(self, instance, a=None,b=None):
+		ent = self.selectedEntity
+		if hasattr(ent, 'polyshape'):
+			ent.polyshape.outlinedown = instance.value
+			self.gameref.update_poly(ent)
+			self.gameref.reindexEnt(ent)
 	def smoothness_changed(self, instance, a=None,b=None):
 		ent = self.selectedEntity
 		if hasattr(ent, 'splineshape'):
@@ -1253,18 +1316,20 @@ class MainTools(FloatLayout):
 				#print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
 				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
 
+				shapeInfo = self.selectedMenu.shapeInfo
+				shapeInfo.height = 60
 				if shape.__class__.__name__ == "Circle":
 					cs = CircleSettings()
 					cs.radiusLabel.text = "%0.2f" % shape.radius
 					cs.radiusLabel.bind(on_text_validate=self.on_rad_change)
-					self.selectedMenu.shapeInfo.add_widget(cs)
+					shapeInfo.add_widget(cs)
 				elif shape.__class__.__name__ == "BoxShape":
 					bs = BoxSettings()
 					bs.widthLabel.text = "%0.2f" % shape.width
 					bs.heightLabel.text = "%0.2f" % shape.height
 					bs.widthLabel.bind(on_text_validate=self.on_width_change)
 					bs.heightLabel.bind(on_text_validate=self.on_height_change)
-					self.selectedMenu.shapeInfo.add_widget(bs)
+					shapeInfo.add_widget(bs)
 				#elif shape.__class__.__name__ == "Poly":
 
 			if hasattr(ent, 'renderer'):
@@ -1272,18 +1337,34 @@ class MainTools(FloatLayout):
 				self.selectedMenu.imgWidthLabel.text = "%0.2f" % (ent.renderer.width)
 				self.selectedMenu.imgHeightLabel.text = "%0.2f" % (ent.renderer.height)
 				print "width=",ent.renderer.width
+
 			if hasattr(ent, 'splineshape'):
+				print "has spline"
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
 				#self.selectedMenu.texLabel.text = texname
+				splineshape = ent.splineshape
 				ps = Label(text="Smoothness")
-				self.selectedMenu.shapeInfo.add_widget(ps)
-				ps = Slider(value = 1./ent.splineshape.stepsize, min=1.,max=10.,on_touch_up=self.smoothness_changed, step=1.)
-				self.selectedMenu.shapeInfo.add_widget(ps)
+				shapeInfo.add_widget(ps)
+				ps = Slider(value = 1./splineshape.stepsize, min=1.,max=10.,on_touch_up=self.smoothness_changed, step=1.)
+				shapeInfo.add_widget(ps)
+				ps = Button(text="outline texture", on_press=self.outline_pressed)
+				shapeInfo.add_widget(ps)
 			elif hasattr(ent, 'polyshape'):
+				print "no spline, poly"
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
 				#self.selectedMenu.texLabel.text = texname
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
-				self.selectedMenu.shapeInfo.add_widget(ps)
+				shapeInfo.add_widget(ps)
+			if hasattr(ent, 'polyshape'):
+				shapeInfo.height += 60
+				polyshape = ent.polyshape
+
+				ps = Label(text="outline thickness")
+				shapeInfo.add_widget(ps)
+				ps = Slider(value = polyshape.outlineup, min=0,max=50.,on_touch_up=self.oup_changed)
+				shapeInfo.add_widget(ps)
+				ps = Slider(value = polyshape.outlinedown, min=-100,max=0.,on_touch_up=self.odown_changed)
+				shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
 				self.selectedMenu.cpicker.set_from_ent(ent)
 				#self.selectedMenu.redLabel.text = "%0.2f" % (ent.color.r)
