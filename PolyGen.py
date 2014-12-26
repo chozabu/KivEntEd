@@ -120,7 +120,7 @@ def extrude_poly(points, up=20, down=-20, color=(1,1,1,1)):
 		y=tvert[1]
 		pair_id = vert_count%2
 
-		nv_ap([x, y, clen, pair_id, color[0], color[1], color[2], color[3]])
+		nv_ap([x, y, clen, 1-pair_id, color[0], color[1], color[2], color[3]])
 		if pair_id:
 			clen+= lens[int(vert_count/2)]
 		vert_count += 1
