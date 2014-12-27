@@ -1675,6 +1675,12 @@ class TestGame(Widget):
 						if shape:
 							self.delObj(shape.body.data)
 							ctouch['touchingnow'] = None
+						else:
+							ent = self.getNonPhysAtPoint(pos)
+							if ent:
+								ent=ent[0]
+								self.delObj(ent.entity_id)
+								ctouch['touchingnow'] = None
 		else:
 			self.gameworld.systems['renderer'].update(dt)
 			self.gameworld.systems['gameview'].update(dt)
