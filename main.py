@@ -747,7 +747,12 @@ class TestGame(Widget):
 
 		#notes for changing center of mass
 		po = pg.poly
-		poc = po.center()
+		print po
+		print po[0]
+		try:
+			poc = po.center()
+		except:
+			poc = (p.position.x,p.position.y)
 		print poc
 		newc = self.bworld(poc,p)
 		oldc = self.blocal((p.position.x,p.position.y),p)
