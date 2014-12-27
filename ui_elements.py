@@ -1347,8 +1347,6 @@ class MainTools(FloatLayout):
 				shapeInfo.add_widget(ps)
 				ps = Slider(value = 1./splineshape.stepsize, min=1.,max=10.,on_touch_up=self.smoothness_changed, step=1.)
 				shapeInfo.add_widget(ps)
-				ps = Button(text="outline texture", on_press=self.outline_pressed)
-				shapeInfo.add_widget(ps)
 			elif hasattr(ent, 'polyshape'):
 				print "no spline, poly"
 				#texname = ent.renderer.texture.split('/')[-1][:-4]
@@ -1359,6 +1357,8 @@ class MainTools(FloatLayout):
 				shapeInfo.height += 60
 				polyshape = ent.polyshape
 
+				ps = Button(text="outline texture", on_press=self.outline_pressed)
+				shapeInfo.add_widget(ps)
 				ps = Label(text="outline thickness")
 				shapeInfo.add_widget(ps)
 				ps = Slider(value = polyshape.outlineup, min=0,max=50.,on_touch_up=self.oup_changed)
