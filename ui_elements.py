@@ -1302,6 +1302,7 @@ class MainTools(FloatLayout):
 					self.cpointids.append(pid)'''
 			#print dir(ent.physics)
 			shapeInfo = self.selectedMenu.shapeInfo
+			shapeInfo.height = 60
 			if hasattr(ent, 'physics'):
 				if fshape:
 					shape=fshape
@@ -1317,7 +1318,6 @@ class MainTools(FloatLayout):
 				#print self.gameref.scripty.collision_types[shape.collision_type], shape.collision_type
 				self.selectedMenu.colTypeSpinner.text = self.gameref.scripty.collision_types[shape.collision_type]
 
-				shapeInfo.height = 60
 				if shape.__class__.__name__ == "Circle":
 					cs = CircleSettings()
 					cs.radiusLabel.text = "%0.2f" % shape.radius
