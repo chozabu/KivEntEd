@@ -1091,8 +1091,8 @@ class MainTools(FloatLayout):
 		#	fval = 0.1
 		#	instance.text = "%0.2f" % fval
 		if fval<=0:fval=float('inf')
-		ent = self.selectedEntity
-		if ent:
+		#ent = self.selectedEntity
+		for ent in self.selectedEntitys:
 			physics = ent.physics
 			body = physics.body
 			bmass = body.mass
@@ -1100,24 +1100,24 @@ class MainTools(FloatLayout):
 			bisinf=bmass==float('inf')
 			fisinf=fval==float('inf')
 			if bisinf!=fisinf:
-				self.hard_mass_change(self.selectedEntity, fval)
+				self.hard_mass_change(ent, fval)
 				print "did hard mass change"
-				return
-			body.mass = fval
-			self.gameref.reindexEnt(self.selectedEntity)
+			else:
+				body.mass = fval
 
-			shape = physics.shapes[0]
+				shape = physics.shapes[0]
 
-			if shape.__class__.__name__ == "BoxShape":
-				shape.body.moment = cy.moment_for_box(fval, shape.width, shape.height)
-			if shape.__class__.__name__ == "Circle":
-				shape.body.moment = cy.moment_for_circle(fval,shape.radius,0)
+				if shape.__class__.__name__ == "BoxShape":
+					shape.body.moment = cy.moment_for_box(fval, shape.width, shape.height)
+				if shape.__class__.__name__ == "Circle":
+					shape.body.moment = cy.moment_for_circle(fval,shape.radius,0)
+			self.gameref.reindexEnt(ent)
 
-		for ent in self.selectedEntitys:
+		'''for ent in self.selectedEntitys:
 			if hasattr(ent, 'physics'):
 				ent.physics.body.mass = fval
 				self.gameref.reindexEnt(ent)
-				#todo - update moment
+				#todo - update moment'''
 
 	def elasChanged(self, instance):
 		self.inputPreview.text = instance.text
