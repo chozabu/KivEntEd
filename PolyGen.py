@@ -173,7 +173,7 @@ class PolyGen():
 		self.poly = newp
 
 	def sub_circle_polygon(self, pos, sides=None, radius=30):
-		if sides is None:sides = int(8+math.sqrt(radius))
+		if sides is None:sides = int(8+math.sqrt(radius)*.2)
 		p1 = Circle(radius, pos, sides)# - Circle(0.5)
 		if self.poly == None:
 			print "poly never created!"
@@ -182,7 +182,7 @@ class PolyGen():
 		if (self.keepsimple and len(check)<2) or not self.keepsimple:
 			self.poly = check
 	def draw_circle_polygon(self, pos, sides=None, radius=30):
-		if sides is None:sides = int(8+math.sqrt(radius))
+		if sides is None:sides = int(8+math.sqrt(radius)*.2)
 		p1 = Circle(radius, pos, sides)
 
 		if self.poly == None:

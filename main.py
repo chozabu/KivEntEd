@@ -911,13 +911,14 @@ class TestGame(Widget):
 
 		if 'polygen' in ctouch and 'lastpolyid' in ctouch:
 			pg = ctouch['polygen']
-			if dist > 10:
+			brushsize = self.mainTools.polyMenu.brushSizeSlider.value
+			if dist > 5+self.mainTools.polyMenu.brushSizeSlider.value*.3:
 				lpid = ctouch['lastpolyid']
 				del ctouch['lastpolyid']
 				le = self.getEntFromID(lpid)
 				mousepos = self.blocal(pos,le)
 				midpos = self.blocal((midx,midy),le)
-				pg.draw_circle_polygon(mousepos, radius=self.mainTools.polyMenu.brushSizeSlider.value)
+				pg.draw_circle_polygon(mousepos, radius=brushsize)
 				pg.draw_square_polygon(midpos,dist,self.mainTools.polyMenu.brushSizeSlider.value*1.96, angle)
 				#pg.draw_square_polygon(pos, 100, self.mainTools.polyMenu.brushSizeSlider.value*2)
 				if lpid!=None:
