@@ -49,13 +49,16 @@ class Serials():
 			points = list(ss.ControlPoints)
 			ed["splineshape"] = {'ControlPoints':points, 'stepsize':ss.stepsize}
 		if hasattr(e, "polyshape"):
-			poly = e.polyshape.poly
+			ps = e.polyshape
+			poly = ps.poly
 			polystr = base64.encodestring(pio.encodeBinary(poly))
 			ed["polyviewbinary"] = polystr
 			ed["polyviewtristrip"] = poly.triStrip()
 			ed['outlineinfo'] = {
-			       'up':e.polyshape.outlineup, 'down':e.polyshape.outlinedown
+			       'up':ps.outlineup, 'down':ps.outlinedown
 			}
+			pvdict={'texscalex':ps.texscalex, 'texscaley':ps.texscaley}
+			ed['polyviewdata']=pvdict
 
 			postr = []
 			index = 0
@@ -305,7 +308,16 @@ class Serials():
 		return {'texture': str(s['texture']), 'size': (s['width'],s['height'])}
 	def loadPoly_renderer(self,s,e):
 
-		triangles, all_verts,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None))
+		if 'polyviewdata' in e:
+			pv = e['polyviewdata']
+			print pv
+			texscalex = pv['texscalex']/5000.
+			texscaley = pv['texscaley']/5000.
+		else:
+			texscalex = .01
+			texscaley = .01
+
+		triangles, all_verts,  tri_count, vert_count =PolyGen.tristripToKDict(e["polyviewtristrip"], self.loadColors(e['color'], None),texscalex,texscaley)
 
 		render_system = self.gameref.gameworld.systems['renderer']
 		vert_count = len(all_verts)
@@ -426,6 +438,11 @@ class Serials():
 					ooi = e['outlineinfo']
 					pg.outlineup = ooi['up']
 					pg.outlinedown = ooi['down']
+				if 'polyviewdata' in e:
+					pv = e['polyviewdata']
+					print pv
+					pg.texscalex = pv['texscalex']
+					pg.texscaley = pv['texscaley']
 			if 'splineshape' in e:
 				#print "LOADING SPLINE"
 				ss = e['splineshape']
