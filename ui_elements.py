@@ -10,6 +10,7 @@ import json
 
 from kivy.clock import Clock
 from kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
@@ -961,6 +962,23 @@ class MainTools(FloatLayout):
 		print sidelen
 
 
+	def texscalex_changed(self, instance, a=None,b=None):
+		print "texscalex_changed"
+		ent = self.selectedEntity
+		if hasattr(ent, 'polyshape'):
+			ent.polyshape.texscalex = instance.value
+			if hasattr(self,'tsbutton') and self.tsbutton.state != 'down':
+				ent.polyshape.texscaley = instance.value
+			self.gameref.update_poly(ent)
+			self.gameref.reindexEnt(ent)
+	def texscaley_changed(self, instance, a=None,b=None):
+		ent = self.selectedEntity
+		if hasattr(ent, 'polyshape'):
+			ent.polyshape.texscaley = instance.value
+			if hasattr(self,'tsbutton') and self.tsbutton.state != 'down':
+				ent.polyshape.texscalex = instance.value
+			self.gameref.update_poly(ent)
+			self.gameref.reindexEnt(ent)
 	def oup_changed(self, instance, a=None,b=None):
 		ent = self.selectedEntity
 		if hasattr(ent, 'polyshape'):
@@ -1354,16 +1372,27 @@ class MainTools(FloatLayout):
 				ps = Button(text="simplify", on_press=self.simplifyPolyPressed)
 				shapeInfo.add_widget(ps)
 			if hasattr(ent, 'polyshape'):
-				shapeInfo.height += 60
+				shapeInfo.height += 90
 				polyshape = ent.polyshape
 
 				ps = Button(text="outline texture", on_press=self.outline_pressed)
 				shapeInfo.add_widget(ps)
 				ps = Label(text="outline thickness")
 				shapeInfo.add_widget(ps)
-				ps = Slider(value = polyshape.outlineup, min=0,max=50.,on_touch_up=self.oup_changed)
+				ps = Slider(value = polyshape.outlineup, min=0,max=50)
+				ps.bind(value=self.oup_changed)
 				shapeInfo.add_widget(ps)
-				ps = Slider(value = polyshape.outlinedown, min=-100,max=0.,on_touch_up=self.odown_changed)
+				ps = Slider(value = polyshape.outlinedown, min=-100,max=0.01)
+				ps.bind(value=self.odown_changed)
+				shapeInfo.add_widget(ps)
+				ps = ToggleButton(text="TexScale")
+				shapeInfo.add_widget(ps)
+				self.tsbutton = ps
+				ps = Slider(value = polyshape.texscalex, min=1,max=100.)
+				ps.bind(value=self.texscalex_changed)
+				shapeInfo.add_widget(ps)
+				ps = Slider(value = polyshape.texscaley, min=1,max=100.)
+				ps.bind(value=self.texscaley_changed)
 				shapeInfo.add_widget(ps)
 			if hasattr(ent, 'color'):
 				self.selectedMenu.cpicker.set_from_ent(ent)

@@ -127,7 +127,7 @@ def extrude_poly(points, up=20, down=-20, color=(1,1,1,1)):
 	return new_triangles, new_vertices,  tri_count, vert_count
 	#return [ts]
 
-def tristripToKDict(ts, color, texscale=.01):
+def tristripToKDict(ts, color, texscalex=.01, texscaley=.01):
 	tri_verts = []
 	new_triangles = []
 	vert_ap = tri_verts.append
@@ -152,7 +152,7 @@ def tristripToKDict(ts, color, texscale=.01):
 	for tvert in tri_verts:
 		x=tvert[0]
 		y=tvert[1]
-		nv_ap([x, y, x*texscale, y*texscale, color[0], color[1], color[2], color[3]])
+		nv_ap([x, y, x*texscalex, y*texscaley, color[0], color[1], color[2], color[3]])
 		vert_count += 1
 	return new_triangles, new_vertices,  tri_count, vert_count
 
@@ -165,6 +165,8 @@ class PolyGen():
 		self.minlinelen = minlinelen
 		self.outlineup=0
 		self.outlinedown=-20
+		self.texscalex=50
+		self.texscaley=50
 
 	def from_spline(self, points):
 		newp = Polygon()
@@ -218,7 +220,7 @@ class PolyGen():
 		ts = self.poly.triStrip()
 		#ts = extrude_poly(self.poly[0])
 		color = self.color
-		return tristripToKDict(ts,color)
+		return tristripToKDict(ts,color, self.texscalex/5000., self.texscaley/5000.)
 	def pts_to_outline(self):
 		#ts = self.poly.triStrip()
 		return extrude_poly(self.poly[0], color=self.color, up=self.outlineup, down=self.outlinedown)

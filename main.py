@@ -744,16 +744,16 @@ class TestGame(Widget):
 		if color!=None:pg.color=color
 		#if not hasattr(p, 'physics'):return p.entity_id
 
-
 		#notes for changing center of mass
 		po = pg.poly
-		print po
-		print po[0]
+		print "updating poly: ", pg
+		#print po
+		#print po[0]
 		try:
 			poc = po.center()
 		except:
 			poc = (p.position.x,p.position.y)
-		print poc
+		#print poc
 		newc = self.bworld(poc,p)
 		oldc = self.blocal((p.position.x,p.position.y),p)
 		shifter = (oldc[0] - poc[0], oldc[1] - poc[1])
@@ -806,7 +806,7 @@ class TestGame(Widget):
 			friction = p.physics.shapes[0].friction
 			elasticity = p.physics.shapes[0].elasticity
 			mass=p.physics.body.mass
-			print friction
+			#print friction
 
 			submass = mass/tricount
 			verts = create_dict['vertices']
@@ -833,7 +833,7 @@ class TestGame(Widget):
 			#for oldshape in p.physics.shapes:
 			#	self.space.remove(oldshape)
 			self.space.remove(p.physics.shapes)
-			print len(p.physics.shapes)
+			#print len(p.physics.shapes)
 			del p.physics.shapes[:]
 
 			#Body body, vertices, offset=(0, 0), auto_order_vertices=True):
