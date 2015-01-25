@@ -278,10 +278,13 @@ class uploads(BoxLayout):
 		'username':self.userName.text, 'password': self.password.text, 'creating':"true"
 		}
 		import requests
-		r = requests.post(serverURL+'/new_user', data=params)
-		print r
-		print r.text
-		result = r.json()
+		try:
+			r = requests.post(serverURL+'/new_user', data=params)
+			print r
+			print r.text
+			result = r.json()
+		except:
+			result=None
 		if result:
 			if 'session' in result:
 				self.mtref.sessionID = result['session']
