@@ -299,7 +299,7 @@ TestGame:
 
     nameLabel: nameLabel
     screenShot: screenShot
-    descLabel: descLabel
+    tagsLabel: tagsLabel
 
     BoxLayout:
         Button:
@@ -322,10 +322,13 @@ TestGame:
         text:"LevelName"
     Image:
         id:screenShot
-    #tags? #compatible games?
-    tbox:
-        id: descLabel
-        text:"Description"
+    #description?
+    BoxLayout:
+        Label:
+            text:"Tags:"
+        tbox:
+            id: tagsLabel
+            text:"boardz"
     Button:
         text:"UpLoad!"
         on_press: root.uploadPressed(self)

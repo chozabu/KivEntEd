@@ -308,6 +308,12 @@ class uploads(BoxLayout):
 		self.uploadLevel()
 	def uploadLevel(self):
 		print "uploading level"
+
+		if not hasattr(self.mtref, 'sessionID'):
+			Popup(title="Not Logged In",
+					content=Label(text="please log in"),
+					size_hint=(0.6, 0.4), size=(400, 400)).open()
+			return
 		lname = self.mtref.nameBox.text
 		updata = self.mtref.gameref.serials.exportDict()
 		#req = UrlRequest('/listLevels', on_success=self.got_levels, timeout=1000)
@@ -316,7 +322,8 @@ class uploads(BoxLayout):
 		'author':self.userName.text,
 		'session':self.mtref.sessionID,
 		'name':lname,"leveldata":json.dumps(updata),
-		"sshot":open(self.screenShot.source, 'rb')
+		"sshot":open(self.screenShot.source, 'rb'),
+		"tags":self.tagsLabel.text
 		}
 
 		'''headers = {'Content-type': 'application/x-www-form-urlencoded',
