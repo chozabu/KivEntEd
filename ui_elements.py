@@ -323,7 +323,7 @@ class uploads(BoxLayout):
 		'session':self.mtref.sessionID,
 		'name':lname,"leveldata":json.dumps(updata),
 		"sshot":open(self.screenShot.source, 'rb'),
-		"tags":self.tagsLabel.text
+		"tags_str":self.tagsLabel.text
 		}
 
 		'''headers = {'Content-type': 'application/x-www-form-urlencoded',
